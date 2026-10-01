@@ -8,6 +8,7 @@ Chunk::Chunk()
 {
 	noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
 	noise.SetFrequency(frequency);
+	noise.SetSeed((int)(rand() % 9999));
 }
 
 void Chunk::Init()
@@ -84,6 +85,14 @@ void Chunk::Update()
 	else if (IsKeyDown(KEY_RIGHT))
 	{
 		scrollX += 0.1f;
+		UpdateDensities();
+		changedPoints = true;
+	}
+
+	if (IsKeyReleased(KEY_SPACE))
+	{
+		noise.SetSeed((int)(rand() % 9999));
+		scrollX = 0.0f;
 		UpdateDensities();
 		changedPoints = true;
 	}
