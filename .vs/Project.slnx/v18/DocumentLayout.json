@@ -1,17 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\",
+  "WorkspaceRootPath": "C:\\Users\\gameuser\\Desktop\\Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\gameuser\\Desktop\\Project\\Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\gameuser\\Desktop\\Project\\Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\gameuser\\Desktop\\Project\\Project\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -28,11 +28,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "game.cpp",
-              "DocumentMoniker": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\game.cpp",
+              "DocumentMoniker": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\game.cpp",
               "RelativeDocumentMoniker": "Project\\game.cpp",
-              "ToolTip": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\game.cpp",
+              "ToolTip": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\game.cpp",
               "RelativeToolTip": "Project\\game.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAC0AAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-01T14:20:10.879Z",
               "EditorCaption": ""
@@ -41,11 +41,11 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "game.h",
-              "DocumentMoniker": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\game.h",
+              "DocumentMoniker": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\game.h",
               "RelativeDocumentMoniker": "Project\\game.h",
-              "ToolTip": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\game.h",
+              "ToolTip": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\game.h",
               "RelativeToolTip": "Project\\game.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-10-01T14:20:08.041Z",
               "EditorCaption": ""
@@ -54,11 +54,11 @@
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\main.cpp",
               "RelativeDocumentMoniker": "Project\\main.cpp",
-              "ToolTip": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\Project\\main.cpp",
+              "ToolTip": "C:\\Users\\gameuser\\Desktop\\Project\\Project\\main.cpp",
               "RelativeToolTip": "Project\\main.cpp",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAAAMAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABIAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-01T14:14:08.294Z",
               "EditorCaption": ""

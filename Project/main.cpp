@@ -49,7 +49,7 @@ void GameLoop(void)
     // Should be outside BeginDrawing(); and EndDrawing();
     game.Update();
 
-    ClearBackground(BLACK);
+    ClearBackground(RAYWHITE);
 
     // Draw the Game Objects
     game.Draw();

@@ -9,7 +9,10 @@ public:
     void Update();
 
 private:
+    Camera camera;
 
+    Model model;
+    Mesh mesh;
 };
 
 #endif // GAME_H
