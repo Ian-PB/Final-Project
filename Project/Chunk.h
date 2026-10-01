@@ -37,6 +37,7 @@ public:
 
 private:
 	void SetupPoints();
+	void UpdateDensities();
 	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection);
 	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2);
 
@@ -49,13 +50,15 @@ private:
 
 	Vector3 position = { 0.0f, 1.5f, 0.0f };
 
-	static const int SIZE = 10; // Amount of points in each direction
+	static const int SIZE = 20; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
 	float pointSpacing = 1.5f;
 
 	// Noise
 	FastNoiseLite noise;
+	float frequency = 0.1f;
+	float scrollX = 0.0f;
 
 	// Debug
 	bool showDebugPoints = false;

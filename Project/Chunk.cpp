@@ -7,7 +7,7 @@
 Chunk::Chunk()
 {
 	noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-	noise.SetFrequency(0.1f);
+	noise.SetFrequency(frequency);
 }
 
 void Chunk::Init()
@@ -54,6 +54,8 @@ void Chunk::Draw()
 
 void Chunk::Update()
 {
+	bool changedPoints = false;
+
 	if (IsKeyDown(KEY_UP))
 	{
 		surfaceLevel += 0.01f;
@@ -61,7 +63,7 @@ void Chunk::Update()
 		if (surfaceLevel > 1.0f)
 			surfaceLevel = 1.0f;
 
-		GenerateMesh();
+		changedPoints = true;
 	}
 	else if (IsKeyDown(KEY_DOWN))
 	{
@@ -70,8 +72,25 @@ void Chunk::Update()
 		if (surfaceLevel < -1.0f)
 			surfaceLevel = -1.0f;
 
-		GenerateMesh();
+		changedPoints = true;
 	}
+
+	if (IsKeyDown(KEY_LEFT))
+	{
+		scrollX -= 0.1f;
+		UpdateDensities();
+		changedPoints = true;
+	}
+	else if (IsKeyDown(KEY_RIGHT))
+	{
+		scrollX += 0.1f;
+		UpdateDensities();
+		changedPoints = true;
+	}
+
+
+	if (changedPoints)
+		GenerateMesh();
 
 	if (IsKeyReleased(KEY_P))
 		showDebugPoints = !showDebugPoints;
@@ -156,9 +175,25 @@ void Chunk::SetupPoints()
 
 				Vector3 localPos = { x * pointSpacing, y * pointSpacing, z * pointSpacing };
 				points[i].position = localPos;
-				points[i].density = noise.GetNoise(localPos.x, localPos.y, localPos.z);
+				points[i].density = noise.GetNoise(localPos.x + scrollX, localPos.y, localPos.z);
 
 				points[i].color = GetColorFromDensity(points[i].density);
+			}
+		}
+	}
+}
+
+void Chunk::UpdateDensities()
+{
+	for (int x = 0; x < SIZE; x++)
+	{
+		for (int y = 0; y < SIZE; y++)
+		{
+			for (int z = 0; z < SIZE; z++)
+			{
+				int i = x * SIZE * SIZE + y * SIZE + z;
+				Vector3 localPos = { x * pointSpacing, y * pointSpacing, z * pointSpacing };
+				points[i].density = noise.GetNoise(localPos.x + scrollX, localPos.y, localPos.z);
 			}
 		}
 	}
