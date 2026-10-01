@@ -1,14 +1,9 @@
 #include "raylib.h"
-#include "stdio.h"
 #include "game.h"
 
 void Game::Init()
 {
-    camera.position = { 0.0f, 2.0f, 4.0f };    // Camera position
-    camera.target = { 0.0f, 2.0f, 0.0f };      // Camera looking at point
-    camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-    camera.fovy = 60.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
+    SetupCamera();
 
     mesh.triangleCount = 1;
     mesh.vertexCount = 1 * 3;
@@ -27,7 +22,7 @@ void Game::Init()
     UploadMesh(&mesh, true);
     model = LoadModelFromMesh(mesh);
 
-    DisableCursor();
+    testChunk.Init();
 }
 
 void Game::Draw()
@@ -37,18 +32,29 @@ void Game::Draw()
     BeginMode3D(camera);
 
         DrawPlane({ 0.0f, 0.0f, 0.0f }, { 32.0f, 32.0f }, LIGHTGRAY); // Draw ground
-        DrawCube({ -16.0f, 2.5f, 0.0f }, 1.0f, 5.0f, 32.0f, BLUE);     // Draw a blue wall
-        DrawCube({ 16.0f, 2.5f, 0.0f }, 1.0f, 5.0f, 32.0f, LIME);      // Draw a green wall
-        DrawCube({ 0.0f, 2.5f, 16.0f }, 32.0f, 5.0f, 1.0f, GOLD);      // Draw a yellow wall
 
-        // Draw some cubes around
+        // Draw triangle
         DrawModel(model, { 0.0f, 3.0f, 0.0f }, 1.0f, BLUE);
         DrawModelWires(model, { 0.0f, 3.0f, 0.0f }, 1.0f, RED);
+
+        testChunk.Draw();
 
     EndMode3D();
 }
 
 void Game::Update()
 {
+    testChunk.Update();
     UpdateCamera(&camera, CAMERA_FIRST_PERSON);
+}
+
+void Game::SetupCamera()
+{
+    camera.position = { 0.0f, 2.0f, 4.0f };             // Camera position
+    camera.target = { 0.0f, 2.0f, 0.0f };               // Camera looking at point
+    camera.up = { 0.0f, 1.0f, 0.0f };                   // Camera up vector (rotation towards target)
+    camera.fovy = 60.0f;                                // Camera field-of-view Y
+    camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
+
+    DisableCursor();
 }

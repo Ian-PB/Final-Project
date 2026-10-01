@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
+#include "Chunk.h"
 
 class Game
 {
@@ -9,10 +9,11 @@ public:
     void Update();
 
 private:
+    void SetupCamera();
     Camera camera;
 
     Model model;
     Mesh mesh;
-};
 
-#endif // GAME_H
+    Chunk testChunk;
+};
