@@ -1,0 +1,39 @@
+# Log files
+*.log
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
+# Bin dir
+/debug/
+/release/
+
+# Web dir
+/web/
+
+# Object files
+*.o
+
+# Ignore raylib directory
+/raylib/
+/raylib/build_web/
+
+# Ignore emsdk directory
+/emsdk/
+
+# Ignore any git repos inside the project
+**/.git/
+
+# Ignore any hidden files or directories in raylib and emsdk
+raylib/**/*
+emsdk/**/*
