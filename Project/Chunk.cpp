@@ -219,6 +219,14 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 		tri.b = vertlist[MarchingTables::TRIANGULATIONS[cubeindex][i + 1]];
 		tri.c = vertlist[MarchingTables::TRIANGULATIONS[cubeindex][i + 2]];
 
+
+		// Check if tri connects back to 0, 0, 0. If it does dont add it
+		if (tri.a == Vector3Zero() || tri.b == Vector3Zero() || tri.c == Vector3Zero())
+		{
+			// std::cout << "Found zero vector " << std::endl;
+			continue;
+		}
+
 		triangles.push_back(tri);
 	}
 
