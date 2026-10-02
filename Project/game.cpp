@@ -28,9 +28,9 @@ void Game::Init()
         {
             for (int z = 0; z < 3; z++)
             {
-                Vector3 newPos = { chunks[x][y][z].GetChunkSize() * x, chunks[x][y][z].GetChunkSize() * y, chunks[x][y][z].GetChunkSize() * z };
-                chunks[x][y][z].SetPosition(newPos);
-                chunks[x][y][z].Init();
+                Vector3 newPos = { world[x][y][z].GetChunkSize() * x, world[x][y][z].GetChunkSize() * y, world[x][y][z].GetChunkSize() * z };
+                world[x][y][z].SetPosition(newPos);
+                world[x][y][z].Init();
             }
         }
     }
@@ -52,7 +52,7 @@ void Game::Draw()
             for (int y = 0; y < 3; y++)
                 for (int z = 0; z < 3; z++)
                 {
-                    chunks[x][y][z].Draw();
+                    world[x][y][z].Draw();
                 }
 
     EndMode3D();
@@ -64,7 +64,7 @@ void Game::Update()
         for (int y = 0; y < 3; y++)
             for (int z = 0; z < 3; z++)
             {
-                chunks[x][y][z].Update();
+                world[x][y][z].Update();
             }
 
     UpdateCamera(&camera, CAMERA_FIRST_PERSON);

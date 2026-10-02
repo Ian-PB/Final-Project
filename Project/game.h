@@ -15,5 +15,5 @@ private:
     Model model;
     Mesh mesh;
 
-    Chunk chunks[3][3][3];
+    Chunk world[3][3][3];
 };
