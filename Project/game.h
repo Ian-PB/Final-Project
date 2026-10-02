@@ -15,5 +15,5 @@ private:
     Model model;
     Mesh mesh;
 
-    Chunk testChunk;
+    Chunk chunks[3][3][3];
 };

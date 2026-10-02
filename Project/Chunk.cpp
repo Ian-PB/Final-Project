@@ -4,11 +4,13 @@
 
 #include "MarchingTables.h"
 
+int Chunk::NOISE_SEED = (int)(rand() % 9999);
+
 Chunk::Chunk()
 {
 	noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
 	noise.SetFrequency(frequency);
-	noise.SetSeed((int)(rand() % 9999));
+	noise.SetSeed(NOISE_SEED);
 }
 
 void Chunk::Init()
@@ -81,7 +83,8 @@ void Chunk::Update()
 
 	if (IsKeyReleased(KEY_G))
 	{
-		noise.SetSeed((int)(rand() % 9999));
+		NOISE_SEED = (int)(rand() % 9999);
+		noise.SetSeed(NOISE_SEED);
 		scrollX = 0.0f;
 		UpdateDensities();
 		changedPoints = true;
@@ -177,9 +180,10 @@ void Chunk::SetupPoints()
 			{
 				int i = x * SIZE * SIZE + y * SIZE + z;
 
-				Vector3 localPos = { x * pointSpacing, y * pointSpacing, z * pointSpacing };
-				points[i].position = localPos;
-				points[i].density = noise.GetNoise(localPos.x + scrollX, localPos.y, localPos.z);
+				points[i].position = GetLocalPos({(float)x, (float)y, (float)z});
+
+				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
+				points[i].density = noise.GetNoise(globalPos.x + scrollX, globalPos.y, globalPos.z);
 
 				points[i].color = GetColorFromDensity(points[i].density);
 			}
@@ -196,8 +200,9 @@ void Chunk::UpdateDensities()
 			for (int z = 0; z < SIZE; z++)
 			{
 				int i = x * SIZE * SIZE + y * SIZE + z;
-				Vector3 localPos = { x * pointSpacing, y * pointSpacing, z * pointSpacing };
-				points[i].density = noise.GetNoise(localPos.x + scrollX, localPos.y, localPos.z);
+
+				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
+				points[i].density = noise.GetNoise(globalPos.x + scrollX, globalPos.y, globalPos.z);
 
 				points[i].color = GetColorFromDensity(points[i].density);
 			}

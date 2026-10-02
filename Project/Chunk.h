@@ -35,6 +35,9 @@ public:
 
 	void GenerateMesh();
 
+	int GetChunkSize() { return ((SIZE - 1) * pointSpacing); }
+	void SetPosition(Vector3 t_pos) { position = t_pos; }
+
 private:
 	void SetupPoints();
 	void UpdateDensities();
@@ -42,13 +45,16 @@ private:
 	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2);
 
 	Color GetColorFromDensity(float val);
+
+	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
+	Vector3 GetGlobalPos(Vector3 t_index) { return { (t_index.x * pointSpacing) + position.x, (t_index.y * pointSpacing) + position.y, (t_index.z * pointSpacing) + position.z }; }
 	float surfaceLevel = 0.0f;
 
 	Mesh mesh;
 	Model model;
 	Model pointModel;
 
-	Vector3 position = { 0.0f, 1.5f, 0.0f };
+	Vector3 position = { 0.0f, 0.0f, 0.0f };
 
 	static const int SIZE = 10; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
@@ -59,6 +65,7 @@ private:
 	FastNoiseLite noise;
 	float frequency = 0.1f;
 	float scrollX = 0.0f;
+	static int NOISE_SEED;
 
 	// Debug
 	bool showDebugPoints = false;
