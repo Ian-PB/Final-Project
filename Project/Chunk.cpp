@@ -4,22 +4,18 @@
 
 #include "MarchingTables.h"
 
-int Chunk::NOISE_SEED = (int)(rand() % 9999);
-
 Chunk::Chunk()
 {
-	noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-	noise.SetFrequency(frequency);
-	noise.SetSeed(NOISE_SEED);
+
 }
 
-void Chunk::Init()
+void Chunk::Init(FastNoiseLite* t_noise)
 {
+	noise = t_noise;
 	Mesh sphereMesh = GenMeshSphere(0.1f, 5, 5);
 	pointModel = LoadModelFromMesh(sphereMesh);
 
 	SetupPoints();
-	GenerateMesh();
 }
 
 void Chunk::Draw()
@@ -47,58 +43,11 @@ void Chunk::Draw()
 
 void Chunk::Update()
 {
-	bool changedPoints = false;
-
-	if (IsKeyDown(KEY_UP))
-	{
-		surfaceLevel += 0.01f;
-
-		if (surfaceLevel > 1.0f)
-			surfaceLevel = 1.0f;
-
-		changedPoints = true;
-	}
-	else if (IsKeyDown(KEY_DOWN))
-	{
-		surfaceLevel -= 0.01f;
-
-		if (surfaceLevel < -1.0f)
-			surfaceLevel = -1.0f;
-
-		changedPoints = true;
-	}
-
-	if (IsKeyDown(KEY_LEFT))
-	{
-		scrollX -= 0.1f;
-		UpdateDensities();
-		changedPoints = true;
-	}
-	else if (IsKeyDown(KEY_RIGHT))
-	{
-		scrollX += 0.1f;
-		UpdateDensities();
-		changedPoints = true;
-	}
-
-	if (IsKeyReleased(KEY_G))
-	{
-		NOISE_SEED = (int)(rand() % 9999);
-		noise.SetSeed(NOISE_SEED);
-		scrollX = 0.0f;
-		UpdateDensities();
-		changedPoints = true;
-	}
-
-
-	if (changedPoints)
-		GenerateMesh();
-
 	if (IsKeyReleased(KEY_P))
 		showDebugPoints = !showDebugPoints;
 }
 
-void Chunk::GenerateMesh()
+void Chunk::GenerateMesh(float t_surfaceLevel)
 {
 	std::vector<Vector3> vertices;
 
@@ -135,7 +84,7 @@ void Chunk::GenerateMesh()
 					cubeSection.val[i] = points[index].density;
 				}
 
-				std::vector<Triangle> triangles = GetMeshVerticesForSection(cubeSection);
+				std::vector<Triangle> triangles = GetMeshVerticesForSection(cubeSection, t_surfaceLevel);
 
 				for (const Triangle& tri : triangles)
 				{
@@ -168,6 +117,9 @@ void Chunk::GenerateMesh()
 	// Upload Mesh and apply to Model
 	UploadMesh(&mesh, true);
 	model = LoadModelFromMesh(mesh);
+
+	// No longer needs a change
+	dirty = false;
 }
 
 void Chunk::SetupPoints()
@@ -183,7 +135,7 @@ void Chunk::SetupPoints()
 				points[i].position = GetLocalPos({(float)x, (float)y, (float)z});
 
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
-				points[i].density = noise.GetNoise(globalPos.x + scrollX, globalPos.y, globalPos.z);
+				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
 				points[i].color = GetColorFromDensity(points[i].density);
 			}
@@ -202,7 +154,7 @@ void Chunk::UpdateDensities()
 				int i = x * SIZE * SIZE + y * SIZE + z;
 
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
-				points[i].density = noise.GetNoise(globalPos.x + scrollX, globalPos.y, globalPos.z);
+				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
 				points[i].color = GetColorFromDensity(points[i].density);
 			}
@@ -210,21 +162,21 @@ void Chunk::UpdateDensities()
 	}
 }
 
-std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection)
+std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel)
 {
 	std::vector<Triangle> triangles;
 	Vector3 vertlist[12] = {};
 
 	int cubeindex = 0;
 	// Determine the index into the edge table which tells us which vertices are inside of the surface
-	if (t_cubeSection.val[0] < surfaceLevel) cubeindex |= 1;
-	if (t_cubeSection.val[1] < surfaceLevel) cubeindex |= 2;
-	if (t_cubeSection.val[2] < surfaceLevel) cubeindex |= 4;
-	if (t_cubeSection.val[3] < surfaceLevel) cubeindex |= 8;
-	if (t_cubeSection.val[4] < surfaceLevel) cubeindex |= 16;
-	if (t_cubeSection.val[5] < surfaceLevel) cubeindex |= 32;
-	if (t_cubeSection.val[6] < surfaceLevel) cubeindex |= 64;
-	if (t_cubeSection.val[7] < surfaceLevel) cubeindex |= 128;
+	if (t_cubeSection.val[0] < t_surfaceLevel) cubeindex |= 1;
+	if (t_cubeSection.val[1] < t_surfaceLevel) cubeindex |= 2;
+	if (t_cubeSection.val[2] < t_surfaceLevel) cubeindex |= 4;
+	if (t_cubeSection.val[3] < t_surfaceLevel) cubeindex |= 8;
+	if (t_cubeSection.val[4] < t_surfaceLevel) cubeindex |= 16;
+	if (t_cubeSection.val[5] < t_surfaceLevel) cubeindex |= 32;
+	if (t_cubeSection.val[6] < t_surfaceLevel) cubeindex |= 64;
+	if (t_cubeSection.val[7] < t_surfaceLevel) cubeindex |= 128;
 
 	// Cube is entirely in/out of the surface 
 	if (MarchingTables::EDGE_TABLE[cubeindex] == 0)
@@ -232,29 +184,29 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 
 	// Find the vertices where the surface intersects the cube
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 1)
-		vertlist[0] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[1], t_cubeSection.val[0], t_cubeSection.val[1]);
+		vertlist[0] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[1], t_cubeSection.val[0], t_cubeSection.val[1], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 2)
-		vertlist[1] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[2], t_cubeSection.val[1], t_cubeSection.val[2]);
+		vertlist[1] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[2], t_cubeSection.val[1], t_cubeSection.val[2], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 4)
-		vertlist[2] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[3], t_cubeSection.val[2], t_cubeSection.val[3]);
+		vertlist[2] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[3], t_cubeSection.val[2], t_cubeSection.val[3], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 8)
-		vertlist[3] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[0], t_cubeSection.val[3], t_cubeSection.val[0]);
+		vertlist[3] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[0], t_cubeSection.val[3], t_cubeSection.val[0], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 16)
-		vertlist[4] = VertexInterp(t_cubeSection.p[4], t_cubeSection.p[5], t_cubeSection.val[4], t_cubeSection.val[5]);
+		vertlist[4] = VertexInterp(t_cubeSection.p[4], t_cubeSection.p[5], t_cubeSection.val[4], t_cubeSection.val[5], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 32)
-		vertlist[5] = VertexInterp(t_cubeSection.p[5], t_cubeSection.p[6], t_cubeSection.val[5], t_cubeSection.val[6]);
+		vertlist[5] = VertexInterp(t_cubeSection.p[5], t_cubeSection.p[6], t_cubeSection.val[5], t_cubeSection.val[6], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 64)
-		vertlist[6] = VertexInterp(t_cubeSection.p[6], t_cubeSection.p[7], t_cubeSection.val[6], t_cubeSection.val[7]);
+		vertlist[6] = VertexInterp(t_cubeSection.p[6], t_cubeSection.p[7], t_cubeSection.val[6], t_cubeSection.val[7], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 128)
-		vertlist[7] = VertexInterp(t_cubeSection.p[7], t_cubeSection.p[4], t_cubeSection.val[7], t_cubeSection.val[4]);
+		vertlist[7] = VertexInterp(t_cubeSection.p[7], t_cubeSection.p[4], t_cubeSection.val[7], t_cubeSection.val[4], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 256)
-		vertlist[8] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[4], t_cubeSection.val[0], t_cubeSection.val[4]);
+		vertlist[8] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[4], t_cubeSection.val[0], t_cubeSection.val[4], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 512)
-		vertlist[9] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[5], t_cubeSection.val[1], t_cubeSection.val[5]);
+		vertlist[9] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[5], t_cubeSection.val[1], t_cubeSection.val[5], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 1024)
-		vertlist[10] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[6], t_cubeSection.val[2], t_cubeSection.val[6]);
+		vertlist[10] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[6], t_cubeSection.val[2], t_cubeSection.val[6], t_surfaceLevel);
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 2048)
-		vertlist[11] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[7], t_cubeSection.val[3], t_cubeSection.val[7]);
+		vertlist[11] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[7], t_cubeSection.val[3], t_cubeSection.val[7], t_surfaceLevel);
 
 	// Create the triangle 
 	for (int i = 0; MarchingTables::TRIANGULATIONS[cubeindex][i] != -1; i += 3)
@@ -279,19 +231,19 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 	return triangles;
 }
 
-Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2)
+Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel)
 {
 	double wayAlongEdge;
 	Vector3 smoothedPoint;
 
-	if (abs(surfaceLevel - valp1) < 0.00001)
+	if (abs(t_surfaceLevel - valp1) < 0.00001)
 		return(p1);
-	if (abs(surfaceLevel - valp2) < 0.00001)
+	if (abs(t_surfaceLevel - valp2) < 0.00001)
 		return(p2);
 	if (abs(valp1 - valp2) < 0.00001)
 		return(p1);
 
-	wayAlongEdge = (surfaceLevel - valp1) / (valp2 - valp1);
+	wayAlongEdge = (t_surfaceLevel - valp1) / (valp2 - valp1);
 	smoothedPoint.x = p1.x + wayAlongEdge * (p2.x - p1.x);
 	smoothedPoint.y = p1.y + wayAlongEdge * (p2.y - p1.y);
 	smoothedPoint.z = p1.z + wayAlongEdge * (p2.z - p1.z);

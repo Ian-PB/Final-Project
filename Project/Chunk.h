@@ -29,26 +29,30 @@ class Chunk
 {
 public:
 	Chunk();
-	void Init();
+	void Init(FastNoiseLite* t_noise);
 	void Draw();
 	void Update();
 
-	void GenerateMesh();
+	void GenerateMesh(float t_surfaceLevel);
+	void UpdateDensities();
 
 	int GetChunkSize() { return ((SIZE - 1) * pointSpacing); }
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
+	bool IsDirty() { return dirty; }
+	void SetDirty() { dirty = true; }
+
 private:
+	bool dirty = false;
+
 	void SetupPoints();
-	void UpdateDensities();
-	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection);
-	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2);
+	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
+	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel);
 
 	Color GetColorFromDensity(float val);
 
 	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
 	Vector3 GetGlobalPos(Vector3 t_index) { return { (t_index.x * pointSpacing) + position.x, (t_index.y * pointSpacing) + position.y, (t_index.z * pointSpacing) + position.z }; }
-	float surfaceLevel = 0.0f;
 
 	Mesh mesh;
 	Model model;
@@ -62,10 +66,7 @@ private:
 	float pointSpacing = 1.5f;
 
 	// Noise
-	FastNoiseLite noise;
-	float frequency = 0.1f;
-	float scrollX = 0.0f;
-	static int NOISE_SEED;
+	FastNoiseLite* noise;
 
 	// Debug
 	bool showDebugPoints = false;

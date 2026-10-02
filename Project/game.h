@@ -1,5 +1,5 @@
 #pragma once
-#include "Chunk.h"
+#include "World.h"
 
 class Game
 {
@@ -15,5 +15,5 @@ private:
     Model model;
     Mesh mesh;
 
-    Chunk world[3][3][3];
+    World world;
 };
