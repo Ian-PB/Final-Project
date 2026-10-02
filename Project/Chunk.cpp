@@ -16,16 +16,6 @@ void Chunk::Init()
 	Mesh sphereMesh = GenMeshSphere(0.1f, 5, 5);
 	pointModel = LoadModelFromMesh(sphereMesh);
 
-	// Setup chunk's mesh using max vertex count
-	int maxVertexCount = (SIZE - 1) * (SIZE - 1) * (SIZE - 1) * 15;
-	mesh.vertexCount = maxVertexCount;
-	mesh.triangleCount = maxVertexCount / 3.0f;
-
-	mesh.vertices = (float*)MemAlloc(maxVertexCount * 3 * sizeof(float));
-
-	UploadMesh(&mesh, true);
-	model = LoadModelFromMesh(mesh);
-
 	SetupPoints();
 	GenerateMesh();
 }
@@ -49,8 +39,8 @@ void Chunk::Draw()
 			}
 		}
 
-	DrawModel(model, position, 1.0f, LIGHTGRAY);
-	DrawModelWires(model, position, 1.0f, MAROON);
+	DrawModel(model, position, 1.0f, GRAY);
+	DrawModelWires(model, position, 1.0f, LIGHTGRAY);
 }
 
 void Chunk::Update()
@@ -89,7 +79,7 @@ void Chunk::Update()
 		changedPoints = true;
 	}
 
-	if (IsKeyReleased(KEY_SPACE))
+	if (IsKeyReleased(KEY_G))
 	{
 		noise.SetSeed((int)(rand() % 9999));
 		scrollX = 0.0f;
@@ -115,7 +105,6 @@ void Chunk::GenerateMesh()
 		{
 			for (int z = 0; z < SIZE - 1; z++)
 			{
-				// int i = x * SIZE * SIZE + y * SIZE + z;
 				CubeSection cubeSection;
 
 				// Get coordinates for each corner
@@ -157,9 +146,14 @@ void Chunk::GenerateMesh()
 
 	int currentVertexCount = (int)vertices.size();
 
-	// Apply new vertices found to mesh
+	// Unload old model
+	UnloadModel(model);
+
+	// Create new mesh with the new vertices
+	mesh = Mesh();
 	mesh.vertexCount = currentVertexCount;
 	mesh.triangleCount = currentVertexCount / 3;
+	mesh.vertices = (float*)MemAlloc(currentVertexCount * 3 * sizeof(float));
 
 	for (int i = 0; i < mesh.vertexCount; i++)
 	{
@@ -168,8 +162,9 @@ void Chunk::GenerateMesh()
 		mesh.vertices[i * 3 + 2] = vertices[i].z;
 	}
 
-	// Update the mesh on the gpu buffer with the new vertices
-	UpdateMeshBuffer(mesh, 0, mesh.vertices, currentVertexCount * 3 * sizeof(float), 0);
+	// Upload Mesh and apply to Model
+	UploadMesh(&mesh, true);
+	model = LoadModelFromMesh(mesh);
 }
 
 void Chunk::SetupPoints()
@@ -203,6 +198,8 @@ void Chunk::UpdateDensities()
 				int i = x * SIZE * SIZE + y * SIZE + z;
 				Vector3 localPos = { x * pointSpacing, y * pointSpacing, z * pointSpacing };
 				points[i].density = noise.GetNoise(localPos.x + scrollX, localPos.y, localPos.z);
+
+				points[i].color = GetColorFromDensity(points[i].density);
 			}
 		}
 	}

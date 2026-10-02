@@ -50,7 +50,7 @@ private:
 
 	Vector3 position = { 0.0f, 1.5f, 0.0f };
 
-	static const int SIZE = 20; // Amount of points in each direction
+	static const int SIZE = 10; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
 	float pointSpacing = 1.5f;

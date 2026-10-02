@@ -24,7 +24,7 @@ int main(void)
 #if defined(WEB_BUILD)
     emscripten_set_main_loop(GameLoop, 0, 1);
 #else
-    SetTargetFPS(60);
+    SetTargetFPS(120);
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         // Call GameLoop

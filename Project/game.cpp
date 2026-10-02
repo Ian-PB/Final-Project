@@ -46,6 +46,15 @@ void Game::Update()
 {
     testChunk.Update();
     UpdateCamera(&camera, CAMERA_FIRST_PERSON);
+
+    if (IsKeyDown(KEY_SPACE))
+    {
+        camera.position.y += 0.2f;
+    }
+    else if (IsKeyDown(KEY_LEFT_SHIFT))
+    {
+        camera.position.y -= 0.2f;
+    }
 }
 
 void Game::SetupCamera()
