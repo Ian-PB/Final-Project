@@ -25,6 +25,12 @@ struct CubeSection
 	double val[8];
 };
 
+struct MeshData
+{
+	int currentVertexCount = 0;
+	std::vector<Vector3> vertices;
+};
+
 class Chunk
 {
 public:
@@ -33,13 +39,14 @@ public:
 	void Draw();
 	void Update();
 
-	void GenerateMesh(float t_surfaceLevel);
+	void ApplyMeshDataToModel();
+	void GenerateMeshData(float t_surfaceLevel);
 	void UpdateDensities();
 
-	int GetChunkSize() { return ((SIZE - 1) * pointSpacing); }
+	int GetChunkSize() const { return ((SIZE - 1) * pointSpacing); }
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
-	bool IsDirty() { return dirty; }
+	bool IsDirty() const { return dirty; }
 	void SetDirty() { dirty = true; }
 
 private:
@@ -54,6 +61,7 @@ private:
 	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
 	Vector3 GetGlobalPos(Vector3 t_index) { return { (t_index.x * pointSpacing) + position.x, (t_index.y * pointSpacing) + position.y, (t_index.z * pointSpacing) + position.z }; }
 
+	MeshData meshData;
 	Mesh mesh;
 	Model model;
 	Model pointModel;

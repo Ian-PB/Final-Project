@@ -47,9 +47,35 @@ void Chunk::Update()
 		showDebugPoints = !showDebugPoints;
 }
 
-void Chunk::GenerateMesh(float t_surfaceLevel)
+void Chunk::ApplyMeshDataToModel()
 {
-	std::vector<Vector3> vertices;
+	// Unload old model
+	UnloadModel(model);
+
+	// Create new mesh with the new vertices
+	mesh = Mesh();
+	mesh.vertexCount = meshData.currentVertexCount;
+	mesh.triangleCount = meshData.currentVertexCount / 3;
+	mesh.vertices = (float*)MemAlloc(meshData.currentVertexCount * 3 * sizeof(float));
+
+	for (int i = 0; i < mesh.vertexCount; i++)
+	{
+		mesh.vertices[i * 3 + 0] = meshData.vertices[i].x;
+		mesh.vertices[i * 3 + 1] = meshData.vertices[i].y;
+		mesh.vertices[i * 3 + 2] = meshData.vertices[i].z;
+	}
+
+	// Upload Mesh and apply to Model
+	UploadMesh(&mesh, true);
+	model = LoadModelFromMesh(mesh);
+
+	// No longer needs a change
+	dirty = false;
+}
+
+void Chunk::GenerateMeshData(float t_surfaceLevel)
+{
+	meshData.vertices.clear();
 
 	for (int x = 0; x < SIZE - 1; x++)
 	{
@@ -88,38 +114,17 @@ void Chunk::GenerateMesh(float t_surfaceLevel)
 
 				for (const Triangle& tri : triangles)
 				{
-					vertices.push_back(tri.a);
-					vertices.push_back(tri.b);
-					vertices.push_back(tri.c);
+					meshData.vertices.push_back(tri.a);
+					meshData.vertices.push_back(tri.b);
+					meshData.vertices.push_back(tri.c);
 				}
 			}
 		}
 	}
 
-	int currentVertexCount = (int)vertices.size();
+	meshData.currentVertexCount = (int)meshData.vertices.size();
 
-	// Unload old model
-	UnloadModel(model);
-
-	// Create new mesh with the new vertices
-	mesh = Mesh();
-	mesh.vertexCount = currentVertexCount;
-	mesh.triangleCount = currentVertexCount / 3;
-	mesh.vertices = (float*)MemAlloc(currentVertexCount * 3 * sizeof(float));
-
-	for (int i = 0; i < mesh.vertexCount; i++)
-	{
-		mesh.vertices[i * 3 + 0] = vertices[i].x;
-		mesh.vertices[i * 3 + 1] = vertices[i].y;
-		mesh.vertices[i * 3 + 2] = vertices[i].z;
-	}
-
-	// Upload Mesh and apply to Model
-	UploadMesh(&mesh, true);
-	model = LoadModelFromMesh(mesh);
-
-	// No longer needs a change
-	dirty = false;
+	dirty = true;
 }
 
 void Chunk::SetupPoints()
