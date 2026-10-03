@@ -9,6 +9,8 @@ struct Triangle
 	Vector3 a;
 	Vector3 b;
 	Vector3 c;
+
+	Vector3 normal;
 };
 struct Point
 {
@@ -29,6 +31,7 @@ struct MeshData
 {
 	int currentVertexCount = 0;
 	std::vector<Vector3> vertices;
+	std::vector<Vector3> normals;
 };
 
 class Chunk
@@ -55,6 +58,7 @@ private:
 	void SetupPoints();
 	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
 	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel);
+	static void SetTriangleNormal(Triangle& tri);
 
 	Color GetColorFromDensity(float val);
 

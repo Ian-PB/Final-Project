@@ -56,13 +56,23 @@ void Chunk::ApplyMeshDataToModel()
 	mesh = Mesh();
 	mesh.vertexCount = meshData.currentVertexCount;
 	mesh.triangleCount = meshData.currentVertexCount / 3;
-	mesh.vertices = (float*)MemAlloc(meshData.currentVertexCount * 3 * sizeof(float));
 
+	
+	mesh.vertices = (float*)MemAlloc(meshData.currentVertexCount * 3 * sizeof(float));
+	mesh.normals = (float*)MemAlloc(mesh.vertexCount * 3 * sizeof(float));
+
+	// Apply all info to mesh
 	for (int i = 0; i < mesh.vertexCount; i++)
 	{
+		// Vertices
 		mesh.vertices[i * 3 + 0] = meshData.vertices[i].x;
 		mesh.vertices[i * 3 + 1] = meshData.vertices[i].y;
 		mesh.vertices[i * 3 + 2] = meshData.vertices[i].z;
+
+		// Normals
+		mesh.normals[i * 3 + 0] = meshData.normals[i].x;
+		mesh.normals[i * 3 + 1] = meshData.normals[i].y;
+		mesh.normals[i * 3 + 2] = meshData.normals[i].z;
 	}
 
 	// Upload Mesh and apply to Model
@@ -76,6 +86,7 @@ void Chunk::ApplyMeshDataToModel()
 void Chunk::GenerateMeshData(float t_surfaceLevel)
 {
 	meshData.vertices.clear();
+	meshData.normals.clear();
 
 	for (int x = 0; x < SIZE - 1; x++)
 	{
@@ -117,6 +128,11 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 					meshData.vertices.push_back(tri.a);
 					meshData.vertices.push_back(tri.b);
 					meshData.vertices.push_back(tri.c);
+
+					// All vertices get same normal (flat shading)
+					meshData.normals.push_back(tri.normal);
+					meshData.normals.push_back(tri.normal);
+					meshData.normals.push_back(tri.normal);
 				}
 			}
 		}
@@ -230,6 +246,9 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 			continue;
 		}
 
+		// Get the triangle's normal
+		SetTriangleNormal(tri);
+
 		triangles.push_back(tri);
 	}
 
@@ -254,6 +273,14 @@ Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, fl
 	smoothedPoint.z = p1.z + wayAlongEdge * (p2.z - p1.z);
 
 	return(smoothedPoint);
+}
+
+void Chunk::SetTriangleNormal(Triangle& tri)
+{
+	Vector3 a = Vector3Subtract(tri.b, tri.a);
+	Vector3 b = Vector3Subtract(tri.c, tri.a);
+
+	tri.normal = Vector3Normalize(Vector3CrossProduct(a, b));
 }
 
 Color Chunk::GetColorFromDensity(float val)
