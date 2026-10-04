@@ -6,7 +6,7 @@ class World;
 class Player
 {
 public:
-	Player(const World& t_world);
+	Player(World& t_world);
 	void Init();
 
 	void Update();
@@ -33,7 +33,7 @@ private:
 	Vector3 rayStart;
 	RayCollision rayCollision;
 
-	const World& WORLD;
+	World& WORLD;
 };
 
 #include "World.h"

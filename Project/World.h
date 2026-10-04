@@ -25,6 +25,7 @@ public:
 
 	Vector3 GetDimensions() const { return { WIDTH, HEIGHT, DEPTH }; }
 	const Chunk& GetChunk(int x, int y, int z) const { return chunks[x][y][z]; }
+	Chunk& GetChunkFromWorldPos(Vector3 t_pos);
 
 private:
 	void UpdateChunks();

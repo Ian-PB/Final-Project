@@ -1,5 +1,7 @@
 #include "World.h"
 #include <mutex>
+#include <math.h>
+#include <algorithm>
 
 World::World()
 {
@@ -141,6 +143,23 @@ void World::WorkerLoop()
 
         jobsRemaining--;
     }
+}
+
+Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
+{
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+
+    // Get indexes
+    int x = (int)std::floor(t_pos.x / chunkSize);
+    int y = (int)std::floor(t_pos.y / chunkSize);
+    int z = (int)std::floor(t_pos.z / chunkSize);
+
+    // Make sure the indexes are within the world
+    x = std::clamp(x, 0, WIDTH - 1);
+    y = std::clamp(y, 0, HEIGHT - 1);
+    z = std::clamp(z, 0, DEPTH - 1);
+
+    return chunks[x][y][z];
 }
 
 // Allows for splitting the work to different threads

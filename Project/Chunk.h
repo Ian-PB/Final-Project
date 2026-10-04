@@ -55,6 +55,8 @@ public:
 	Mesh GetMesh() const { return mesh; }
 	Vector3 GetPosition() const { return position; }
 
+	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
+
 private:
 	bool dirty = false;
 

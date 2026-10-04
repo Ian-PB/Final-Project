@@ -143,6 +143,28 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 	dirty = true;
 }
 
+void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
+{
+	for (int x = 0; x < SIZE; x++)
+	{
+		for (int y = 0; y < SIZE; y++)
+		{
+			for (int z = 0; z < SIZE; z++)
+			{
+				int i = x * SIZE * SIZE + y * SIZE + z;
+
+				if (Vector3Distance(points[i].position, t_pos) <= t_radius)
+				{
+					if (destroy)
+						points[i].density = -1.0f;
+					else
+						points[i].density = 1.0f;
+				}
+			}
+		}
+	}
+}
+
 void Chunk::SetupPoints()
 {
 	for (int x = 0; x < SIZE; x++)

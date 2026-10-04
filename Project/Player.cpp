@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <raymath.h>
 
-Player::Player(const World& t_world) : WORLD(t_world)
+Player::Player(World& t_world) : WORLD(t_world)
 {
     SetupCamera();
     rayCollision.distance = 9999.0f;
@@ -163,4 +163,8 @@ void Player::ShootRay()
     }
 
     rayCollision.point = closestHit;
+
+    // Destroy hitPos of mesh
+    Chunk& chunkHit = WORLD.GetChunkFromWorldPos(closestHit);
+    chunkHit.EditSphere(closestHit, 5);
 }
