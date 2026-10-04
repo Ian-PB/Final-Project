@@ -1,5 +1,6 @@
 #pragma once
 #include "World.h"
+#include "Player.h"
 
 class Game
 {
@@ -9,11 +10,7 @@ public:
     void Update();
 
 private:
-    void SetupCamera();
-    Camera camera;
-
-    Model model;
-    Mesh mesh;
+    Player player;
 
     World world;
 };

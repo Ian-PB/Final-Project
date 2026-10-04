@@ -24,7 +24,7 @@ struct Point
 struct CubeSection
 {
 	Vector3 p[8];
-	double val[8];
+	float val[8];
 };
 
 struct MeshData
@@ -46,7 +46,7 @@ public:
 	void GenerateMeshData(float t_surfaceLevel);
 	void UpdateDensities();
 
-	int GetChunkSize() const { return ((SIZE - 1) * pointSpacing); }
+	int GetChunkSize() const { return (int)((SIZE - 1) * pointSpacing); }
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
 	bool IsDirty() const { return dirty; }
