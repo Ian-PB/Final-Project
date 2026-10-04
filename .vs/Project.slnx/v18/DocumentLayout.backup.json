@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Chunk.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Chunk.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -13,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,11 +30,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "game.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.cpp",
               "RelativeDocumentMoniker": "Project\\game.cpp",
@@ -44,7 +48,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "game.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.h",
               "RelativeDocumentMoniker": "Project\\game.h",
@@ -58,13 +62,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Player.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeDocumentMoniker": "Project\\Player.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeToolTip": "Project\\Player.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAIwBQAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-04T19:12:17.691Z",
               "IsPinned": true,
@@ -72,16 +76,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeDocumentMoniker": "Project\\Player.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeToolTip": "Project\\Player.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-10-04T19:12:12.532Z",
               "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Chunk.h",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Chunk.h",
+              "RelativeDocumentMoniker": "Project\\Chunk.h",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Chunk.h",
+              "RelativeToolTip": "Project\\Chunk.h",
+              "ViewState": "AgIAAB0AAAAAAAAAAAD4vzAAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-10-04T19:41:14.383Z",
               "EditorCaption": ""
             }
           ]

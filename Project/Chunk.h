@@ -46,7 +46,7 @@ public:
 	void GenerateMeshData(float t_surfaceLevel);
 	void UpdateDensities();
 
-	int GetChunkSize() const { return (int)((SIZE - 1) * pointSpacing); }
+	float GetChunkSize() const { return ((SIZE - 1) * pointSpacing); }
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
 	bool IsDirty() const { return dirty; }
