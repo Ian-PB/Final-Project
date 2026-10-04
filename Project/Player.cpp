@@ -1,15 +1,34 @@
 #include "Player.h"
 #include <raymath.h>
 
+Player::Player(const World& t_world) : WORLD(t_world)
+{
+    SetupCamera();
+    rayCollision.distance = 9999.0f;
+    rayCollision.hit = false;
+}
+
 void Player::Init()
 {
-	SetupCamera();
 }
 
 void Player::Update()
 {
     CameraLook();
     Movement();
+
+    if (IsMouseButtonReleased(0))
+        ShootRay();
+}
+
+void Player::Draw()
+{
+    if (rayCollision.hit)
+    {
+        DrawSphere(rayStart, 0.2f, GREEN); // Start point
+        DrawSphere(rayCollision.point, 0.5f, RED); // End point
+        DrawLine3D(rayStart, rayCollision.point, RED);
+    }
 }
 
 void Player::SetupCamera()
@@ -40,6 +59,14 @@ void Player::CameraLook()
 
     forward = { cosf(cameraPitch) * sinf(cameraYaw), sinf(cameraPitch), cosf(cameraPitch) * cosf(cameraYaw) };
     camera.target = Vector3Add(position, forward); // Face in new direction (forward)
+
+    Vector2 screenCenter =
+    {
+        GetScreenWidth() / 2.0f,
+        GetScreenHeight() / 2.0f
+    };
+    // Use screenCenter instead of the mouse pos because the mouse is locked
+    ray = GetScreenToWorldRay(screenCenter, camera);
 }
 
 void Player::Movement()
@@ -83,4 +110,57 @@ void Player::Movement()
     // Set position to the camera
     camera.position = position;
     camera.target = Vector3Add(camera.position, forward);
+}
+
+void Player::ShootRay()
+{
+    rayCollision.hit = false;
+    rayCollision.distance = 9999.0f;
+    rayStart = position;
+
+    // Get the chunks array from world
+    Vector3 worldDimensions = WORLD.GetDimensions();
+    std::vector<Vector3> hitPositions;
+
+    for (int x = 0; x < worldDimensions.x; x++)
+    {
+        for (int y = 0; y < worldDimensions.y; y++)
+        {
+            for (int z = 0; z < worldDimensions.z; z++)
+            {
+                const Chunk& chunk = WORLD.GetChunk(x, y, z);
+                // Get chunks transform position
+                Matrix transform = MatrixTranslate(
+                    chunk.GetPosition().x,
+                    chunk.GetPosition().y,
+                    chunk.GetPosition().z
+                );
+
+                RayCollision meshCollision = GetRayCollisionMesh(ray, chunk.GetMesh(), transform);
+
+                // Check if in range and hit
+                if (meshCollision.hit && (meshCollision.distance < rayCollision.distance))
+                {
+                    rayCollision.hit = true;
+                    // Add to hit positions
+                    hitPositions.push_back(meshCollision.point);
+                }
+            }
+        }
+    }
+
+    // Find which point is the closest
+    float closestHitDist = 9999.0f;
+    Vector3 closestHit = rayStart; // Set to the same point until changed
+    for (Vector3 hitPos : hitPositions)
+    {
+        float dist = Vector3Distance(rayStart, hitPos);
+        if (Vector3Distance(rayStart, hitPos) < closestHitDist)
+        {
+            closestHit = hitPos;
+            closestHitDist = dist;
+        }
+    }
+
+    rayCollision.point = closestHit;
 }

@@ -10,7 +10,7 @@ public:
     void Update();
 
 private:
-    Player player;
+    std::shared_ptr<Player> player;
 
     World world;
 };

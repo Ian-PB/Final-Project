@@ -52,6 +52,9 @@ public:
 	bool IsDirty() const { return dirty; }
 	void SetDirty() { dirty = true; }
 
+	Mesh GetMesh() const { return mesh; }
+	Vector3 GetPosition() const { return position; }
+
 private:
 	bool dirty = false;
 

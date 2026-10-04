@@ -1,12 +1,16 @@
 #pragma once
 #include <raylib.h>
 
+class World;
+
 class Player
 {
 public:
+	Player(const World& t_world);
 	void Init();
 
 	void Update();
+	void Draw();
 
 	Camera& GetCameraRef() { return camera; }
 private:
@@ -22,5 +26,14 @@ private:
 	float cameraSensitivity = 0.003f;
 	float cameraYaw = 0.0f;
 	float cameraPitch = 0.0f;
+
+	// Ray from camera
+	void ShootRay();
+	Ray ray;
+	Vector3 rayStart;
+	RayCollision rayCollision;
+
+	const World& WORLD;
 };
 
+#include "World.h"

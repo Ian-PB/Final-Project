@@ -9,6 +9,12 @@
 
 class World
 {
+// Needs to be before the getChunks function
+private:
+	static const int WIDTH = 5;
+	static const int HEIGHT = 5;
+	static const int DEPTH = 5;
+
 public:
 	World();
 	~World();
@@ -17,14 +23,14 @@ public:
 	void Draw();
 	void Update();
 
+	Vector3 GetDimensions() const { return { WIDTH, HEIGHT, DEPTH }; }
+	const Chunk& GetChunk(int x, int y, int z) const { return chunks[x][y][z]; }
+
 private:
 	void UpdateChunks();
 
 	// World Dimensions
 	int totalChunks = 0;
-	static const int WIDTH = 5;
-	static const int HEIGHT = 5;
-	static const int DEPTH = 5;
 	Chunk chunks[WIDTH][HEIGHT][DEPTH];
 
 	float surfaceLevel = 0.0f;
