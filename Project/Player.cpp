@@ -25,9 +25,9 @@ void Player::Draw()
 {
     if (rayCollision.hit)
     {
-        DrawSphere(rayStart, 0.2f, GREEN); // Start point
-        DrawSphere(rayCollision.point, 0.5f, RED); // End point
-        DrawLine3D(rayStart, rayCollision.point, RED);
+        DrawSphere(rayStart, 0.2f, { 230, 41, 55, 100 }); // Start point
+        DrawSphere(rayCollision.point, 0.5f, { 230, 41, 55, 100 }); // End point
+        DrawLine3D(rayStart, rayCollision.point, { 230, 41, 55, 100 });
     }
 }
 
