@@ -19,6 +19,8 @@ void Player::Update()
 
     if (IsMouseButtonReleased(0))
         ShootRay();
+    if (IsMouseButtonReleased(1))
+        breaking = !breaking;
 }
 
 void Player::Draw()
@@ -168,5 +170,5 @@ void Player::ShootRay()
     rayCollision.point = closestHit;
 
     // Destroy hitPos of mesh
-    WORLD.EditSphere(closestHit, rayRadius);
+    WORLD.EditSphere(closestHit, rayRadius, breaking);
 }
