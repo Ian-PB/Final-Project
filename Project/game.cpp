@@ -20,6 +20,7 @@ void Game::Draw()
 
     EndMode3D();
 
+    player->Draw2D();
     DrawFPS(0, 0);
     // Crossair
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);

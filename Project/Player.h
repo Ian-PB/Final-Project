@@ -11,6 +11,7 @@ public:
 
 	void Update();
 	void Draw();
+	void Draw2D();
 
 	Camera& GetCameraRef() { return camera; }
 private:
@@ -21,7 +22,7 @@ private:
 
 	Vector3 position;
 	Vector3 forward;
-	float moveSpeed = 5.0f;
+	float moveSpeed = 10.0f;
 
 	float cameraSensitivity = 0.003f;
 	float cameraYaw = 0.0f;
@@ -34,6 +35,7 @@ private:
 	RayCollision rayCollision;
 	bool breaking = true;
 	float rayRadius = 20.0f;
+	float radiusChange = 0.5f;
 
 	World& WORLD;
 };

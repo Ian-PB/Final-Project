@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <raymath.h>
+#include <string>
 
 Player::Player(World& t_world) : WORLD(t_world)
 {
@@ -21,6 +22,17 @@ void Player::Update()
         ShootRay();
     if (IsMouseButtonReleased(1))
         breaking = !breaking;
+
+    // Scroll to increase or decrease ray
+    float scroll = GetMouseWheelMove();
+    if (scroll > 0.0f)
+        rayRadius += radiusChange;
+    else if (scroll < 0.0f)
+    {
+        rayRadius -= radiusChange;
+        if (rayRadius < 0.0f) // Clamp
+            rayRadius = 0.0f;
+    }
 }
 
 void Player::Draw()
@@ -34,6 +46,17 @@ void Player::Draw()
         // Temp destruction sphere
         DrawSphereWires(rayCollision.point, rayRadius, 10, 10, RED);
     }
+}
+
+void Player::Draw2D()
+{
+    if (breaking)
+        DrawText("Breaking", 0, 25, 16, RED);
+    else
+        DrawText("Building", 0, 25, 16, GREEN);
+
+    std::string radiusText = "Radius: " + std::to_string(rayRadius);
+    DrawText(radiusText.c_str(), 0, 42, 10, WHITE);
 }
 
 void Player::SetupCamera()
