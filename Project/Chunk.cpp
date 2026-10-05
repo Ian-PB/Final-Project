@@ -153,12 +153,14 @@ void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 			{
 				int i = x * SIZE * SIZE + y * SIZE + z;
 
-				if (Vector3Distance(points[i].position, t_pos) <= t_radius)
+				Vector3 pointWorldPos = Vector3Add(position, points[i].position);
+				if (Vector3Distance(pointWorldPos, t_pos) <= t_radius)
 				{
+					std::cout << "DESTROYING" << std::endl;
 					if (destroy)
-						points[i].density = -1.0f;
-					else
 						points[i].density = 1.0f;
+					else
+						points[i].density = -1.0f;
 				}
 			}
 		}

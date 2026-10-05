@@ -26,9 +26,14 @@ public:
 	Vector3 GetDimensions() const { return { WIDTH, HEIGHT, DEPTH }; }
 	const Chunk& GetChunk(int x, int y, int z) const { return chunks[x][y][z]; }
 	Chunk& GetChunkFromWorldPos(Vector3 t_pos);
+	int GetChunkIndexFromWorldPos(Vector3 t_pos);
+	int GetFlatIndex(int x, int y, int z) { return (x * (HEIGHT * DEPTH) + y * DEPTH + z); }
+
+	// World editting
+	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
 private:
-	void UpdateChunks();
+	void UpdateAllChunks();
 
 	// World Dimensions
 	int totalChunks = 0;

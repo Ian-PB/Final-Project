@@ -2,6 +2,7 @@
 #include <mutex>
 #include <math.h>
 #include <algorithm>
+#include <raymath.h>
 
 World::World()
 {
@@ -78,7 +79,7 @@ void World::Update()
         if (jobsRemaining == 0)
         {
             // Awake all workers
-            UpdateChunks();
+            UpdateAllChunks();
             completeRebuild = false;
         }
     }
@@ -162,8 +163,70 @@ Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
     return chunks[x][y][z];
 }
 
+int World::GetChunkIndexFromWorldPos(Vector3 t_pos)
+{
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+
+    // Get indexes
+    int x = (int)std::floor(t_pos.x / chunkSize);
+    int y = (int)std::floor(t_pos.y / chunkSize);
+    int z = (int)std::floor(t_pos.z / chunkSize);
+
+    // Make sure the indexes are within the world
+    x = std::clamp(x, 0, WIDTH - 1);
+    y = std::clamp(y, 0, HEIGHT - 1);
+    z = std::clamp(z, 0, DEPTH - 1);
+
+    return GetFlatIndex(x, y, z);
+}
+
+void World::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
+{
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+    
+    int minX = (int)std::floor((t_pos.x - t_radius) / chunkSize);
+    int minY = (int)std::floor((t_pos.y - t_radius) / chunkSize);
+    int minZ = (int)std::floor((t_pos.z - t_radius) / chunkSize);
+
+    int maxX = (int)std::floor((t_pos.x + t_radius) / chunkSize);
+    int maxY = (int)std::floor((t_pos.y + t_radius) / chunkSize);
+    int maxZ = (int)std::floor((t_pos.z + t_radius) / chunkSize);
+
+    // Keep within the world borders
+    minX = std::clamp(minX, 0, WIDTH - 1);
+    minY = std::clamp(minY, 0, HEIGHT - 1);
+    minZ = std::clamp(minZ, 0, DEPTH - 1);
+
+    maxX = std::clamp(maxX, 0, WIDTH - 1);
+    maxY = std::clamp(maxY, 0, HEIGHT - 1);
+    maxZ = std::clamp(maxZ, 0, DEPTH - 1);
+
+    // Loop through the possible positions and update the chunks the sphere is withn
+    for (int x = minX; x <= maxX; x++)
+    {
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int z = minZ; z <= maxZ; z++)
+            {
+                Chunk& chunkToChange = chunks[x][y][z];;
+                chunkToChange.EditSphere(t_pos, t_radius, destroy);
+
+                int chunkToChangeIndex = GetFlatIndex(x, y, z);
+
+                { // Protect variables in multi-threading
+                    std::lock_guard<std::mutex> lock(jobMutex);
+                    chunksThatNeedWork.push(chunkToChangeIndex);
+                    jobsRemaining++;
+                }
+            }
+        }
+    }
+
+    jobCondition.notify_one();
+}
+
 // Allows for splitting the work to different threads
-void World::UpdateChunks()
+void World::UpdateAllChunks()
 {
     if (jobsRemaining > 0)
         return;

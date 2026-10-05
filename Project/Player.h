@@ -32,6 +32,7 @@ private:
 	Ray ray;
 	Vector3 rayStart;
 	RayCollision rayCollision;
+	float rayRadius = 2.0f;
 
 	World& WORLD;
 };

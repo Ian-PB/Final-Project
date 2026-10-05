@@ -28,6 +28,9 @@ void Player::Draw()
         DrawSphere(rayStart, 0.2f, { 230, 41, 55, 100 }); // Start point
         DrawSphere(rayCollision.point, 0.5f, { 230, 41, 55, 100 }); // End point
         DrawLine3D(rayStart, rayCollision.point, { 230, 41, 55, 100 });
+
+        // Temp destruction sphere
+        DrawSphereWires(rayCollision.point, rayRadius, 10, 10, RED);
     }
 }
 
@@ -165,6 +168,5 @@ void Player::ShootRay()
     rayCollision.point = closestHit;
 
     // Destroy hitPos of mesh
-    Chunk& chunkHit = WORLD.GetChunkFromWorldPos(closestHit);
-    chunkHit.EditSphere(closestHit, 5);
+    WORLD.EditSphere(closestHit, rayRadius);
 }
