@@ -38,7 +38,7 @@ class Chunk
 {
 public:
 	Chunk();
-	void Init(FastNoiseLite* t_noise);
+	void Init(FastNoiseLite* t_noise, Shader* t_shader);
 	void Draw();
 	void Update();
 
@@ -84,6 +84,9 @@ private:
 
 	// Noise
 	FastNoiseLite* noise;
+
+	// Shaders
+	Shader* shader;
 
 	// Debug
 	bool showDebugPoints = false;

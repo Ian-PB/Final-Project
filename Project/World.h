@@ -33,6 +33,8 @@ public:
 	// World editting
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
+	void SetShaderLightPos(Vector3 t_pos);
+
 private:
 	void UpdateAllChunks();
 
@@ -43,6 +45,9 @@ private:
 	float surfaceLevel = 0.0f;
 
 	bool completeRebuild = false;
+
+	// Shader
+	Shader lightingShader;
 
 	// Noise
 	void SetupNoise();

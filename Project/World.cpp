@@ -33,6 +33,7 @@ World::~World()
 void World::Init()
 {
     SetupNoise();
+    lightingShader = LoadShader("resources/Shaders/default.vs", "resources/Shaders/default.fs");
 
     for (int x = 0; x < WIDTH; x++)
     {
@@ -42,7 +43,7 @@ void World::Init()
             {
                 Vector3 newPos = { chunks[x][y][z].GetChunkSize() * x, chunks[x][y][z].GetChunkSize() * y, chunks[x][y][z].GetChunkSize() * z };
                 chunks[x][y][z].SetPosition(newPos);
-                chunks[x][y][z].Init(&noise);
+                chunks[x][y][z].Init(&noise, &lightingShader);
             }
         }
     }
@@ -227,6 +228,12 @@ void World::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
     }
 
     jobCondition.notify_one();
+}
+
+void World::SetShaderLightPos(Vector3 t_pos)
+{
+    int lightPosLocation = GetShaderLocation(lightingShader, "lightPos");
+    SetShaderValue(lightingShader, lightPosLocation, &t_pos, SHADER_UNIFORM_VEC3);
 }
 
 // Allows for splitting the work to different threads

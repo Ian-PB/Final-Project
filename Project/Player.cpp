@@ -138,6 +138,8 @@ void Player::Movement()
     // Set position to the camera
     camera.position = position;
     camera.target = Vector3Add(camera.position, forward);
+
+    WORLD.SetShaderLightPos(position);
 }
 
 void Player::ShootRay()

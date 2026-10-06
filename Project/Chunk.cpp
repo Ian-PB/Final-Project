@@ -6,11 +6,12 @@
 
 Chunk::Chunk()
 {
-
 }
 
-void Chunk::Init(FastNoiseLite* t_noise)
+void Chunk::Init(FastNoiseLite* t_noise, Shader* t_shader)
 {
+	shader = t_shader;
+
 	noise = t_noise;
 	Mesh sphereMesh = GenMeshSphere(0.1f, 5, 5);
 	pointModel = LoadModelFromMesh(sphereMesh);
@@ -38,7 +39,7 @@ void Chunk::Draw()
 		}
 
 	DrawModel(model, position, 1.0f, GRAY);
-	DrawModelWires(model, position, 1.0f, LIGHTGRAY);
+	// DrawModelWires(model, position, 1.0f, LIGHTGRAY);
 }
 
 void Chunk::Update()
@@ -78,6 +79,7 @@ void Chunk::ApplyMeshDataToModel()
 	// Upload Mesh and apply to Model
 	UploadMesh(&mesh, true);
 	model = LoadModelFromMesh(mesh);
+	model.materials[0].shader = *shader;
 
 	// No longer needs a change
 	dirty = false;
