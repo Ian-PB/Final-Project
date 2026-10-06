@@ -236,6 +236,12 @@ void World::SetShaderLightPos(Vector3 t_pos)
     SetShaderValue(lightingShader, lightPosLocation, &t_pos, SHADER_UNIFORM_VEC3);
 }
 
+void World::SetShaderViewPos(Vector3 t_pos)
+{
+    int viewPosLocation = GetShaderLocation(lightingShader, "viewPos");
+    SetShaderValue(lightingShader, viewPosLocation, &t_pos, SHADER_UNIFORM_VEC3);
+}
+
 // Allows for splitting the work to different threads
 void World::UpdateAllChunks()
 {

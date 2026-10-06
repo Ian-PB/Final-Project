@@ -38,6 +38,9 @@ private:
 	float radiusChange = 0.5f;
 
 	World& WORLD;
+
+	// Debug
+	bool displayDebugElements = false;
 };
 
 #include "World.h"

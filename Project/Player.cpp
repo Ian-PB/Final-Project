@@ -15,6 +15,10 @@ void Player::Init()
 
 void Player::Update()
 {
+    // Enable / disable debug
+    if (IsKeyReleased(KEY_F1))
+        displayDebugElements = !displayDebugElements;
+
     CameraLook();
     Movement();
 
@@ -37,7 +41,7 @@ void Player::Update()
 
 void Player::Draw()
 {
-    if (rayCollision.hit)
+    if (rayCollision.hit && displayDebugElements)
     {
         DrawSphere(rayStart, 0.2f, { 230, 41, 55, 100 }); // Start point
         DrawSphere(rayCollision.point, 0.5f, { 230, 41, 55, 100 }); // End point
