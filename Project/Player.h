@@ -44,7 +44,9 @@ private:
 	bool displayDebugElements = false;
 
 	Light& light;
-	Light& testLight;
+
+	void SetRandLight(Vector3 pos);
+	Light& randLight;
 };
 
 #include "World.h"

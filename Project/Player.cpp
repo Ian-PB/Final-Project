@@ -2,7 +2,7 @@
 #include <raymath.h>
 #include <string>
 
-Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), testLight(Lighting::CreateLight(GREEN))
+Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), randLight(Lighting::CreateLight(WHITE))
 {
     SetupCamera();
     rayCollision.distance = 9999.0f;
@@ -11,6 +11,7 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
 
 void Player::Init()
 {
+    randLight.strength = 5.0f;
 }
 
 void Player::Update()
@@ -41,15 +42,21 @@ void Player::Update()
 
 void Player::Draw()
 {
-    if (rayCollision.hit && displayDebugElements)
+    if (rayCollision.hit)
     {
-        DrawSphere(rayStart, 0.2f, { 230, 41, 55, 100 }); // Start point
-        DrawSphere(rayCollision.point, 0.5f, { 230, 41, 55, 100 }); // End point
-        DrawLine3D(rayStart, rayCollision.point, { 230, 41, 55, 100 });
+        if (displayDebugElements)
+        {
+            DrawSphere(rayStart, 0.2f, { 230, 41, 55, 100 }); // Start point
+            DrawSphere(rayCollision.point, 0.5f, { 230, 41, 55, 100 }); // End point
+            DrawLine3D(rayStart, rayCollision.point, { 230, 41, 55, 100 });
 
-        // Temp destruction sphere
-        DrawSphereWires(rayCollision.point, rayRadius, 10, 10, RED);
+            // Temp destruction sphere
+            DrawSphereWires(rayCollision.point, rayRadius, 10, 10, RED);
+        }
+
+        DrawSphere(rayCollision.point, 0.2, randLight.color);
     }
+
 }
 
 void Player::Draw2D()
@@ -144,10 +151,6 @@ void Player::Movement()
     camera.target = Vector3Add(camera.position, forward);
 
     light.position = position;
-
-    Vector3 testLightPos = position;
-    testLightPos.x += 10.0f;
-    testLight.position = testLightPos;
 }
 
 void Player::ShootRay()
@@ -201,7 +204,34 @@ void Player::ShootRay()
     }
 
     rayCollision.point = closestHit;
+    SetRandLight(rayCollision.point);
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);
+}
+
+void Player::SetRandLight(Vector3 pos)
+{
+    randLight.position = pos;
+
+    int randColor = rand() % 5;
+
+    switch (randColor)
+    {
+    case 0:
+        randLight.color = RED;
+        break;
+    case 1:
+        randLight.color = GREEN;
+        break;
+    case 2:
+        randLight.color = BLUE;
+        break;
+    case 3:
+        randLight.color = PURPLE;
+        break;
+    case 4:
+        randLight.color = GOLD;
+        break;
+    }
 }
