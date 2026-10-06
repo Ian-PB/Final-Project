@@ -209,8 +209,8 @@ void World::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
             for (int z = minZ; z <= maxZ; z++)
             {
                 Chunk& chunkToChange = chunks[x][y][z];;
-                // If the chunk is being changed currently dont do anything
-                if (!chunkToChange.TrySetDirty())
+                // If the chunk is being changed currently don't do anything
+                if (chunkToChange.IsDirty() )
                     continue;
 
                 chunkToChange.EditSphere(t_pos, t_radius, destroy);

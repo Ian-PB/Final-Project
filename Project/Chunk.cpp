@@ -85,6 +85,8 @@ void Chunk::ApplyMeshDataToModel()
 
 void Chunk::GenerateMeshData(float t_surfaceLevel)
 {
+	dirty = true;
+
 	meshData.vertices.clear();
 	meshData.normals.clear();
 
@@ -139,15 +141,6 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 	}
 
 	meshData.currentVertexCount = (int)meshData.vertices.size();
-
-	dirty = true;
-}
-
-bool Chunk::TrySetDirty()
-{
-	bool expected = false;
-	// If dirty is false set to true (atomicly)
-	return dirty.compare_exchange_strong(expected, true);
 }
 
 void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)

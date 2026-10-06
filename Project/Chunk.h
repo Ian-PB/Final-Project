@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include "FastNoiseLite.h"
-#include <atomic>
+
 
 struct Triangle
 {
@@ -50,7 +50,7 @@ public:
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
 	bool IsDirty() const { return dirty; }
-	bool TrySetDirty();
+	void SetDirty() { dirty = true; }
 
 	Mesh GetMesh() const { return mesh; }
 	Vector3 GetPosition() const { return position; }
@@ -58,7 +58,7 @@ public:
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
 private:
-	std::atomic<bool> dirty = false;
+	bool dirty = false;
 
 	void SetupPoints();
 	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
