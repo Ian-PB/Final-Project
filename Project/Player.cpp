@@ -2,7 +2,7 @@
 #include <raymath.h>
 #include <string>
 
-Player::Player(World& t_world) : WORLD(t_world)
+Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), testLight(Lighting::CreateLight(GREEN))
 {
     SetupCamera();
     rayCollision.distance = 9999.0f;
@@ -143,7 +143,11 @@ void Player::Movement()
     camera.position = position;
     camera.target = Vector3Add(camera.position, forward);
 
-    WORLD.SetShaderLightPos(position);
+    light.position = position;
+
+    Vector3 testLightPos = position;
+    testLightPos.x += 10.0f;
+    testLight.position = testLightPos;
 }
 
 void Player::ShootRay()

@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MarchingTables.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="Lighting.h" />
     <ClInclude Include="MarchingTables.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="World.h" />

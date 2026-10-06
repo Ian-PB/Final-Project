@@ -282,7 +282,7 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 
 Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel)
 {
-	double wayAlongEdge;
+	float wayAlongEdge;
 	Vector3 smoothedPoint;
 
 	if (abs(t_surfaceLevel - valp1) < 0.00001)

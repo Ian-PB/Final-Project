@@ -33,10 +33,6 @@ public:
 	// World editting
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
-	// Shaders
-	void SetShaderLightPos(Vector3 t_pos);
-	void SetShaderViewPos(Vector3 t_pos);
-
 private:
 	void UpdateAllChunks();
 

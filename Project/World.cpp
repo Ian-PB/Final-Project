@@ -3,6 +3,7 @@
 #include <math.h>
 #include <algorithm>
 #include <raymath.h>
+#include "Lighting.h"
 
 World::World()
 {
@@ -61,6 +62,7 @@ void World::Draw()
 
 void World::Update()
 {
+    Lighting::SendToShader(lightingShader);
     KeyboardInputs();
 
     for (int x = 0; x < WIDTH; x++)
@@ -228,18 +230,6 @@ void World::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
     }
 
     jobCondition.notify_one();
-}
-
-void World::SetShaderLightPos(Vector3 t_pos)
-{
-    int lightPosLocation = GetShaderLocation(lightingShader, "lightPos");
-    SetShaderValue(lightingShader, lightPosLocation, &t_pos, SHADER_UNIFORM_VEC3);
-}
-
-void World::SetShaderViewPos(Vector3 t_pos)
-{
-    int viewPosLocation = GetShaderLocation(lightingShader, "viewPos");
-    SetShaderValue(lightingShader, viewPosLocation, &t_pos, SHADER_UNIFORM_VEC3);
 }
 
 // Allows for splitting the work to different threads

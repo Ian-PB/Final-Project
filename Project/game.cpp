@@ -3,10 +3,12 @@
 
 void Game::Init()
 {
+    Lighting::Init();
     world.Init();
 
     player = std::make_shared<Player>(world);
     player->Init();
+
 }
 
 void Game::Draw()

@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include "Lighting.h"
 
 class World;
 
@@ -41,6 +42,9 @@ private:
 
 	// Debug
 	bool displayDebugElements = false;
+
+	Light& light;
+	Light& testLight;
 };
 
 #include "World.h"
