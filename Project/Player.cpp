@@ -18,7 +18,7 @@ void Player::Update()
     CameraLook();
     Movement();
 
-    if (IsMouseButtonReleased(0))
+    if (IsMouseButtonDown(0))
         ShootRay();
     if (IsMouseButtonReleased(1))
         breaking = !breaking;

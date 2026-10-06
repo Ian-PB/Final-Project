@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include "FastNoiseLite.h"
-
+#include <atomic>
 
 struct Triangle
 {
@@ -50,7 +50,7 @@ public:
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
 	bool IsDirty() const { return dirty; }
-	void SetDirty() { dirty = true; }
+	bool TrySetDirty();
 
 	Mesh GetMesh() const { return mesh; }
 	Vector3 GetPosition() const { return position; }
@@ -58,7 +58,7 @@ public:
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
 private:
-	bool dirty = false;
+	std::atomic<bool> dirty = false;
 
 	void SetupPoints();
 	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
@@ -77,10 +77,10 @@ private:
 
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
 
-	static const int SIZE = 10; // Amount of points in each direction
+	static const int SIZE = 20; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
-	float pointSpacing = 1.5f;
+	float pointSpacing = 1.0f;
 
 	// Noise
 	FastNoiseLite* noise;

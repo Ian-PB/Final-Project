@@ -143,6 +143,13 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 	dirty = true;
 }
 
+bool Chunk::TrySetDirty()
+{
+	bool expected = false;
+	// If dirty is false set to true (atomicly)
+	return dirty.compare_exchange_strong(expected, true);
+}
+
 void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 {
 	for (int x = 0; x < SIZE; x++)

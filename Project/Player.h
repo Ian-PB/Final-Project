@@ -34,7 +34,7 @@ private:
 	Vector3 rayStart;
 	RayCollision rayCollision;
 	bool breaking = true;
-	float rayRadius = 20.0f;
+	float rayRadius = 2.0f;
 	float radiusChange = 0.5f;
 
 	World& WORLD;
