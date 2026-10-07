@@ -125,7 +125,7 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 					cubeSection.val[i] = points[index].density;
 				}
 
-				std::vector<Triangle> triangles = GetMeshVerticesForSection(cubeSection, t_surfaceLevel);
+				GetMeshVerticesForSection(cubeSection, t_surfaceLevel);
 
 				for (const Triangle& tri : triangles)
 				{
@@ -208,9 +208,9 @@ void Chunk::UpdateDensities()
 	}
 }
 
-std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel)
+void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel)
 {
-	std::vector<Triangle> triangles;
+	triangles.clear();
 	Vector3 vertlist[12] = {};
 
 	int cubeindex = 0;
@@ -226,7 +226,7 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 
 	// Cube is entirely in/out of the surface 
 	if (MarchingTables::EDGE_TABLE[cubeindex] == 0)
-		return triangles; // Returns empty
+		return; // Returns empty
 
 	// Find the vertices where the surface intersects the cube
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 1)
@@ -276,8 +276,6 @@ std::vector<Triangle> Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection
 
 		triangles.push_back(tri);
 	}
-
-	return triangles;
 }
 
 Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel)

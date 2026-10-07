@@ -66,7 +66,7 @@ private:
 	bool dirty = false;
 
 	void SetupPoints();
-	std::vector<Triangle> GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
+	void GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
 	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel);
 	static void SetTriangleNormal(Triangle& tri);
 
@@ -77,6 +77,7 @@ private:
 
 	MeshData meshData;
 	Mesh mesh;
+	std::vector<Triangle> triangles;
 	Model model;
 	Model pointModel;
 
