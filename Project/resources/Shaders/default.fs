@@ -1,3 +1,7 @@
+// Resources used to learn lighting:
+// https://learnopengl.com/Lighting/Basic-Lighting
+// Intensity equation found and editted from: https://www.youtube.com/watch?v=JB4d1yXZ-yA
+
 #version 330
 #define MAX_LIGHTS 50
 
