@@ -20,6 +20,8 @@ void Player::Init()
 
 void Player::Update()
 {
+    CollisionDetection();
+
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
         displayDebugElements = !displayDebugElements;
@@ -42,24 +44,6 @@ void Player::Update()
         rayRadius -= radiusChange;
         if (rayRadius < 0.0f) // Clamp
             rayRadius = 0.0f;
-    }
-
-    // Temp collision check
-    const Chunk& chunk = WORLD.GetChunkFromWorldPos(position);
-
-    // Get chunks transform position
-    Matrix transform = MatrixTranslate(
-        chunk.GetPosition().x,
-        chunk.GetPosition().y,
-        chunk.GetPosition().z
-    );
-
-    Vector3 newPos;
-    bool hit = collider.CheckCollision(chunk.GetMesh(), transform, newPos);
-
-    if (hit)
-    {
-        std::cout << "HIT" << std::endl;
     }
 }
 
@@ -232,6 +216,30 @@ void Player::ShootRay()
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);
+}
+
+void Player::CollisionDetection()
+{
+    // Temp collision check
+    const Chunk& chunk = WORLD.GetChunkFromWorldPos(position);
+
+    // Get chunks transform position
+    Matrix transform = MatrixTranslate(
+        chunk.GetPosition().x,
+        chunk.GetPosition().y,
+        chunk.GetPosition().z
+    );
+
+    Vector3 newPos;
+    bool hit = collider.CheckCollision(chunk.GetMesh(), transform, newPos);
+
+    if (hit)
+    {
+        position = newPos;
+        collider.SetPos(position);
+
+        std::cout << "HIT" << std::endl;
+    }
 }
 
 void Player::SetRandLight(Vector3 pos)

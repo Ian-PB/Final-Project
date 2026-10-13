@@ -44,6 +44,7 @@ private:
 
 	World& WORLD;
 
+	void CollisionDetection();
 	CylinderCollider collider;
 	float height = 3.0f;
 	float radius = 1.0f;

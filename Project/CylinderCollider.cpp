@@ -8,14 +8,21 @@ const float CylinderCollider::MAX_COLLISION_DISTANCE = 0.1f;
 
 bool CylinderCollider::CheckCollision(Mesh t_mesh, Matrix t_matrix, Vector3& t_fixedPos)
 {
+    t_fixedPos = position;
+
     GetRays();
 
     for (int i = 0; i < rays.size(); i++)
     {
-        RayCollision rayCollison = GetRayCollisionMesh(rays[i], t_mesh, t_matrix);
+        RayCollision rayCollision = GetRayCollisionMesh(rays[i], t_mesh, t_matrix);
 
-        if (rayCollison.hit && rayCollison.distance <= MAX_COLLISION_DISTANCE)
+        if (rayCollision.hit && rayCollision.distance <= MAX_COLLISION_DISTANCE)
         {
+            float correction = MAX_COLLISION_DISTANCE - rayCollision.distance;
+            Vector3 pushDirection = Vector3Negate(rays[i].direction);
+
+            t_fixedPos = Vector3Add(position, Vector3Scale(pushDirection, correction));
+
             return true;
         }
     }
