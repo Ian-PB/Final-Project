@@ -9,7 +9,7 @@ void Game::Init()
     player = std::make_shared<Player>(world);
     player->Init();
 
-    world.InitColliders(&player->GetPosRef());
+    world.InitColliders(player->GetPosRef());
 }
 
 void Game::Draw()

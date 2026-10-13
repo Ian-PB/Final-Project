@@ -37,7 +37,7 @@ class Chunk
 public:
 	Chunk();
 	void Init(FastNoiseLite* t_noise, Shader* t_shader);
-	void InitCollider(Vector3* playerPos);
+	void InitCollider(Vector3& playerPos);
 	void Draw();
 	void Update();
 

@@ -19,9 +19,9 @@ void Chunk::Init(FastNoiseLite* t_noise, Shader* t_shader)
 	SetupPoints();
 }
 
-void Chunk::InitCollider(Vector3* playerPos)
+void Chunk::InitCollider(Vector3& playerPos)
 {
-	collider.Init(playerPos, GetBounds());
+	collider.Init(playerPos, triangles, position);
 }
 
 void Chunk::Draw()
@@ -45,6 +45,8 @@ void Chunk::Draw()
 
 	DrawModel(model, position, 1.0f, GRAY);
 	// DrawModelWires(model, position, 1.0f, LIGHTGRAY);
+
+	collider.Draw();
 }
 
 void Chunk::Update()
@@ -87,6 +89,8 @@ void Chunk::ApplyMeshDataToModel()
 	UploadMesh(&mesh, true);
 	model = LoadModelFromMesh(mesh);
 	model.materials[0].shader = *shader;
+
+	collider.SetBounds(GetBounds());
 
 	// No longer needs a change
 	dirty = false;

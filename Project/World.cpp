@@ -50,7 +50,7 @@ void World::Init()
     }
 }
 
-void World::InitColliders(Vector3* playerPos)
+void World::InitColliders(Vector3& playerPos)
 {
     for (int x = 0; x < WIDTH; x++)
     {
