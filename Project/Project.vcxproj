@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Chunk.cpp" />
+    <ClCompile Include="CylinderCollider.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="main.cpp" />
@@ -155,6 +156,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chunk.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="CylinderCollider.h" />
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Lighting.h" />
