@@ -50,6 +50,20 @@ void World::Init()
     }
 }
 
+void World::InitColliders(Vector3* playerPos)
+{
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                chunks[x][y][z].InitCollider(playerPos);
+            }
+        }
+    }
+}
+
 void World::Draw()
 {
     for (int x = 0; x < WIDTH; x++)

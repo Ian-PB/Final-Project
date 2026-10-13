@@ -20,6 +20,7 @@ public:
 	~World();
 
 	void Init();
+	void InitColliders(Vector3* playerPos);
 	void Draw();
 	void Update();
 

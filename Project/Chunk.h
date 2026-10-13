@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include "FastNoiseLite.h"
+#include "MeshCollider.h"
 
 // Resources used to research how to do marching cubes:
 // https://www.youtube.com/watch?v=M3iI2l0ltbE 
@@ -9,14 +10,6 @@
 //https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
 // https://paulbourke.net/geometry/polygonise/ 
 
-struct Triangle
-{
-	Vector3 a;
-	Vector3 b;
-	Vector3 c;
-
-	Vector3 normal;
-};
 struct Point
 {
 
@@ -44,6 +37,7 @@ class Chunk
 public:
 	Chunk();
 	void Init(FastNoiseLite* t_noise, Shader* t_shader);
+	void InitCollider(Vector3* playerPos);
 	void Draw();
 	void Update();
 
@@ -59,6 +53,7 @@ public:
 
 	Mesh GetMesh() const { return mesh; }
 	Vector3 GetPosition() const { return position; }
+	BoundingBox GetBounds();
 
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
@@ -87,6 +82,9 @@ private:
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
 	float pointSpacing = 1.0f;
+
+	// Collision
+	MeshCollider collider;
 
 	// Noise
 	FastNoiseLite* noise;

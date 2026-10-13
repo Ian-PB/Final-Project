@@ -20,7 +20,7 @@ void Player::Init()
 
 void Player::Update()
 {
-    CollisionDetection();
+    // CollisionDetection();
 
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))

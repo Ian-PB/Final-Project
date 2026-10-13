@@ -151,6 +151,7 @@
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MarchingTables.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -162,6 +163,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="MarchingTables.h" />
+    <ClInclude Include="MeshCollider.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

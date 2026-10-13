@@ -19,6 +19,11 @@ void Chunk::Init(FastNoiseLite* t_noise, Shader* t_shader)
 	SetupPoints();
 }
 
+void Chunk::InitCollider(Vector3* playerPos)
+{
+	collider.Init(playerPos, GetBounds());
+}
+
 void Chunk::Draw()
 {
 	// Draw points
@@ -46,6 +51,8 @@ void Chunk::Update()
 {
 	if (IsKeyReleased(KEY_P))
 		showDebugPoints = !showDebugPoints;
+
+	collider.Update();
 }
 
 void Chunk::ApplyMeshDataToModel()
@@ -89,6 +96,8 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 {
 	dirty = true;
 
+	triangles.clear();
+
 	meshData.vertices.clear();
 	meshData.normals.clear();
 
@@ -126,23 +135,33 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 				}
 
 				GetMeshVerticesForSection(cubeSection, t_surfaceLevel);
-
-				for (const Triangle& tri : triangles)
-				{
-					meshData.vertices.push_back(tri.a);
-					meshData.vertices.push_back(tri.b);
-					meshData.vertices.push_back(tri.c);
-
-					// All vertices get same normal (flat shading)
-					meshData.normals.push_back(tri.normal);
-					meshData.normals.push_back(tri.normal);
-					meshData.normals.push_back(tri.normal);
-				}
 			}
 		}
 	}
 
+	for (const Triangle& tri : triangles)
+	{
+		meshData.vertices.push_back(tri.a);
+		meshData.vertices.push_back(tri.b);
+		meshData.vertices.push_back(tri.c);
+
+		// All vertices get same normal (flat shading)
+		meshData.normals.push_back(tri.normal);
+		meshData.normals.push_back(tri.normal);
+		meshData.normals.push_back(tri.normal);
+	}
+
 	meshData.currentVertexCount = (int)meshData.vertices.size();
+}
+
+BoundingBox Chunk::GetBounds()
+{
+	BoundingBox bounds = GetMeshBoundingBox(mesh);
+
+	bounds.min = Vector3Add(bounds.min, position);
+	bounds.max = Vector3Add(bounds.max, position);
+
+	return bounds;
 }
 
 void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
@@ -210,7 +229,6 @@ void Chunk::UpdateDensities()
 
 void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel)
 {
-	triangles.clear();
 	Vector3 vertlist[12] = {};
 
 	int cubeindex = 0;

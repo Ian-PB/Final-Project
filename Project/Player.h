@@ -17,6 +17,7 @@ public:
 	void Draw2D();
 
 	Camera& GetCameraRef() { return camera; }
+	Vector3& GetPosRef() { return position; }
 private:
 	Vector3 GetCameraPos() { return Vector3Add(collider.GetPos(), cameraPosOffset); }
 	void SetupCamera();

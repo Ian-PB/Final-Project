@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Colliders">
+      <UniqueIdentifier>{be0862fb-b848-4568-ab6b-b8b858ffb46c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Colliders">
+      <UniqueIdentifier>{9af3f950-71c2-4c09-94a2-b3eb23a85eaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,7 +43,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CylinderCollider.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Source Files\Colliders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,11 +71,14 @@
     <ClInclude Include="Lighting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Collider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CylinderCollider.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.h">
+      <Filter>Header Files\Colliders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
