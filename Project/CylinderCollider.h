@@ -16,7 +16,12 @@ private:
 	float height;
 	float radius;
 
-	std::vector<Vector3> circleDivisionOffsets; // How much offset the object's center
+	std::vector<Vector3> bottomCircleDivisionOffsets; // How much offset the object's center
+	std::vector<Vector3> topCircleDivisionOffsets; // How much offset the object's center
 	std::vector<Vector3> heightDivisionOffsets;	// How much offset the object's center
+	std::vector<Vector3> directionsAway;
+
+	static const Vector3 RAY_UP_DIR;
+	static const Vector3 RAY_DOWN_DIR;
 };
 

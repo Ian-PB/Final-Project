@@ -2,8 +2,19 @@
 #include <iostream>
 #include <raymath.h>
 
+const Vector3 CylinderCollider::RAY_UP_DIR = { 0.0f, 1.0f, 0.0f };
+const Vector3 CylinderCollider::RAY_DOWN_DIR = { 0.0f, -1.0f, 0.0f };
+
 bool CylinderCollider::CheckCollision(Mesh& t_mesh, Vector3& t_fixedPos)
 {
+    // Check collisions upwards
+    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, topCircleDivisionOffsets[i]);
+    }
+
+
     return false;
 }
 
@@ -19,10 +30,16 @@ void CylinderCollider::Draw()
     DrawSphere(position, DEBUG_POINT_RADIUS, PINK);
     DrawSphere({position.x, position.y + height, position.z}, DEBUG_POINT_RADIUS, PINK);
 
-    // Draw points on sphere
-    for (int i = 0; i < circleDivisionOffsets.size(); i++)
+    // Draw points on top circle
+    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
     {
-        Vector3 pointPos = Vector3Add(position, circleDivisionOffsets[i]);
+        Vector3 pointPos = Vector3Add(position, topCircleDivisionOffsets[i]);
+        DrawSphere(pointPos, DEBUG_POINT_RADIUS, BLUE);
+    }
+    // Draw points on bottom circle
+    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
+    {
+        Vector3 pointPos = Vector3Add(position, bottomCircleDivisionOffsets[i]);
         DrawSphere(pointPos, DEBUG_POINT_RADIUS, BLUE);
     }
 
@@ -39,7 +56,8 @@ void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
     radius = t_r;
     slices = t_slices;
 
-    circleDivisionOffsets.clear();
+    bottomCircleDivisionOffsets.clear();
+    topCircleDivisionOffsets.clear();
     heightDivisionOffsets.clear();
 
     // Make sure slices are at least greater than 3 to make a square;
@@ -65,7 +83,19 @@ void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
             offset.x = cosf(angle) * radius;
             offset.z = sinf(angle) * radius;
 
-            circleDivisionOffsets.push_back(offset);
+            if (h == 0)
+                topCircleDivisionOffsets.push_back(offset);
+            else
+                bottomCircleDivisionOffsets.push_back(offset);
+
+            // This is to stop duplicates on the directions away
+
+            if (h != 0)
+                continue;
+
+            // Directions away
+            Vector3 dir = Vector3Normalize({ offset.x, 0.0f, offset.z });
+            directionsAway.push_back(dir);
         }
     }
 
