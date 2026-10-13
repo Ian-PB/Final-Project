@@ -1,7 +1,6 @@
 #pragma once
 #include "World.h"
 #include "Player.h"
-#include "CylinderCollider.h"
 
 class Game
 {
@@ -12,7 +11,6 @@ public:
 
 private:
     std::shared_ptr<Player> player;
-    CylinderCollider collider;
 
     World world;
 };

@@ -4,24 +4,21 @@
 
 const Vector3 CylinderCollider::RAY_UP_DIR = { 0.0f, 1.0f, 0.0f };
 const Vector3 CylinderCollider::RAY_DOWN_DIR = { 0.0f, -1.0f, 0.0f };
+const float CylinderCollider::MAX_COLLISION_DISTANCE = 0.1f;
 
-bool CylinderCollider::CheckCollision(Mesh& t_mesh, Vector3& t_fixedPos)
+bool CylinderCollider::CheckCollision(Mesh t_mesh, Matrix t_matrix, Vector3& t_fixedPos)
 {
-    // Check collisions upwards
-    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
-    {
-        Ray ray;
-        ray.position = Vector3Add(position, topCircleDivisionOffsets[i]);
-        ray.direction = RAY_UP_DIR;
-    }
-    // Check collisions downwards
-    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
-    {
-        Ray ray;
-        ray.position = Vector3Add(position, bottomCircleDivisionOffsets[i]);
-        ray.direction = RAY_DOWN_DIR;
-    }
+    GetRays();
 
+    for (int i = 0; i < rays.size(); i++)
+    {
+        RayCollision rayCollison = GetRayCollisionMesh(rays[i], t_mesh, t_matrix);
+
+        if (rayCollison.hit && rayCollison.distance <= MAX_COLLISION_DISTANCE)
+        {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -31,31 +28,8 @@ void CylinderCollider::Draw()
     if (IsKeyReleased(KEY_F1))
         debugMode = !debugMode;
 
-    if (!debugMode)
-        return;
-
-    DrawCylinderWires(position, radius, radius, height, slices, GREEN);
-    DrawSphere(position, DEBUG_POINT_RADIUS, PINK);
-    DrawSphere({position.x, position.y + height, position.z}, DEBUG_POINT_RADIUS, PINK);
-
-    // Draw points on top circle
-    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
-    {
-        Vector3 pointPos = Vector3Add(position, topCircleDivisionOffsets[i]);
-        DrawSphere(pointPos, DEBUG_POINT_RADIUS, BLUE);
-    }
-    // Draw points on bottom circle
-    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
-    {
-        Vector3 pointPos = Vector3Add(position, bottomCircleDivisionOffsets[i]);
-        DrawSphere(pointPos, DEBUG_POINT_RADIUS, BLUE);
-    }
-
-    for (int i = 0; i < heightDivisionOffsets.size(); i++)
-    {
-        Vector3 pointPos = Vector3Add(position, heightDivisionOffsets[i]);
-        DrawSphere(pointPos, DEBUG_POINT_RADIUS, RED);
-    }
+    if (debugMode)
+        DrawDebug();
 }
 
 void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
@@ -67,6 +41,7 @@ void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
     bottomCircleDivisionOffsets.clear();
     topCircleDivisionOffsets.clear();
     heightDivisionOffsets.clear();
+    directionsAway.clear();
 
     // Make sure slices are at least greater than 3 to make a square;
     if (slices < 3)
@@ -97,7 +72,6 @@ void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
                 bottomCircleDivisionOffsets.push_back(offset);
 
             // This is to stop duplicates on the directions away
-
             if (h != 0)
                 continue;
 
@@ -118,5 +92,105 @@ void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
         {
             heightDivisionOffsets.push_back({ topCircleDivisionOffsets[endPoint].x, y, topCircleDivisionOffsets[endPoint].z });
         }
+    }
+}
+
+void CylinderCollider::DrawDebug()
+{
+    // Wires
+    DrawCylinderWires(position, radius, radius, height, slices, GREEN);
+
+    // Draw points on top circle
+    DrawPoints();
+
+    // Draw rays
+    DrawRays();
+}
+
+void CylinderCollider::DrawPoints()
+{
+    // Draw points on top and bottom
+    DrawSphere(position, DEBUG_POINT_RADIUS, PINK);
+    DrawSphere({ position.x, position.y + height, position.z }, DEBUG_POINT_RADIUS, PINK);
+
+    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
+    {
+        Vector3 pointPos = Vector3Add(position, topCircleDivisionOffsets[i]);
+        DrawSphere(pointPos, DEBUG_POINT_RADIUS, BLUE);
+    }
+    // Draw points on bottom circle
+    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
+    {
+        Vector3 pointPos = Vector3Add(position, bottomCircleDivisionOffsets[i]);
+        DrawSphere(pointPos, DEBUG_POINT_RADIUS, BLUE);
+    }
+    // Draw points along height
+    for (int i = 0; i < heightDivisionOffsets.size(); i++)
+    {
+        Vector3 pointPos = Vector3Add(position, heightDivisionOffsets[i]);
+        DrawSphere(pointPos, DEBUG_POINT_RADIUS, RED);
+    }
+}
+
+void CylinderCollider::DrawRays()
+{
+    // Top ring
+    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, topCircleDivisionOffsets[i]);
+        ray.direction = RAY_UP_DIR;
+        DrawRay(ray, BLUE);
+    }
+    // Bottom ring
+    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, bottomCircleDivisionOffsets[i]);
+        ray.direction = RAY_DOWN_DIR;
+        DrawRay(ray, BLUE);
+    }
+    // Along height
+    for (int i = 0; i < heightDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, heightDivisionOffsets[i]);
+        int dirIndex = (int)(i % slices);
+        ray.direction = directionsAway[dirIndex];
+        DrawRay(ray, RED);
+    }
+}
+
+void CylinderCollider::GetRays()
+{
+    rays.clear();
+
+    // Check collisions upwards
+    for (int i = 0; i < topCircleDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, topCircleDivisionOffsets[i]);
+        ray.direction = RAY_UP_DIR;
+
+        rays.push_back(ray);
+    }
+    // Check collisions downwards
+    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, bottomCircleDivisionOffsets[i]);
+        ray.direction = RAY_DOWN_DIR;
+
+        rays.push_back(ray);
+    }
+    // Along height
+    for (int i = 0; i < heightDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, heightDivisionOffsets[i]);
+        int dirIndex = (int)(i % slices);
+        ray.direction = directionsAway[dirIndex];
+
+        rays.push_back(ray);
     }
 }

@@ -1,10 +1,12 @@
 #include "Player.h"
 #include <raymath.h>
 #include <string>
+#include <iostream>
 
 Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), randLight(Lighting::CreateLight(WHITE))
 {
     SetupCamera();
+    position = collider.GetPos();
     rayCollision.distance = 9999.0f;
     rayCollision.hit = false;
 }
@@ -12,6 +14,8 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
 void Player::Init()
 {
     randLight.strength = 5.0f;
+    collider.Setup(height, radius);
+    cameraPosOffset.y = height;
 }
 
 void Player::Update()
@@ -32,11 +36,30 @@ void Player::Update()
     float scroll = GetMouseWheelMove();
     if (scroll > 0.0f)
         rayRadius += radiusChange;
+
     else if (scroll < 0.0f)
     {
         rayRadius -= radiusChange;
         if (rayRadius < 0.0f) // Clamp
             rayRadius = 0.0f;
+    }
+
+    // Temp collision check
+    const Chunk& chunk = WORLD.GetChunkFromWorldPos(position);
+
+    // Get chunks transform position
+    Matrix transform = MatrixTranslate(
+        chunk.GetPosition().x,
+        chunk.GetPosition().y,
+        chunk.GetPosition().z
+    );
+
+    Vector3 newPos;
+    bool hit = collider.CheckCollision(chunk.GetMesh(), transform, newPos);
+
+    if (hit)
+    {
+        std::cout << "HIT" << std::endl;
     }
 }
 
@@ -57,6 +80,7 @@ void Player::Draw()
         DrawSphere(rayCollision.point, 0.2, randLight.color);
     }
 
+    collider.Draw();
 }
 
 void Player::Draw2D()
@@ -72,8 +96,7 @@ void Player::Draw2D()
 
 void Player::SetupCamera()
 {
-    position = { 0.0f, 2.0f, 4.0f };
-    camera.position = position;                         // Camera position
+    camera.position = GetCameraPos();                         // Camera position
     camera.target = { 0.0f, 2.0f, 0.0f };               // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };                   // Camera up vector (rotation towards target)
     camera.fovy = 60.0f;                                // Camera field-of-view Y
@@ -97,7 +120,7 @@ void Player::CameraLook()
     cameraPitch = Clamp(cameraPitch, -1.5f, 1.5f);
 
     forward = { cosf(cameraPitch) * sinf(cameraYaw), sinf(cameraPitch), cosf(cameraPitch) * cosf(cameraYaw) };
-    camera.target = Vector3Add(position, forward); // Face in new direction (forward)
+    camera.target = Vector3Add(GetCameraPos(), forward); // Face in new direction (forward)
 
     Vector2 screenCenter =
     {
@@ -147,7 +170,8 @@ void Player::Movement()
     }
 
     // Set position to the camera
-    camera.position = position;
+    collider.SetPos(position);
+    camera.position = GetCameraPos();
     camera.target = Vector3Add(camera.position, forward);
 
     light.position = position;
@@ -157,7 +181,7 @@ void Player::ShootRay()
 {
     rayCollision.hit = false;
     rayCollision.distance = 9999.0f;
-    rayStart = position;
+    rayStart = GetCameraPos();
 
     // Get the chunks array from world
     Vector3 worldDimensions = WORLD.GetDimensions();

@@ -8,8 +8,6 @@ void Game::Init()
 
     player = std::make_shared<Player>(world);
     player->Init();
-
-    collider.Setup(3, 1);
 }
 
 void Game::Draw()
@@ -20,8 +18,6 @@ void Game::Draw()
 
         world.Draw();
         player->Draw();
-
-        collider.Draw();
 
     EndMode3D();
 

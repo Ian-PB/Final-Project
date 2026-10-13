@@ -1,6 +1,8 @@
 #pragma once
 #include <raylib.h>
+#include <raymath.h>
 #include "Lighting.h"
+#include "CylinderCollider.h"
 
 class World;
 
@@ -16,10 +18,12 @@ public:
 
 	Camera& GetCameraRef() { return camera; }
 private:
+	Vector3 GetCameraPos() { return Vector3Add(collider.GetPos(), cameraPosOffset); }
 	void SetupCamera();
 	void CameraLook();
 	void Movement();
 	Camera camera;
+	Vector3 cameraPosOffset = { 0.0f, 0.0f, 0.0f }; // Setup in Init()
 
 	Vector3 position;
 	Vector3 forward;
@@ -39,6 +43,10 @@ private:
 	float radiusChange = 0.5f;
 
 	World& WORLD;
+
+	CylinderCollider collider;
+	float height = 3.0f;
+	float radius = 1.0f;
 
 	// Debug
 	bool displayDebugElements = false;
