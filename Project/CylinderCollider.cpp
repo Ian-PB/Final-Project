@@ -12,6 +12,14 @@ bool CylinderCollider::CheckCollision(Mesh& t_mesh, Vector3& t_fixedPos)
     {
         Ray ray;
         ray.position = Vector3Add(position, topCircleDivisionOffsets[i]);
+        ray.direction = RAY_UP_DIR;
+    }
+    // Check collisions downwards
+    for (int i = 0; i < bottomCircleDivisionOffsets.size(); i++)
+    {
+        Ray ray;
+        ray.position = Vector3Add(position, bottomCircleDivisionOffsets[i]);
+        ray.direction = RAY_DOWN_DIR;
     }
 
 
@@ -106,9 +114,9 @@ void CylinderCollider::Setup(float t_h, float t_r, int t_slices)
         float y = (height * i) / slices;
 
         // Only go through half since if not it will make doubles of each point
-        for (int endPoint = 0; endPoint < circleDivisionOffsets.size() / 2; endPoint++)
+        for (int endPoint = 0; endPoint < topCircleDivisionOffsets.size(); endPoint++)
         {
-            heightDivisionOffsets.push_back({ circleDivisionOffsets[endPoint].x, y, circleDivisionOffsets[endPoint].z });
+            heightDivisionOffsets.push_back({ topCircleDivisionOffsets[endPoint].x, y, topCircleDivisionOffsets[endPoint].z });
         }
     }
 }
