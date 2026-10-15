@@ -20,7 +20,6 @@ void Player::Init()
 
 void Player::Update()
 {
-    CollisionDetection();
 
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
@@ -33,6 +32,8 @@ void Player::Update()
         ShootRay();
     if (IsMouseButtonReleased(1))
         breaking = !breaking;
+
+    CollisionDetection();
 
     // Scroll to increase or decrease ray
     float scroll = GetMouseWheelMove();
