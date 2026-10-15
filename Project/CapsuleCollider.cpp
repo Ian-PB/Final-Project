@@ -245,7 +245,7 @@ CollisionInfo CapsuleCollider::CapsuleTriangle(Vector3 t_start, Vector3 t_end, c
 
 CollisionInfo CapsuleCollider::CheckAgainstTriangles(const std::vector<Triangle>& t_triangles)
 {
-    CollisionInfo collisionInfo;
+    CollisionInfo deepestCollision;
     // Position represents bottom of capsule
     Vector3 start = position;
     start.y += radius;
@@ -255,12 +255,13 @@ CollisionInfo CapsuleCollider::CheckAgainstTriangles(const std::vector<Triangle>
 
     for (const Triangle& tri : t_triangles)
     {
-        collisionInfo = CapsuleTriangle(start, end, tri);
-        if (collisionInfo.hit)
+        CollisionInfo collisionInfo = CapsuleTriangle(start, end, tri);
+
+        if (collisionInfo.hit && (collisionInfo.penetration > deepestCollision.penetration))
         {
-            return collisionInfo;
+            deepestCollision = collisionInfo;
         }
     }
 
-    return collisionInfo;
+    return deepestCollision;
 }
