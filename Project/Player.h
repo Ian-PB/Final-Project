@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include "Lighting.h"
-#include "CylinderCollider.h"
+#include "CapsuleCollider.h"
 
 class World;
 
@@ -46,7 +46,7 @@ private:
 	World& WORLD;
 
 	void CollisionDetection();
-	CylinderCollider collider;
+	CapsuleCollider collider;
 	float height = 3.0f;
 	float radius = 1.0f;
 
@@ -57,6 +57,8 @@ private:
 
 	void SetRandLight(Vector3 pos);
 	Light& randLight;
+
+	int hitTimes = 0;
 };
 
 #include "World.h"

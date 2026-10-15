@@ -10,7 +10,10 @@ void MeshCollider::Init(Vector3& t_trackedPos, std::vector<Triangle>& t_triangle
 
 void MeshCollider::Draw()
 {
-	if (!active)
+	if (IsKeyReleased(KEY_F1))
+		debugMode = !debugMode;
+
+	if (!active || !debugMode)
 		return;
 
 	for (const Triangle& t : activeTriangles)

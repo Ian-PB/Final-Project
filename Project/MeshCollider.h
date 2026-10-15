@@ -1,15 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
-
-struct Triangle
-{
-	Vector3 a;
-	Vector3 b;
-	Vector3 c;
-
-	Vector3 normal;
-};
+#include "Collider.h"
 
 class MeshCollider
 {
@@ -18,6 +10,8 @@ public:
 	void Draw();
 	void Update();
 
+	std::vector<Triangle>& GetTriangles() { return activeTriangles; }
+
 	void SetBounds(BoundingBox t_bounds) { bounds = t_bounds; }
 	bool TargetWithinBounds();
 
@@ -25,6 +19,7 @@ public:
 
 private:
 	bool active = false;
+	bool debugMode = false;
 
 	Vector3* position = nullptr;
 	BoundingBox bounds;

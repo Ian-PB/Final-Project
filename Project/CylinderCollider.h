@@ -5,7 +5,7 @@
 class CylinderCollider : public Collider
 {
 public:
-	virtual bool CheckCollision(Mesh t_mesh, Matrix t_matrix, Vector3& t_fixedPos) override;
+	virtual bool CheckCollision(Mesh t_mesh, Matrix t_matrix, Vector3& t_fixedPos);
 	virtual void Draw() override;
 
 	void Setup(float t_h, float t_r, int t_slices = 8);

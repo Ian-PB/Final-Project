@@ -48,6 +48,9 @@
     <ClCompile Include="MeshCollider.cpp">
       <Filter>Source Files\Colliders</Filter>
     </ClCompile>
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="MeshCollider.h">
+      <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleCollider.h">
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
   </ItemGroup>

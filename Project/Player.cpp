@@ -15,12 +15,12 @@ void Player::Init()
 {
     randLight.strength = 5.0f;
     collider.Setup(height, radius);
-    cameraPosOffset.y = height;
+    cameraPosOffset.y = height * 0.8f;
 }
 
 void Player::Update()
 {
-    // CollisionDetection();
+    CollisionDetection();
 
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
@@ -230,15 +230,12 @@ void Player::CollisionDetection()
         chunk.GetPosition().z
     );
 
-    Vector3 newPos;
-    bool hit = collider.CheckCollision(chunk.GetMesh(), transform, newPos);
+    bool hit = collider.CheckAgainstTriangles(chunk.GetCollider().GetTriangles());
 
     if (hit)
     {
-        position = newPos;
-        collider.SetPos(position);
-
-        std::cout << "HIT" << std::endl;
+        hitTimes++;
+        std::cout << "HIT: " << hitTimes << std::endl;
     }
 }
 

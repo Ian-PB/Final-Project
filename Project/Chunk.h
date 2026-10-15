@@ -55,6 +55,8 @@ public:
 	Vector3 GetPosition() const { return position; }
 	BoundingBox GetBounds();
 
+	MeshCollider GetCollider() const { return collider; }
+
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
 private:
