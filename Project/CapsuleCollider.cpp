@@ -15,9 +15,13 @@ void CapsuleCollider::Draw()
 
     if (debugMode)
     {
+        Vector3 start = position;
+        start.y += radius;
+
         Vector3 end = position;
-        end.y += height;
-        DrawCapsuleWires(position, end, radius, 10, 10, GREEN);
+        end.y += std::max(radius, height - radius);
+
+        DrawCapsuleWires(start, end, radius, 10, 10, GREEN);
         DrawSphere(position, 0.02f, PINK);
     }
 }
@@ -77,13 +81,13 @@ Vector3 CapsuleCollider::ClosestPointToTriangle(Vector3 t_point, Vector3 t_triA,
     return Vector3Add(t_triA, Vector3Add(Vector3Scale(ab, v), Vector3Scale(ac, w)));
 }
 
-float CapsuleCollider::ShortestSegmentToSegmentDistSq(Vector3 p1, Vector3 q1, Vector3 p2, Vector3 q2)
+float CapsuleCollider::ShortestSegmentToSegmentDistSq(Vector3 t_p1, Vector3 t_q1, Vector3 t_p2, Vector3 t_q2, Vector3& t_closest1, Vector3& t_closest2)
 {
     const float EPS = 0.000001f;
 
-    Vector3 d1 = Vector3Subtract(q1, p1);
-    Vector3 d2 = Vector3Subtract(q2, p2);
-    Vector3 r = Vector3Subtract(p1, p2);
+    Vector3 d1 = Vector3Subtract(t_q1, t_p1);
+    Vector3 d2 = Vector3Subtract(t_q2, t_p2);
+    Vector3 r = Vector3Subtract(t_p1, t_p2);
 
     float a = Vector3DotProduct(d1, d1);
     float e = Vector3DotProduct(d2, d2);
@@ -93,7 +97,11 @@ float CapsuleCollider::ShortestSegmentToSegmentDistSq(Vector3 p1, Vector3 q1, Ve
     float t = 0.0f;
 
     if (a <= EPS && e <= EPS)
+    {
+        t_closest1 = t_p1;
+        t_closest2 = t_p2;
         return Vector3DotProduct(r, r);
+    }
 
     if (a <= EPS)
     {
@@ -130,55 +138,114 @@ float CapsuleCollider::ShortestSegmentToSegmentDistSq(Vector3 p1, Vector3 q1, Ve
         }
     }
 
-    Vector3 c1 = Vector3Add(p1, Vector3Scale(d1, s));
-    Vector3 c2 = Vector3Add(p2, Vector3Scale(d2, t));
+    t_closest1 = Vector3Add(t_p1, Vector3Scale(d1, s));
+    t_closest2 = Vector3Add(t_p2, Vector3Scale(d2, t));
 
-    return Vector3DistanceSqr(c1, c2);
+    return Vector3DistanceSqr(t_closest1, t_closest2);
 }
 
-bool CapsuleCollider::CapsuleTriangle(Vector3 t_start, Vector3 t_end, const Triangle& tri)
+void CapsuleCollider::TestPoints(Vector3 t_capsulePoint, Vector3 t_trianglePoint, float& t_minDistSq, Vector3& t_closestCapsule, Vector3& t_closestTriangle)
 {
-    float radiusSq = radius * radius;
+    float distSq = Vector3DistanceSqr(t_capsulePoint, t_trianglePoint);
 
-    // Check if segment intersects triangle
-    Vector3 direction = Vector3Subtract(t_end, t_start);
-    float length = Vector3Length(direction);
-
-    if (length > 0.000001f)
+    if (distSq < t_minDistSq)
     {
-        Ray ray;
-        ray.position = t_start;
-        ray.direction = Vector3Scale(direction, 1.0f / length);
+        t_minDistSq = distSq;
+        t_closestCapsule = t_capsulePoint;
+        t_closestTriangle = t_trianglePoint;
+    }
+}
 
-        RayCollision hit = GetRayCollisionTriangle(ray, tri.a, tri.b, tri.c);
+CollisionInfo CapsuleCollider::CapsuleTriangle(Vector3 t_start, Vector3 t_end, const Triangle& tri)
+{
+    CollisionInfo collisionInfo;
+    float radiusSq = radius * radius;
+    float minDistSq = FLT_MAX;
 
-        if (hit.hit && hit.distance <= length)
-            return true;
+    Vector3 closestCapsulePoint = t_start;
+    Vector3 closestTrianglePoint = tri.a;
+
+
+    // Check capsule start point against triangle
+    TestPoints(t_start, ClosestPointToTriangle(t_start, tri.a, tri.b, tri.c), minDistSq, closestCapsulePoint, closestTrianglePoint);
+
+    // Check capsule end point against triangle
+    TestPoints(t_end, ClosestPointToTriangle(t_end, tri.a, tri.b, tri.c), minDistSq, closestCapsulePoint, closestTrianglePoint);
+
+    // Check capsule line segment against triangle edges (lines)
+    Vector3 c1 = { 0.0f, 0.0f, 0.0f };
+    Vector3 c2 = { 0.0f, 0.0f, 0.0f };
+
+    ShortestSegmentToSegmentDistSq(t_start, t_end, tri.a, tri.b, c1, c2);
+    TestPoints(c1, c2, minDistSq, closestCapsulePoint, closestTrianglePoint);
+
+    ShortestSegmentToSegmentDistSq(t_start, t_end, tri.b, tri.c, c1, c2);
+    TestPoints(c1, c2, minDistSq, closestCapsulePoint, closestTrianglePoint);
+
+    ShortestSegmentToSegmentDistSq(t_start, t_end, tri.c, tri.a, c1, c2);
+    TestPoints(c1, c2, minDistSq, closestCapsulePoint, closestTrianglePoint);
+
+    // Check where the capsule segment crosses the triangle
+    Vector3 ab = Vector3Subtract(tri.b, tri.a);
+    Vector3 ac = Vector3Subtract(tri.c, tri.a);
+
+    float normalLength = Vector3Length(tri.normal);
+    
+    if (normalLength > 0.000001f)
+    {
+        Vector3 scaledTriNormal = Vector3Scale(tri.normal, 1.0f / normalLength);
+        float d0 = Vector3DotProduct(Vector3Subtract(t_start, tri.a), scaledTriNormal);
+        float d1 = Vector3DotProduct(Vector3Subtract(t_end, tri.a), scaledTriNormal);
+
+        float denom = d0 - d1;
+
+        if (fabsf(denom) > 0.000001f)
+        {
+            float t = d0 / denom;
+
+            if (t >= 0.0f && t <= 1.0f)
+            {
+                Vector3 crossing = Vector3Lerp(t_start, t_end, t);
+
+                Vector3 pointOnTriangle = ClosestPointToTriangle(crossing, tri.a, tri.b, tri.c);
+
+                TestPoints(crossing, pointOnTriangle, minDistSq, closestCapsulePoint, closestTrianglePoint);
+            }
+        }
     }
 
-    // Check capsule endpoints against triangle face
-    Vector3 p1 = ClosestPointToTriangle(t_start, tri.a, tri.b, tri.c);
+    // Check if no collision
+    if (minDistSq >= radiusSq)
+        return collisionInfo;
 
-    Vector3 p2 = ClosestPointToTriangle(t_end, tri.a, tri.b, tri.c);
+    collisionInfo.hit = true;
 
-    if (Vector3DistanceSqr(t_start, p1) <= radiusSq || Vector3DistanceSqr(t_end, p2) <= radiusSq)
-        return true;
+    // Calculate penetration
+    float dist = sqrtf(minDistSq);
+    collisionInfo.penetration = radius - dist;
 
-    // Check capsule segment against triangle edges
-    if (ShortestSegmentToSegmentDistSq(t_start, t_end, tri.a, tri.b) <= radiusSq)
-        return true;
+    // Get collision normal
+    if (dist > 0.0f)
+    {
+        Vector3 triToCapsule = Vector3Subtract(closestCapsulePoint, closestTrianglePoint);
+        collisionInfo.normal = Vector3Scale(triToCapsule, 1.0f / dist);
+    }
+    else
+    {
+        collisionInfo.normal = tri.normal;
 
-    if (ShortestSegmentToSegmentDistSq(t_start, t_end, tri.b, tri.c) <= radiusSq)
-        return true;
+        // Check if basicly 0
+        if (Vector3LengthSqr(collisionInfo.normal) < 0.000001f)
+            collisionInfo.normal = { 0.0f, 1.0f, 0.0f }; // Default to upwards
+    }
 
-    if (ShortestSegmentToSegmentDistSq(t_start, t_end, tri.c, tri.a) <= radiusSq)
-        return true;
 
-    return false;
+    return collisionInfo;
 }
 
-bool CapsuleCollider::CheckAgainstTriangles(const std::vector<Triangle>& t_triangles)
+CollisionInfo CapsuleCollider::CheckAgainstTriangles(const std::vector<Triangle>& t_triangles)
 {
+    CollisionInfo collisionInfo;
     // Position represents bottom of capsule
     Vector3 start = position;
     start.y += radius;
@@ -188,9 +255,12 @@ bool CapsuleCollider::CheckAgainstTriangles(const std::vector<Triangle>& t_trian
 
     for (const Triangle& tri : t_triangles)
     {
-        if (CapsuleTriangle(start, end, tri))
-            return true;
+        collisionInfo = CapsuleTriangle(start, end, tri);
+        if (collisionInfo.hit)
+        {
+            return collisionInfo;
+        }
     }
 
-    return false;
+    return collisionInfo;
 }

@@ -230,12 +230,16 @@ void Player::CollisionDetection()
         chunk.GetPosition().z
     );
 
-    bool hit = collider.CheckAgainstTriangles(chunk.GetCollider().GetTriangles());
+    CollisionInfo collisionInfo = collider.CheckAgainstTriangles(chunk.GetCollider().GetTriangles());
 
-    if (hit)
+    if (collisionInfo.hit)
     {
-        hitTimes++;
-        std::cout << "HIT: " << hitTimes << std::endl;
+        Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
+        position = Vector3Add(position, correction);
+        camera.position = GetCameraPos();
+        collider.SetPos(position);
+
+        std::cout << "HIT" << std::endl;
     }
 }
 

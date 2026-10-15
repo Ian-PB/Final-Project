@@ -57,8 +57,6 @@ private:
 
 	void SetRandLight(Vector3 pos);
 	Light& randLight;
-
-	int hitTimes = 0;
 };
 
 #include "World.h"
