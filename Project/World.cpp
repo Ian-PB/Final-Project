@@ -180,6 +180,35 @@ Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
     return chunks[x][y][z];
 }
 
+std::vector<Chunk*> World::GetChunksInBounds(BoundingBox t_bounds)
+{
+    std::vector<Chunk*> result;
+
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+
+    // Get the min position
+    int minX = std::max(0, (int)floorf(t_bounds.min.x / chunkSize));
+    int minY = std::max(0, (int)floorf(t_bounds.min.y / chunkSize));
+    int minZ = std::max(0, (int)floorf(t_bounds.min.z / chunkSize));
+    // Get the max position
+    int maxX = std::min(WIDTH - 1, (int)floorf(t_bounds.max.x / chunkSize));
+    int maxY = std::min(HEIGHT - 1, (int)floorf(t_bounds.max.y / chunkSize));
+    int maxZ = std::min(DEPTH - 1, (int)floorf(t_bounds.max.z / chunkSize));
+
+    for (int x = minX; x <= maxX; x++)
+    {
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int z = minZ; z <= maxZ; z++)
+            {
+                result.push_back(&chunks[x][y][z]);
+            }
+        }
+    }
+
+    return result;
+}
+
 int World::GetChunkIndexFromWorldPos(Vector3 t_pos)
 {
     float chunkSize = chunks[0][0][0].GetChunkSize();

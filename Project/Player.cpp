@@ -221,6 +221,10 @@ void Player::ShootRay()
 
 void Player::CollisionDetection()
 {
+    BoundingBox bounds;
+    bounds.min = { position.x - radius, position.y, position.z - radius };
+    bounds.min = { position.x + radius, position.y + radius, position.z + radius };
+
     // Temp collision check
     const Chunk& chunk = WORLD.GetChunkFromWorldPos(position);
 
