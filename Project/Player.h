@@ -47,6 +47,7 @@ private:
 
 	void CollisionDetection();
 	CapsuleCollider collider;
+	static const int MAX_COLLISION_ITERATIONS = 6;
 	float height = 3.0f;
 	float radius = 1.0f;
 

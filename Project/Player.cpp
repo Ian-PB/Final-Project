@@ -231,17 +231,23 @@ void Player::CollisionDetection()
         chunk.GetPosition().z
     );
 
-    CollisionInfo collisionInfo = collider.CheckAgainstTriangles(chunk.GetCollider().GetTriangles());
-
-    if (collisionInfo.hit)
+    for (int i = 0; i < MAX_COLLISION_ITERATIONS; i++)
     {
+        CollisionInfo collisionInfo = collider.CheckAgainstTriangles(chunk.GetCollider().GetTriangles());
+
+        // Leave early if no collision
+        if (!collisionInfo.hit)
+            break;
+
+        // Correct position
         Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
         position = Vector3Add(position, correction);
-        camera.position = GetCameraPos();
         collider.SetPos(position);
-
-        std::cout << "HIT" << std::endl;
     }
+
+    // Update camera after resolving collisions
+    camera.position = GetCameraPos();
+    camera.target = Vector3Add(camera.position, forward);
 }
 
 void Player::SetRandLight(Vector3 pos)
