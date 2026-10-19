@@ -1,8 +1,9 @@
 #pragma once
 #include <raylib.h>
-#include <raymath.h>
 #include "Lighting.h"
 #include "CapsuleCollider.h"
+#include "MainCamera.h"
+#include <memory>
 
 class World;
 
@@ -16,23 +17,15 @@ public:
 	void Draw();
 	void Draw2D();
 
-	Camera& GetCameraRef() { return camera; }
 	Vector3& GetPosRef() { return position; }
+	Camera& GetCameraRef() { return camera->GetCameraRef(); }
 private:
-	Vector3 GetCameraPos() { return Vector3Add(collider.GetPos(), cameraPosOffset); }
-	void SetupCamera();
-	void CameraLook();
 	void Movement();
-	Camera camera;
-	Vector3 cameraPosOffset = { 0.0f, 0.0f, 0.0f }; // Setup in Init()
 
 	Vector3 position;
-	Vector3 forward;
 	float moveSpeed = 10.0f;
 
-	float cameraSensitivity = 0.003f;
-	float cameraYaw = 0.0f;
-	float cameraPitch = 0.0f;
+	std::shared_ptr<MainCamera> camera;
 
 	// Ray from camera
 	void ShootRay();

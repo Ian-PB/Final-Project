@@ -51,6 +51,9 @@
     <ClCompile Include="CapsuleCollider.cpp">
       <Filter>Source Files\Colliders</Filter>
     </ClCompile>
+    <ClCompile Include="MainCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="CapsuleCollider.h">
       <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

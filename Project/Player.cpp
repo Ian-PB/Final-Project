@@ -5,7 +5,6 @@
 
 Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), randLight(Lighting::CreateLight(WHITE))
 {
-    SetupCamera();
     position = collider.GetPos();
     rayCollision.distance = 9999.0f;
     rayCollision.hit = false;
@@ -13,9 +12,11 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
 
 void Player::Init()
 {
+    Vector3 camOffset = { 0.0f, height * 0.8f, 0.0f };
+    camera = std::make_shared<MainCamera>(position, camOffset);
+
     randLight.strength = 5.0f;
     collider.Setup(height, radius);
-    cameraPosOffset.y = height * 0.8f;
 }
 
 void Player::Update()
@@ -25,7 +26,7 @@ void Player::Update()
     if (IsKeyReleased(KEY_F1))
         displayDebugElements = !displayDebugElements;
 
-    CameraLook();
+    camera->Update();
     Movement();
 
     if (IsMouseButtonReleased(0))
@@ -79,48 +80,12 @@ void Player::Draw2D()
     DrawText(radiusText.c_str(), 0, 42, 10, WHITE);
 }
 
-void Player::SetupCamera()
-{
-    camera.position = GetCameraPos();                         // Camera position
-    camera.target = { 0.0f, 2.0f, 0.0f };               // Camera looking at point
-    camera.up = { 0.0f, 1.0f, 0.0f };                   // Camera up vector (rotation towards target)
-    camera.fovy = 60.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
-
-    // Camera initially faces towards -Z
-    cameraYaw = PI;
-    cameraPitch = 0.0f;
-
-    DisableCursor();
-}
-
-void Player::CameraLook()
-{
-    Vector2 mouseDelta = GetMouseDelta();
-
-    cameraYaw -= mouseDelta.x * cameraSensitivity;
-    cameraPitch -= mouseDelta.y * cameraSensitivity;
-
-    // Dont allow the camera to flip upside down
-    cameraPitch = Clamp(cameraPitch, -1.5f, 1.5f);
-
-    forward = { cosf(cameraPitch) * sinf(cameraYaw), sinf(cameraPitch), cosf(cameraPitch) * cosf(cameraYaw) };
-    camera.target = Vector3Add(GetCameraPos(), forward); // Face in new direction (forward)
-
-    Vector2 screenCenter =
-    {
-        GetScreenWidth() / 2.0f,
-        GetScreenHeight() / 2.0f
-    };
-    // Use screenCenter instead of the mouse pos because the mouse is locked
-    ray = GetScreenToWorldRay(screenCenter, camera);
-}
-
 void Player::Movement()
 {
     // Flattened so you dont go in the direction you're facing
-    Vector3 flatForward = { sinf(cameraYaw), 0.0f, cosf(cameraYaw) };
-    Vector3 right = { cosf(cameraYaw), 0.0f, -sinf(cameraYaw) };
+    float yaw = camera->GetYaw();
+    Vector3 flatForward = { sinf(yaw), 0.0f, cosf(yaw) };
+    Vector3 right = { cosf(yaw), 0.0f, -sinf(yaw) };
 
     // Make speed not based off FPS
     float speed = moveSpeed * GetFrameTime();
@@ -156,17 +121,23 @@ void Player::Movement()
 
     // Set position to the camera
     collider.SetPos(position);
-    camera.position = GetCameraPos();
-    camera.target = Vector3Add(camera.position, forward);
 
     light.position = position;
 }
 
 void Player::ShootRay()
 {
+    Vector2 screenCenter =
+    {
+        GetScreenWidth() / 2.0f,
+        GetScreenHeight() / 2.0f
+    };
+    // Use screenCenter instead of the mouse pos because the mouse is locked
+    ray = GetScreenToWorldRay(screenCenter, camera->GetCameraRef());
+
     rayCollision.hit = false;
     rayCollision.distance = 9999.0f;
-    rayStart = GetCameraPos();
+    rayStart = camera->GetPos();
 
     // Get the chunks array from world
     Vector3 worldDimensions = WORLD.GetDimensions();
@@ -246,8 +217,7 @@ void Player::CollisionDetection()
     }
 
     // Update camera after resolving collisions
-    camera.position = GetCameraPos();
-    camera.target = Vector3Add(camera.position, forward);
+    camera->UpdatePos();
 }
 
 void Player::SetRandLight(Vector3 pos)

@@ -151,6 +151,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MarchingTables.cpp" />
     <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Lighting.h" />
+    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MarchingTables.h" />
     <ClInclude Include="MeshCollider.h" />
     <ClInclude Include="Player.h" />
