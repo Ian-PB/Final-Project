@@ -25,7 +25,7 @@ private:
 	BoundingBox bounds;
 
 	Vector3* trackedPos;
-	float trackingRadius = 5.0f;;
+	float trackingRadius = 7.0f;;
 
 	std::vector<Triangle>* allTriangles = nullptr;
 	std::vector<Triangle> activeTriangles;

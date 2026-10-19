@@ -12,8 +12,8 @@ Game game;
 
 int main(void)
 {
-
     InitWindow(screenWidth, screenHeight, "Raylib StarterKit GPPI");
+    ToggleFullscreen();
 
     // Initialise Game
     game.Init();

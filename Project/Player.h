@@ -21,9 +21,17 @@ public:
 	Camera& GetCameraRef() { return camera->GetCameraRef(); }
 private:
 	void Movement();
+	void NormalMovement();
+	// Jumping
+	void Jump();
+	float jumpForce = 0.5f;
 
+	void FreeFly();
+	bool freeFly = true;
+
+	Vector3 velocity = { 0.0f, 0.0f, 0.0f };
 	Vector3 position;
-	float moveSpeed = 10.0f;
+	float moveSpeed = 0.75f;
 
 	std::shared_ptr<MainCamera> camera;
 

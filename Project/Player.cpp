@@ -21,10 +21,11 @@ void Player::Init()
 
 void Player::Update()
 {
-
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
         displayDebugElements = !displayDebugElements;
+    else if (IsKeyReleased(KEY_F2))
+        freeFly = !freeFly;
 
     camera->Update();
     Movement();
@@ -78,9 +79,28 @@ void Player::Draw2D()
 
     std::string radiusText = "Radius: " + std::to_string(rayRadius);
     DrawText(radiusText.c_str(), 0, 42, 10, WHITE);
+
+    DrawText("F2 toggle flying", 0, 55, 10, BLUE);
+    std::string posString = "Pos: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z);
+    DrawText(posString.c_str(), 0, 67, 10, WHITE);
+    std::string velocityString = "Velocity: " + std::to_string(velocity.x) + ", " + std::to_string(velocity.y) + ", " + std::to_string(velocity.z);
+    DrawText(velocityString.c_str(), 0, 80, 10, WHITE);
 }
 
 void Player::Movement()
+{
+    if (freeFly)
+        FreeFly();
+    else
+        NormalMovement();
+
+    // Set position to the camera
+    collider.SetPos(position);
+
+    light.position = position;
+}
+
+void Player::NormalMovement()
 {
     // Flattened so you dont go in the direction you're facing
     float yaw = camera->GetYaw();
@@ -89,6 +109,50 @@ void Player::Movement()
 
     // Make speed not based off FPS
     float speed = moveSpeed * GetFrameTime();
+
+    // Move Forward or Backward
+    if (IsKeyDown(KEY_W))
+    {
+        velocity += Vector3Scale(flatForward, speed);
+    }
+    else if (IsKeyDown(KEY_S))
+    {
+        velocity -= Vector3Scale(flatForward, speed);
+    }
+    // Move Left or Right
+    if (IsKeyDown(KEY_A))
+    {
+        velocity += Vector3Scale(right, speed);
+    }
+    else if (IsKeyDown(KEY_D))
+    {
+        velocity -= Vector3Scale(right, speed);
+    }
+
+    Jump();
+
+    // Temp gravity
+    velocity.y -= 0.02f;
+
+    position = Vector3Add(position, velocity);
+    velocity = Vector3Scale(velocity, 0.9f);
+}
+
+void Player::Jump()
+{
+    if (IsKeyPressed(KEY_SPACE))
+        velocity.y = jumpForce;
+}
+
+void Player::FreeFly()
+{
+    // Flattened so you dont go in the direction you're facing
+    float yaw = camera->GetYaw();
+    Vector3 flatForward = { sinf(yaw), 0.0f, cosf(yaw) };
+    Vector3 right = { cosf(yaw), 0.0f, -sinf(yaw) };
+
+    // Make speed not based off FPS
+    float speed = 10.0f * GetFrameTime();
 
     // Move Forward or Backward
     if (IsKeyDown(KEY_W))
@@ -118,11 +182,6 @@ void Player::Movement()
     {
         position.y -= speed;
     }
-
-    // Set position to the camera
-    collider.SetPos(position);
-
-    light.position = position;
 }
 
 void Player::ShootRay()
