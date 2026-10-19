@@ -69,7 +69,7 @@
               "RelativeDocumentMoniker": "Project\\Player.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeToolTip": "Project\\Player.cpp",
-              "ViewState": "AgIAANwAAAAAAAAAAAAmwOkAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAN8AAAAAAAAAAAAmwOcAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-13T20:38:27.437Z",
               "IsPinned": true,
@@ -97,7 +97,7 @@
               "RelativeDocumentMoniker": "Project\\Chunk.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Chunk.h",
               "RelativeToolTip": "Project\\Chunk.h",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAUwE0AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAUwE8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-10-07T21:53:46.667Z",
               "IsPinned": true,
@@ -114,8 +114,7 @@
               "ViewState": "AgIAAOUAAAAAAAAAAAAUwPkAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-15T16:06:04.983Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -128,8 +127,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-10-15T16:04:35.036Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -141,8 +139,7 @@
               "RelativeToolTip": "Project\\MeshCollider.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-10-15T21:28:21.136Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-10-15T21:28:21.136Z"
             },
             {
               "$type": "Document",
@@ -152,7 +149,7 @@
               "RelativeDocumentMoniker": "Project\\World.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\World.cpp",
               "RelativeToolTip": "Project\\World.cpp",
-              "ViewState": "AgIAAKMAAAAAAAAAAAAmwL0AAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAKMAAAAAAAAAAAAmwLYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-13T22:07:34.627Z",
               "EditorCaption": ""
@@ -165,7 +162,7 @@
               "RelativeDocumentMoniker": "Project\\World.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\World.h",
               "RelativeToolTip": "Project\\World.h",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAmwB0AAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAmwBwAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-10-13T22:07:12.485Z",
               "EditorCaption": ""

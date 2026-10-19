@@ -223,30 +223,26 @@ void Player::CollisionDetection()
 {
     BoundingBox bounds;
     bounds.min = { position.x - radius, position.y, position.z - radius };
-    bounds.min = { position.x + radius, position.y + radius, position.z + radius };
+    bounds.max = { position.x + radius, position.y + radius, position.z + radius };
 
     // Temp collision check
-    const Chunk& chunk = WORLD.GetChunkFromWorldPos(position);
+    std::vector<Chunk*> chunks= WORLD.GetChunksInBounds(bounds);
 
-    // Get chunks transform position
-    Matrix transform = MatrixTranslate(
-        chunk.GetPosition().x,
-        chunk.GetPosition().y,
-        chunk.GetPosition().z
-    );
-
-    for (int i = 0; i < MAX_COLLISION_ITERATIONS; i++)
+    for (const Chunk* chunk : chunks)
     {
-        CollisionInfo collisionInfo = collider.CheckAgainstTriangles(chunk.GetCollider().GetTriangles());
+        for (int i = 0; i < MAX_COLLISION_ITERATIONS; i++)
+        {
+            CollisionInfo collisionInfo = collider.CheckAgainstTriangles(chunk->GetCollider().GetTriangles());
 
-        // Leave early if no collision
-        if (!collisionInfo.hit)
-            break;
+            // Leave early if no collision
+            if (!collisionInfo.hit)
+                break;
 
-        // Correct position
-        Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
-        position = Vector3Add(position, correction);
-        collider.SetPos(position);
+            // Correct position
+            Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
+            position = Vector3Add(position, correction);
+            collider.SetPos(position);
+        }
     }
 
     // Update camera after resolving collisions
