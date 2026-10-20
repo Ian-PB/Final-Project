@@ -48,6 +48,23 @@ void World::Init()
             }
         }
     }
+
+    // Make world
+    noiseSeed = (int)(rand() % 9999);
+    noise.SetSeed(noiseSeed);
+    completeRebuild = true;
+
+    // Reset densities
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                chunks[x][y][z].UpdateDensities();
+            }
+        }
+    }
 }
 
 void World::InitColliders(Vector3& playerPos)

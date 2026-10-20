@@ -4,6 +4,8 @@
 #include "CapsuleCollider.h"
 #include "MainCamera.h"
 #include <memory>
+#include <vector>
+#include "Chunk.h"
 
 class World;
 
@@ -20,10 +22,18 @@ public:
 	Vector3& GetPosRef() { return position; }
 	Camera& GetCameraRef() { return camera->GetCameraRef(); }
 private:
+
 	void Movement();
 	void NormalMovement();
+	void GroundCheck();
+
+	void UpdateOccupiedChunks();
+	std::vector<Chunk*> occupiedChunks;
+
 	// Jumping
 	void Jump();
+	Ray groundCheckRay;
+	bool canJump;
 	float jumpForce = 0.5f;
 
 	void FreeFly();
@@ -37,9 +47,9 @@ private:
 
 	// Ray from camera
 	void ShootRay();
-	Ray ray;
-	Vector3 rayStart;
-	RayCollision rayCollision;
+	Ray shootRay;
+	Vector3 shootRayStart;
+	RayCollision shootRayCollision;
 	bool breaking = true;
 	float rayRadius = 2.0f;
 	float radiusChange = 0.5f;
