@@ -22,19 +22,41 @@ public:
 	Vector3& GetPosRef() { return position; }
 	Camera& GetCameraRef() { return camera->GetCameraRef(); }
 private:
+	void UpdatePositions();
 
 	void Movement();
 	void NormalMovement();
-	void GroundCheck();
+
+	void RayChecks();
+	void CeilingCheck(const Triangle& tri);
+	void GroundCheck(const Triangle& tri);
 
 	void UpdateOccupiedChunks();
 	std::vector<Chunk*> occupiedChunks;
 
 	// Jumping
-	void Jump();
+	struct JumpInfo
+	{
+		bool CheckJump(Vector3& t_velocity);
+		void UpdateJump(float t_yPos);
+		bool canJump;
+		bool isJumping;
+
+		float jumpForce = 0.25f;
+	};
+	JumpInfo jump;
 	Ray groundCheckRay;
-	bool canJump;
-	float jumpForce = 0.5f;
+	bool isGrounded;
+	float rayHeightDist;
+	const float RAY_EXTENTION = 0.25f;
+
+	Ray aboveCheckRay;
+
+	// Gravity
+	bool gravityOn = true;
+	float gravityForce = 0.6f;
+	const float MAX_DOWNWARD_FORCE = -0.75f;
+	const float DRAG = 0.9f;
 
 	void FreeFly();
 	bool freeFly = true;

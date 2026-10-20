@@ -10,10 +10,13 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     shootRayCollision.hit = false;
 
     groundCheckRay.direction = { 0.0f, -1.0f, 0.0f };
+    aboveCheckRay.direction = { 0.0f, 1.0f, 0.0f };
 }
 
 void Player::Init()
 {
+    rayHeightDist = height / 2.0f + RAY_EXTENTION;
+
     Vector3 camOffset = { 0.0f, height * 0.8f, 0.0f };
     camera = std::make_shared<MainCamera>(position, camOffset);
 
@@ -90,10 +93,29 @@ void Player::Draw2D()
     std::string velocityString = "Velocity: " + std::to_string(velocity.x) + ", " + std::to_string(velocity.y) + ", " + std::to_string(velocity.z);
     DrawText(velocityString.c_str(), 0, 80, 10, WHITE);
 
-    if (canJump)
+    if (jump.canJump)
         DrawText("canJump", 0, 100, 16, GREEN);
     else
         DrawText("canJump", 0, 100, 16, RED);
+
+    if (isGrounded)
+        DrawText("isGrounded", 0, 120, 16, GREEN);
+    else
+        DrawText("isGrounded", 0, 120, 16, RED);
+}
+
+void Player::UpdatePositions()
+{
+    // Collider
+    collider.SetPos(position);
+
+    // Rays
+    Vector3 bodyCenter = { position.x, position.y + height / 2.0f, position.z };
+    groundCheckRay.position = bodyCenter;
+    aboveCheckRay.position = bodyCenter;
+
+    // Light
+    light.position = position;
 }
 
 void Player::Movement()
@@ -103,26 +125,23 @@ void Player::Movement()
         FreeFly();
     else
     {
-        GroundCheck();
+        RayChecks();
         NormalMovement();
     }
 
-    // Set position to the camera
-    collider.SetPos(position);
-    groundCheckRay.position = position;
-    groundCheckRay.position.y += height / 2.0f; // Middle of body
-    light.position = position;
+    UpdatePositions();
 }
 
 void Player::NormalMovement()
 {
+    float deltaTime = GetFrameTime();
     // Flattened so you dont go in the direction you're facing
     float yaw = camera->GetYaw();
     Vector3 flatForward = { sinf(yaw), 0.0f, cosf(yaw) };
     Vector3 right = { cosf(yaw), 0.0f, -sinf(yaw) };
 
     // Make speed not based off FPS
-    float speed = moveSpeed * GetFrameTime();
+    float speed = moveSpeed * deltaTime;
 
     // Move Forward or Backward
     if (IsKeyDown(KEY_W))
@@ -143,18 +162,28 @@ void Player::NormalMovement()
         velocity -= Vector3Scale(right, speed);
     }
 
-    Jump();
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        jump.CheckJump(velocity);
+    }
 
-    // Temp gravity
-    velocity.y -= 0.02f;
+    // Gravity
+    if (!isGrounded)
+    {
+        velocity.y -= gravityForce * deltaTime;
+        if (velocity.y < MAX_DOWNWARD_FORCE)
+            velocity.y = MAX_DOWNWARD_FORCE;
+    }
 
     position = Vector3Add(position, velocity);
-    velocity = Vector3Scale(velocity, 0.9f);
+
+    velocity.x *= DRAG;
+    velocity.z *= DRAG;
 }
 
-void Player::GroundCheck()
+void Player::RayChecks()
 {
-    float groundDistance = height / 2.0f + 0.15f;
+    isGrounded = false;
 
     for (const Chunk* chunk : occupiedChunks)
     {
@@ -162,15 +191,36 @@ void Player::GroundCheck()
 
         for (const Triangle& t : tris)
         {
-            RayCollision groundRay = GetRayCollisionTriangle(groundCheckRay, t.a, t.b, t.c);
-            if (groundRay.hit && groundRay.distance <= groundDistance) // Is groundeed
-            {
-                // Refresh jump
-                canJump = true;
-                return;
-            }
+            GroundCheck(t);
+            CeilingCheck(t);
         }
+    }
+}
 
+void Player::CeilingCheck(const Triangle& tri)
+{
+    RayCollision ray = GetRayCollisionTriangle(aboveCheckRay, tri.a, tri.b, tri.c);
+    if (ray.hit && ray.distance <= rayHeightDist) // Hit roof
+    {
+        // Stop upward momentum of roof hit
+        velocity.y = 0.0f;
+        jump.isJumping = false;
+    }
+}
+
+void Player::GroundCheck(const Triangle& tri)
+{
+    RayCollision groundRay = GetRayCollisionTriangle(groundCheckRay, tri.a, tri.b, tri.c);
+
+    if (groundRay.hit && groundRay.distance <= rayHeightDist) // Is groundeed
+    {
+        // Refresh jump
+        isGrounded = true;
+        jump.canJump = true;
+
+        // Only if moving downwards
+        if (velocity.y < 0.0f)
+            velocity.y = 0.0f;
     }
 }
 
@@ -183,18 +233,6 @@ void Player::UpdateOccupiedChunks()
     // Save chunks that are occupied
     occupiedChunks.clear();
     occupiedChunks = WORLD.GetChunksInBounds(bounds);
-}
-
-void Player::Jump()
-{
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        if (canJump)
-        {
-            canJump = false;
-            velocity.y = jumpForce;
-        }
-    }
 }
 
 void Player::FreeFly()
@@ -349,4 +387,18 @@ void Player::SetRandLight(Vector3 pos)
         randLight.color = GOLD;
         break;
     }
+}
+
+bool Player::JumpInfo::CheckJump(Vector3& t_velocity)
+{
+    if (canJump)
+    {
+        canJump = false;
+        t_velocity.y += jumpForce;
+        isJumping = true;
+
+        return true;
+    }
+
+    return false;
 }
