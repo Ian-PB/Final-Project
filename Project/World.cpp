@@ -357,6 +357,7 @@ void World::KeyboardInputs()
     }
 }
 
+// FastNoiseLite is a library I added
 void World::SetupNoise()
 {
     noiseSeed = (int)(rand() % 9999);

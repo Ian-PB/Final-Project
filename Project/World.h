@@ -49,7 +49,7 @@ private:
 	// Shader
 	Shader lightingShader;
 
-	// Noise
+	// Noise (FastNoiseLite is a library I added)
 	void SetupNoise();
 	FastNoiseLite noise;
 	float frequency = 0.1f;

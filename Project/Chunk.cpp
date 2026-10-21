@@ -8,6 +8,7 @@ Chunk::Chunk()
 {
 }
 
+// FastNoiseLite is a library I added
 void Chunk::Init(FastNoiseLite* t_noise, Shader* t_shader)
 {
 	shader = t_shader;
@@ -96,6 +97,11 @@ void Chunk::ApplyMeshDataToModel()
 	dirty = false;
 }
 
+// Resources used to research how to do marching cubes:
+// https://www.youtube.com/watch?v=M3iI2l0ltbE 
+// https://mclark45.medium.com/marching-cubes-algorithm-618302629331 
+//https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
+// https://paulbourke.net/geometry/polygonise/ 
 void Chunk::GenerateMeshData(float t_surfaceLevel)
 {
 	dirty = true;
@@ -231,6 +237,11 @@ void Chunk::UpdateDensities()
 	}
 }
 
+// Resources used to research how to do marching cubes:
+// https://www.youtube.com/watch?v=M3iI2l0ltbE 
+// https://mclark45.medium.com/marching-cubes-algorithm-618302629331 
+//https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
+// https://paulbourke.net/geometry/polygonise/ 
 void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel)
 {
 	Vector3 vertlist[12] = {};
@@ -300,6 +311,11 @@ void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surface
 	}
 }
 
+// Resources used to research how to do marching cubes:
+// https://www.youtube.com/watch?v=M3iI2l0ltbE 
+// https://mclark45.medium.com/marching-cubes-algorithm-618302629331 
+// https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
+// https://paulbourke.net/geometry/polygonise/ 
 Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel)
 {
 	float wayAlongEdge;

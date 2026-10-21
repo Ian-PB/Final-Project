@@ -1,11 +1,6 @@
 #pragma once
 #include <raylib.h>
 
-// Sources I saw after doing the cylinder collider: 
-// https://blog.bearcats.nl/capsule-triangle-sweep/
-// https://cseweb.ucsd.edu/classes/sp19/cse291-d/Files/CSE291_13_CollisionDetection.pdf
-// http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf
-
 struct Triangle
 {
 	Vector3 a;

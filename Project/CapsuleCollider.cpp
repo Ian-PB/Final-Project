@@ -26,6 +26,11 @@ void CapsuleCollider::Draw()
     }
 }
 
+
+// Sources of research and editted code
+// https://blog.bearcats.nl/capsule-triangle-sweep/
+// https://cseweb.ucsd.edu/classes/sp19/cse291-d/Files/CSE291_13_CollisionDetection.pdf
+// http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf
 Vector3 CapsuleCollider::ClosestPointToTriangle(Vector3 t_point, Vector3 t_triA, Vector3 t_triB, Vector3 t_triC)
 {
     Vector3 ab = Vector3Subtract(t_triB, t_triA);
@@ -81,6 +86,10 @@ Vector3 CapsuleCollider::ClosestPointToTriangle(Vector3 t_point, Vector3 t_triA,
     return Vector3Add(t_triA, Vector3Add(Vector3Scale(ab, v), Vector3Scale(ac, w)));
 }
 
+// Sources of research and editted code
+// https://blog.bearcats.nl/capsule-triangle-sweep/
+// https://cseweb.ucsd.edu/classes/sp19/cse291-d/Files/CSE291_13_CollisionDetection.pdf
+// http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf
 float CapsuleCollider::ShortestSegmentToSegmentDistSq(Vector3 t_p1, Vector3 t_q1, Vector3 t_p2, Vector3 t_q2, Vector3& t_closest1, Vector3& t_closest2)
 {
     const float EPS = 0.000001f;
