@@ -238,6 +238,13 @@ void Player::GroundCheck(const Triangle& tri)
                 velocity.y = 0.0f;
             }
 
+            float normalVelocity = Vector3DotProduct(velocity, groundRay.normal);
+
+            if (normalVelocity < 0.0f)
+            {
+                velocity = Vector3Reject(velocity, groundRay.normal);
+            }
+
             // 1 collision found
             break;
         }
@@ -377,12 +384,12 @@ void Player::CollisionDetection()
             position = Vector3Add(position, correction);
             collider.SetPos(position);
 
-            // Remove velocity going into the surface
+            // Project velocity along normal of collision
             float normalVelocity = Vector3DotProduct(velocity, collisionInfo.normal);
 
             if (normalVelocity < 0.0f)
             {
-                velocity = Vector3Subtract(velocity, Vector3Scale(collisionInfo.normal, normalVelocity));
+                velocity = Vector3Reject(velocity, collisionInfo.normal);
             }
         }
     }
