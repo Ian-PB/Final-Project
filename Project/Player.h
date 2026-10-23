@@ -53,7 +53,11 @@ private:
 	Vector3 groundCheckRaysOffsets[GROUND_CHECK_RAYS_AMOUNT];
 	bool isGrounded;
 	float rayHeightDist;
-	const float RAY_EXTENTION = 0.15f;
+	const float RAY_EXTENTION = 0.05f;
+
+	static const Vector3 UP;
+	static const Vector3 DOWN;
+	static const int MAX_SLOPE_ANGLE = 45;
 
 	Ray aboveCheckRay;
 
@@ -68,7 +72,7 @@ private:
 
 	Vector3 velocity = { 0.0f, 0.0f, 0.0f };
 	Vector3 position;
-	float moveSpeed = 0.75f;
+	float moveSpeed = 1.75f;
 
 	std::shared_ptr<MainCamera> camera;
 

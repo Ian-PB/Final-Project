@@ -3,6 +3,9 @@
 #include <string>
 #include <iostream>
 
+const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
+const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
+
 Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), randLight(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
@@ -10,7 +13,7 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     shootRayCollision.hit = false;
 
     for (int i = 0; i < GROUND_CHECK_RAYS_AMOUNT; i++)
-        groundCheckRays[i].direction = {0.0f, -1.0f, 0.0f};
+        groundCheckRays[i].direction = DOWN;
 
     groundCheckRaysOffsets[0] = { 0.0f, 0.0f, 0.0f };
     groundCheckRaysOffsets[1] = { radius, 0.0f, 0.0f };
@@ -18,7 +21,7 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     groundCheckRaysOffsets[3] = { 0.0f, 0.0f, radius };
     groundCheckRaysOffsets[4] = { 0.0f, 0.0f, -radius };
 
-    aboveCheckRay.direction = { 0.0f, 1.0f, 0.0f };
+    aboveCheckRay.direction = UP;
 }
 
 void Player::Init()
@@ -228,6 +231,11 @@ void Player::GroundCheck(const Triangle& tri)
 
         if (groundRay.hit && groundRay.distance <= rayHeightDist) // Is groundeed
         {
+            // Check how steep the ground is
+            float slopeAngle = Vector3Angle(groundRay.normal, UP) * RAD2DEG;
+            if (slopeAngle >= MAX_SLOPE_ANGLE)
+                continue;
+
             // Refresh jump
             isGrounded = true;
             jump.canJump = true;
@@ -238,9 +246,9 @@ void Player::GroundCheck(const Triangle& tri)
                 velocity.y = 0.0f;
             }
 
-            float normalVelocity = Vector3DotProduct(velocity, groundRay.normal);
+            float velocityIntoNormal = Vector3DotProduct(velocity, groundRay.normal);
 
-            if (normalVelocity < 0.0f)
+            if (velocityIntoNormal < 0.0f)
             {
                 velocity = Vector3Reject(velocity, groundRay.normal);
             }
@@ -383,14 +391,6 @@ void Player::CollisionDetection()
             Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
             position = Vector3Add(position, correction);
             collider.SetPos(position);
-
-            // Project velocity along normal of collision
-            float normalVelocity = Vector3DotProduct(velocity, collisionInfo.normal);
-
-            if (normalVelocity < 0.0f)
-            {
-                velocity = Vector3Reject(velocity, collisionInfo.normal);
-            }
         }
     }
 

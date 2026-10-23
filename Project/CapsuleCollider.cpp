@@ -241,7 +241,10 @@ CollisionInfo CapsuleCollider::CapsuleTriangle(Vector3 t_start, Vector3 t_end, c
     }
     else
     {
-        collisionInfo.normal = tri.normal;
+        collisionInfo.normal = Vector3Normalize(tri.normal);
+
+        if (Vector3LengthSqr(collisionInfo.normal) < 0.000001f)
+            collisionInfo.normal = { 0.0f, 1.0f, 0.0f };
 
         // Check if basicly 0
         if (Vector3LengthSqr(collisionInfo.normal) < 0.000001f)
