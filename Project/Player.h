@@ -7,6 +7,9 @@
 #include <vector>
 #include "Chunk.h"
 
+// Reading on Character Controllers
+// https://brooke.fyi/posts/cpp-character-controller-1/
+
 class World;
 
 class Player
@@ -45,10 +48,12 @@ private:
 		float jumpForce = 0.25f;
 	};
 	JumpInfo jump;
-	Ray groundCheckRay;
+	static const int GROUND_CHECK_RAYS_AMOUNT = 5;
+	Ray groundCheckRays[GROUND_CHECK_RAYS_AMOUNT];
+	Vector3 groundCheckRaysOffsets[GROUND_CHECK_RAYS_AMOUNT];
 	bool isGrounded;
 	float rayHeightDist;
-	const float RAY_EXTENTION = 0.25f;
+	const float RAY_EXTENTION = 0.15f;
 
 	Ray aboveCheckRay;
 
@@ -56,7 +61,7 @@ private:
 	bool gravityOn = true;
 	float gravityForce = 0.6f;
 	const float MAX_DOWNWARD_FORCE = -0.75f;
-	const float DRAG = 0.9f;
+	const float DRAG = 0.87f;
 
 	void FreeFly();
 	bool freeFly = true;

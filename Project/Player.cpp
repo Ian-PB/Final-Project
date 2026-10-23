@@ -9,7 +9,15 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     shootRayCollision.distance = 9999.0f;
     shootRayCollision.hit = false;
 
-    groundCheckRay.direction = { 0.0f, -1.0f, 0.0f };
+    for (int i = 0; i < GROUND_CHECK_RAYS_AMOUNT; i++)
+        groundCheckRays[i].direction = {0.0f, -1.0f, 0.0f};
+
+    groundCheckRaysOffsets[0] = { 0.0f, 0.0f, 0.0f };
+    groundCheckRaysOffsets[1] = { radius, 0.0f, 0.0f };
+    groundCheckRaysOffsets[2] = { -radius, 0.0f, 0.0f };
+    groundCheckRaysOffsets[3] = { 0.0f, 0.0f, radius };
+    groundCheckRaysOffsets[4] = { 0.0f, 0.0f, -radius };
+
     aboveCheckRay.direction = { 0.0f, 1.0f, 0.0f };
 }
 
@@ -21,7 +29,7 @@ void Player::Init()
     camera = std::make_shared<MainCamera>(position, camOffset);
 
     randLight.strength = 5.0f;
-    light.strength = 205.0f;
+    light.strength = 25.0f;
     collider.Setup(height, radius);
 }
 
@@ -112,11 +120,14 @@ void Player::UpdatePositions()
 
     // Rays
     Vector3 bodyCenter = { position.x, position.y + height / 2.0f, position.z };
-    groundCheckRay.position = bodyCenter;
+
+    for (int i = 0; i < GROUND_CHECK_RAYS_AMOUNT; i++)
+        groundCheckRays[i].position = Vector3Add(bodyCenter, groundCheckRaysOffsets[i]);
+
     aboveCheckRay.position = bodyCenter;
 
     // Light
-    light.position = position;
+    light.position = bodyCenter;
 }
 
 void Player::Movement()
@@ -211,17 +222,25 @@ void Player::CeilingCheck(const Triangle& tri)
 
 void Player::GroundCheck(const Triangle& tri)
 {
-    RayCollision groundRay = GetRayCollisionTriangle(groundCheckRay, tri.a, tri.b, tri.c);
-
-    if (groundRay.hit && groundRay.distance <= rayHeightDist) // Is groundeed
+    for (int i = 0; i < GROUND_CHECK_RAYS_AMOUNT; i++)
     {
-        // Refresh jump
-        isGrounded = true;
-        jump.canJump = true;
+        RayCollision groundRay = GetRayCollisionTriangle(groundCheckRays[i], tri.a, tri.b, tri.c);
 
-        // Only if moving downwards
-        if (velocity.y < 0.0f)
-            velocity.y = 0.0f;
+        if (groundRay.hit && groundRay.distance <= rayHeightDist) // Is groundeed
+        {
+            // Refresh jump
+            isGrounded = true;
+            jump.canJump = true;
+
+            // Only if moving downwards
+            if (velocity.y < 0.0f)
+            {
+                velocity.y = 0.0f;
+            }
+
+            // 1 collision found
+            break;
+        }
     }
 }
 
@@ -357,6 +376,14 @@ void Player::CollisionDetection()
             Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
             position = Vector3Add(position, correction);
             collider.SetPos(position);
+
+            // Remove velocity going into the surface
+            float normalVelocity = Vector3DotProduct(velocity, collisionInfo.normal);
+
+            if (normalVelocity < 0.0f)
+            {
+                velocity = Vector3Subtract(velocity, Vector3Scale(collisionInfo.normal, normalVelocity));
+            }
         }
     }
 
