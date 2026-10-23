@@ -6,11 +6,10 @@
 
 struct Point
 {
-
 	Color color = RED;
 
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
-	float density = 0.0f;
+	float density = 0.0f; // -1 is solid while 1 is empty
 };
 
 struct CubeSection
@@ -53,6 +52,8 @@ public:
 
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
+	void ClearChunk(bool posXWall = false, bool negXWall = false, bool posYWall = false, bool negYWall = false, bool posZWall = false, bool negZWall = false);
+
 private:
 	bool dirty = false;
 
@@ -74,6 +75,7 @@ private:
 
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
 
+	int IndexFrom3D(int x, int y, int z) { return (x * SIZE * SIZE + y * SIZE + z); }
 	static const int SIZE = 20; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 

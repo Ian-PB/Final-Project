@@ -316,25 +316,35 @@ void World::UpdateAllChunks()
     jobCondition.notify_all(); // Tell workers to work
 }
 
+void World::NoiseWorldGen()
+{
+    noiseSeed = (int)(rand() % 9999);
+    noise.SetSeed(noiseSeed);
+    completeRebuild = true;
+
+    // Reset densities
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                chunks[x][y][z].UpdateDensities();
+            }
+        }
+    }
+}
+
+void World::HollowBoxWorldGen()
+{
+
+}
+
 void World::KeyboardInputs()
 {
     if (IsKeyReleased(KEY_G))
     {
-        noiseSeed = (int)(rand() % 9999);
-        noise.SetSeed(noiseSeed);
-        completeRebuild = true;
-
-        // Reset densities
-        for (int x = 0; x < WIDTH; x++)
-        {
-            for (int y = 0; y < HEIGHT; y++)
-            {
-                for (int z = 0; z < DEPTH; z++)
-                {
-                    chunks[x][y][z].UpdateDensities();
-                }
-            }
-        }
+        NoiseWorldGen();
     }
 
     if (IsKeyDown(KEY_UP))

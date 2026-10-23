@@ -35,7 +35,7 @@ void Chunk::Draw()
 			{
 				for (int z = 0; z < SIZE; z++)
 				{
-					int i = x * SIZE * SIZE + y * SIZE + z;
+					int i = IndexFrom3D(x, y, z);
 
 					Vector3 realPos = Vector3Add(position, points[i].position);
 
@@ -176,22 +176,30 @@ BoundingBox Chunk::GetBounds()
 
 void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 {
+	for (int i = 0; i < SIZE*SIZE*SIZE; i++)
+	{
+		Vector3 pointWorldPos = Vector3Add(position, points[i].position);
+		if (Vector3Distance(pointWorldPos, t_pos) <= t_radius)
+		{
+			if (destroy)
+				points[i].density = 1.0f;
+			else
+				points[i].density = -1.0f;
+		}
+	}
+}
+
+void Chunk::ClearChunk(bool posXWall, bool negXWall, bool posYWall, bool negYWall, bool posZWall, bool negZWall)
+{
 	for (int x = 0; x < SIZE; x++)
 	{
 		for (int y = 0; y < SIZE; y++)
 		{
 			for (int z = 0; z < SIZE; z++)
 			{
-				int i = x * SIZE * SIZE + y * SIZE + z;
+				int i = IndexFrom3D(x, y, z);
 
-				Vector3 pointWorldPos = Vector3Add(position, points[i].position);
-				if (Vector3Distance(pointWorldPos, t_pos) <= t_radius)
-				{
-					if (destroy)
-						points[i].density = 1.0f;
-					else
-						points[i].density = -1.0f;
-				}
+				points[i].density = 1; // Empty
 			}
 		}
 	}
@@ -205,7 +213,7 @@ void Chunk::SetupPoints()
 		{
 			for (int z = 0; z < SIZE; z++)
 			{
-				int i = x * SIZE * SIZE + y * SIZE + z;
+				int i = IndexFrom3D(x, y, z);
 
 				points[i].position = GetLocalPos({(float)x, (float)y, (float)z});
 
@@ -226,7 +234,7 @@ void Chunk::UpdateDensities()
 		{
 			for (int z = 0; z < SIZE; z++)
 			{
-				int i = x * SIZE * SIZE + y * SIZE + z;
+				int i = IndexFrom3D(x, y, z);
 
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);

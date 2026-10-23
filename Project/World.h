@@ -38,6 +38,10 @@ public:
 private:
 	void UpdateAllChunks();
 
+	// World Gen TEMP
+	void NoiseWorldGen();
+	void HollowBoxWorldGen();
+
 	// World Dimensions
 	int totalChunks = 0;
 	Chunk chunks[WIDTH][HEIGHT][DEPTH];
