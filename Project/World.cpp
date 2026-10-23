@@ -5,7 +5,7 @@
 #include <raymath.h>
 #include "Lighting.h"
 
-World::World()
+World::World() : light(Lighting::CreateLight(RAYWHITE))
 {
     unsigned int hardwareThreads = std::thread::hardware_concurrency();
     totalChunks = WIDTH * HEIGHT * DEPTH;
@@ -16,6 +16,10 @@ World::World()
     {
         workers.emplace_back(&World::WorkerLoop, this);
     }
+
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+    light.position = { WIDTH * chunkSize * 0.5f, HEIGHT * chunkSize * 0.5f, DEPTH * chunkSize * 0.5f };
+    light.strength = 60.0f;
 }
 
 World::~World()

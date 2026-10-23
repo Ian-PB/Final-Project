@@ -3,6 +3,10 @@
 #include <string>
 #include <iostream>
 
+#include "PlayerState.h"
+#include "GroundedState.h"
+#include "AerialState.h"
+
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
@@ -34,6 +38,12 @@ void Player::Init()
     randLight.strength = 5.0f;
     light.strength = 25.0f;
     collider.Setup(height, radius);
+
+    groundedState = std::make_shared<GroundedState>(*this);
+    aerialState = std::make_shared<AerialState>(*this);
+    // slidingState = std::make_shared<SlidingState>(this);
+
+    state = groundedState;
 }
 
 void Player::Update()
@@ -149,51 +159,7 @@ void Player::Movement()
 
 void Player::NormalMovement()
 {
-    float deltaTime = GetFrameTime();
-    // Flattened so you dont go in the direction you're facing
-    float yaw = camera->GetYaw();
-    Vector3 flatForward = { sinf(yaw), 0.0f, cosf(yaw) };
-    Vector3 right = { cosf(yaw), 0.0f, -sinf(yaw) };
-
-    // Make speed not based off FPS
-    float speed = moveSpeed * deltaTime;
-
-    // Move Forward or Backward
-    if (IsKeyDown(KEY_W))
-    {
-        velocity += Vector3Scale(flatForward, speed);
-    }
-    else if (IsKeyDown(KEY_S))
-    {
-        velocity -= Vector3Scale(flatForward, speed);
-    }
-    // Move Left or Right
-    if (IsKeyDown(KEY_A))
-    {
-        velocity += Vector3Scale(right, speed);
-    }
-    else if (IsKeyDown(KEY_D))
-    {
-        velocity -= Vector3Scale(right, speed);
-    }
-
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        jump.CheckJump(velocity);
-    }
-
-    // Gravity
-    if (!isGrounded)
-    {
-        velocity.y -= gravityForce * deltaTime;
-        if (velocity.y < MAX_DOWNWARD_FORCE)
-            velocity.y = MAX_DOWNWARD_FORCE;
-    }
-
-    position = Vector3Add(position, velocity);
-
-    velocity.x *= DRAG;
-    velocity.z *= DRAG;
+    state->Update();
 }
 
 void Player::RayChecks()
@@ -268,6 +234,15 @@ void Player::UpdateOccupiedChunks()
     // Save chunks that are occupied
     occupiedChunks.clear();
     occupiedChunks = WORLD.GetChunksInBounds(bounds);
+}
+
+void Player::SwapState(std::shared_ptr<PlayerState> t_newState)
+{
+    state->OnLeaveState();
+
+    state = t_newState;
+
+    state->OnEnterState();
 }
 
 void Player::FreeFly()
@@ -429,7 +404,7 @@ bool Player::JumpInfo::CheckJump(Vector3& t_velocity)
     if (canJump)
     {
         canJump = false;
-        t_velocity.y += jumpForce;
+        t_velocity.y = jumpForce;
         isJumping = true;
 
         return true;

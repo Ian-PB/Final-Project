@@ -11,6 +11,10 @@
 // https://brooke.fyi/posts/cpp-character-controller-1/
 
 class World;
+class PlayerState;
+class GroundedState;
+class AerialState;
+// class SlidingState;
 
 class Player
 {
@@ -37,11 +41,17 @@ private:
 	void UpdateOccupiedChunks();
 	std::vector<Chunk*> occupiedChunks;
 
+	// States
+	void SwapState(std::shared_ptr<PlayerState> t_newState);
+	std::shared_ptr<PlayerState> state;
+	std::shared_ptr<GroundedState> groundedState;
+	std::shared_ptr<AerialState> aerialState;
+	// std::shared_ptr<SlidingState> slidingState;
+
 	// Jumping
 	struct JumpInfo
 	{
 		bool CheckJump(Vector3& t_velocity);
-		void UpdateJump(float t_yPos);
 		bool canJump;
 		bool isJumping;
 
@@ -51,9 +61,9 @@ private:
 	static const int GROUND_CHECK_RAYS_AMOUNT = 5;
 	Ray groundCheckRays[GROUND_CHECK_RAYS_AMOUNT];
 	Vector3 groundCheckRaysOffsets[GROUND_CHECK_RAYS_AMOUNT];
-	bool isGrounded;
+	bool isGrounded = false;
 	float rayHeightDist;
-	const float RAY_EXTENTION = 0.05f;
+	const float RAY_EXTENTION = 0.1f;
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
@@ -64,8 +74,10 @@ private:
 	// Gravity
 	bool gravityOn = true;
 	float gravityForce = 0.6f;
-	const float MAX_DOWNWARD_FORCE = -0.75f;
-	const float DRAG = 0.87f;
+	const float MAX_VELOCITY = 0.65f;
+	const float GROUNDED_DRAG = 0.88f;
+	const float AERIAL_DRAG = 0.92f;
+	
 
 	void FreeFly();
 	bool freeFly = true;
@@ -100,6 +112,15 @@ private:
 
 	void SetRandLight(Vector3 pos);
 	Light& randLight;
+
+
+	friend class GroundedState;
+	friend class AerialState;
+	// friend class SlidingState;
 };
 
 #include "World.h"
+#include "PlayerState.h"
+#include "GroundedState.h"
+#include "AerialState.h"
+// #include "SlidingState.h"

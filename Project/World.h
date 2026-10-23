@@ -6,6 +6,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include "Lighting.h"
 
 class World
 {
@@ -73,6 +74,8 @@ private:
 
 	std::atomic<bool> stopWorkers = false;
 	std::atomic<int> jobsRemaining = 0;
+
+	Light& light;
 
 	void KeyboardInputs();
 };

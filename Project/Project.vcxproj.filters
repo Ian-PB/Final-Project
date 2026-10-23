@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Colliders">
       <UniqueIdentifier>{9af3f950-71c2-4c09-94a2-b3eb23a85eaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\PlayerStates">
+      <UniqueIdentifier>{db056c10-35ab-4483-8934-c297231d4aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PlayerStates">
+      <UniqueIdentifier>{f7862c7b-96b6-49ea-b6bc-88f37360dbe6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="MainCamera.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GroundedState.cpp">
+      <Filter>Source Files\PlayerStates</Filter>
+    </ClCompile>
+    <ClCompile Include="AerialState.cpp">
+      <Filter>Source Files\PlayerStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="MainCamera.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>Header Files\PlayerStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundedState.h">
+      <Filter>Header Files\PlayerStates</Filter>
+    </ClInclude>
+    <ClInclude Include="AerialState.h">
+      <Filter>Header Files\PlayerStates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
