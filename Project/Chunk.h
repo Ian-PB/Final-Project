@@ -25,6 +25,15 @@ struct MeshData
 	std::vector<Vector3> normals;
 };
 
+struct WallFlags {
+	bool posXWall = false;
+	bool negXWall = false;
+	bool posYWall = false;
+	bool negYWall = false;
+	bool posZWall = false;
+	bool negZWall = false;
+};
+
 class Chunk
 {
 public:
@@ -52,7 +61,7 @@ public:
 
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
 
-	void ClearChunk(bool posXWall = false, bool negXWall = false, bool posYWall = false, bool negYWall = false, bool posZWall = false, bool negZWall = false);
+	void ClearChunk(WallFlags walls = {});
 
 private:
 	bool dirty = false;

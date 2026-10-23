@@ -337,7 +337,29 @@ void World::NoiseWorldGen()
 
 void World::HollowBoxWorldGen()
 {
+    completeRebuild = true;
 
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                WallFlags walls;
+
+                walls.posXWall = (x == 0);
+                walls.negXWall = (x == WIDTH - 1);
+
+                walls.posYWall = (y == 0);
+                walls.negYWall = (y == HEIGHT - 1);
+
+                walls.posZWall = (z == 0);
+                walls.negZWall = (z == DEPTH - 1);
+
+                chunks[x][y][z].ClearChunk(walls);
+            }
+        }
+    }
 }
 
 void World::KeyboardInputs()
@@ -345,6 +367,10 @@ void World::KeyboardInputs()
     if (IsKeyReleased(KEY_G))
     {
         NoiseWorldGen();
+    }
+    else if (IsKeyReleased(KEY_C))
+    {
+        HollowBoxWorldGen();
     }
 
     if (IsKeyDown(KEY_UP))

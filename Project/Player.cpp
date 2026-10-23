@@ -21,7 +21,7 @@ void Player::Init()
     camera = std::make_shared<MainCamera>(position, camOffset);
 
     randLight.strength = 5.0f;
-    light.strength = 25.0f;
+    light.strength = 205.0f;
     collider.Setup(height, radius);
 }
 

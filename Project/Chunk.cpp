@@ -189,7 +189,7 @@ void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 	}
 }
 
-void Chunk::ClearChunk(bool posXWall, bool negXWall, bool posYWall, bool negYWall, bool posZWall, bool negZWall)
+void Chunk::ClearChunk(WallFlags walls)
 {
 	for (int x = 0; x < SIZE; x++)
 	{
@@ -198,8 +198,20 @@ void Chunk::ClearChunk(bool posXWall, bool negXWall, bool posYWall, bool negYWal
 			for (int z = 0; z < SIZE; z++)
 			{
 				int i = IndexFrom3D(x, y, z);
+				bool solid = 
+					(walls.posXWall && x == 1) ||			// Pos X Wall
+					(walls.negXWall && x == SIZE - 2) ||	// Neg X Wall
+					(walls.posYWall && y == 1) ||			// Pos Y Wall
+					(walls.negYWall && y == SIZE - 2) ||	// Neg Y Wall
+					(walls.posZWall && z == 1) ||			// Pos Z Wall
+					(walls.negZWall && z == SIZE - 2);		// Neg Z Wall
 
-				points[i].density = 1; // Empty
+				if (solid)
+					points[i].density = -1; // Solid
+				else
+					points[i].density = 1; // Empty
+
+				points[i].color = GetColorFromDensity(points[i].density);
 			}
 		}
 	}
