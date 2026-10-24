@@ -1,6 +1,9 @@
 #include "raylib.h"
 #include "stdio.h"
 
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+
 #include "game.h"
 
 const int screenWidth = 800;
