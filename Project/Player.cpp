@@ -54,7 +54,6 @@ void Player::Update()
     else if (IsKeyReleased(KEY_F2))
         freeFly = !freeFly;
 
-    UpdateOccupiedChunks();
 
     camera->Update();
     Movement();
@@ -64,6 +63,7 @@ void Player::Update()
     if (IsMouseButtonReleased(1))
         breaking = !breaking;
 
+    UpdateOccupiedChunks();
     CollisionDetection();
 
     // Scroll to increase or decrease ray
@@ -175,7 +175,7 @@ void Player::RayChecks()
         for (const Triangle& t : tris)
         {
             GroundCheck(t);
-            CeilingCheck(t);
+            // CeilingCheck(t);
         }
     }
 }
@@ -193,6 +193,9 @@ void Player::CeilingCheck(const Triangle& tri)
 
 void Player::GroundCheck(const Triangle& tri)
 {
+    if (jump.isJumping && velocity.y > 0.0f)
+        return;
+
     for (int i = 0; i < GROUND_CHECK_RAYS_AMOUNT; i++)
     {
         RayCollision groundCollision = GetRayCollisionTriangle(groundCheckRays[i], tri.a, tri.b, tri.c);
@@ -214,12 +217,7 @@ void Player::GroundCheck(const Triangle& tri)
             // Refresh jump
             isGrounded = true;
             jump.canJump = true;
-
-            // Only if moving downwards
-            if (velocity.y < 0.0f)
-            {
-                velocity.y = 0.0f;
-            }
+            jump.isJumping = false;
         }
     }
 }
@@ -227,8 +225,8 @@ void Player::GroundCheck(const Triangle& tri)
 void Player::UpdateOccupiedChunks()
 {
     BoundingBox bounds;
-    bounds.min = { position.x - radius, position.y, position.z - radius };
-    bounds.max = { position.x + radius, position.y + radius, position.z + radius };
+    bounds.min = { position.x - radius, position.y - RAY_EXTENTION, position.z - radius };
+    bounds.max = { position.x + radius, position.y + height + RAY_EXTENTION, position.z + radius };
 
     // Save chunks that are occupied
     occupiedChunks.clear();
@@ -364,11 +362,11 @@ void Player::CollisionDetection()
             // Correct position
             Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
 
-            // Flatten if the surface isn't walkable
-            float slopeAngle = Vector3Angle(collisionInfo.normal, UP) * RAD2DEG;
-            if (slopeAngle > MAX_SLOPE_ANGLE)
+            // Remove velocity into the surface
+            float velocityIntoNormal = Vector3DotProduct(velocity, collisionInfo.normal);
+            if (velocityIntoNormal < 0.0f)
             {
-                correction.y = 0.0f;
+                velocity = Vector3Subtract(velocity, Vector3Scale(collisionInfo.normal, velocityIntoNormal));
             }
 
             position = Vector3Add(position, correction);
@@ -378,6 +376,7 @@ void Player::CollisionDetection()
 
     // Update camera after resolving collisions
     camera->UpdatePos();
+    UpdatePositions();
 }
 
 void Player::SetRandLight(Vector3 pos)

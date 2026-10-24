@@ -52,8 +52,8 @@ private:
 	struct JumpInfo
 	{
 		bool CheckJump(Vector3& t_velocity);
-		bool canJump;
-		bool isJumping;
+		bool canJump = false;
+		bool isJumping = false;
 
 		float jumpForce = 0.3f;
 	};
@@ -69,7 +69,7 @@ private:
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
-	static const int MAX_SLOPE_ANGLE = 45;
+	static const int MAX_SLOPE_ANGLE = 55;
 
 	Ray aboveCheckRay;
 
@@ -77,7 +77,7 @@ private:
 	bool gravityOn = true;
 	float gravityForce = 1.2f;
 	const float MAX_VELOCITY = 0.65f;
-	const float GROUNDED_DRAG = 0.88f;
+	const float GROUNDED_FRICTION = 0.88f;
 	const float AERIAL_DRAG = 0.92f;
 	
 

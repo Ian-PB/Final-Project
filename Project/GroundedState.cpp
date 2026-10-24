@@ -18,9 +18,9 @@ void GroundedState::Update()
     }
 
     // Jump will take you out of the grounded state
-    if (IsKeyPressed(KEY_SPACE))
+    if (IsKeyPressed(KEY_SPACE) && p.jump.CheckJump(p.velocity))
     {
-        p.jump.CheckJump(p.velocity);
+        p.isGrounded = false;
         p.SwapState(p.aerialState);
         return;
     }
@@ -58,19 +58,28 @@ void GroundedState::Update()
     Vector3 projectedMovement = Vector3Normalize(Vector3Reject(moveDir, p.groundNormal));
     projectedMovement = Vector3Scale(projectedMovement, speed);
 
-    float slopeAngle = Vector3Angle(p.groundNormal, p.UP) * RAD2DEG;
-    if (slopeAngle > p.MAX_SLOPE_ANGLE)
-    {
-        std::cout << "Slope angle: " << slopeAngle << std::endl;
-        // Flatten the projectect movement to not allow player to move up the slope
-        projectedMovement = { projectedMovement.x, 0.0f, projectedMovement.z };
-    }
 
+    // Also project the current velocity along the ground normal
+    p.velocity = Vector3Reject(p.velocity, p.groundNormal);
+    // Add both projected together
     p.velocity = Vector3Add(p.velocity, projectedMovement);
 
+    // If the player isn't moving and the slope is walkable
+    if (moveDir == Vector3Zero() && OnWalkableSlope())
+        p.velocity.y = 0.0f; // Don't slide down it
+
+    // Apply velocity to position
     p.position = Vector3Add(p.position, p.velocity);
 
-    p.velocity.x *= p.GROUNDED_DRAG;
-    //p.velocity.y *= p.GROUNDED_DRAG;
-    p.velocity.z *= p.GROUNDED_DRAG;
+    // Friction
+    p.velocity = Vector3Scale(p.velocity, p.GROUNDED_FRICTION);
+}
+
+bool GroundedState::OnWalkableSlope()
+{
+    float slopeAngle = Vector3Angle(p.groundNormal, p.UP) * RAD2DEG;
+    if (slopeAngle < p.MAX_SLOPE_ANGLE)
+        return true;
+
+    return false;
 }
