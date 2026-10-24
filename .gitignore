@@ -43,3 +43,16 @@ web/
 
 # Nested Git repositories
 **/.git/
+Project/x64/Debug/game.obj
+Project/x64/Debug/game.obj
+Project/x64/Debug/main.obj
+Project/x64/Debug/Project.ilk
+Project/x64/Debug/Project.tlog/CL.command.1.tlog
+Project/x64/Debug/Project.tlog/CL.read.1.tlog
+Project/x64/Debug/Project.tlog/CL.write.1.tlog
+Project/x64/Debug/vc145.idb
+Project/x64/Debug/vc145.pdb
+x64/Debug/Project.pdb
+.vs/Project.slnx/v18/.suo
+.vs/Project.slnx/v18/DocumentLayout.backup.json
+.vs/Project.slnx/v18/DocumentLayout.json
