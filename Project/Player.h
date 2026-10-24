@@ -55,7 +55,7 @@ private:
 		bool canJump;
 		bool isJumping;
 
-		float jumpForce = 0.25f;
+		float jumpForce = 0.3f;
 	};
 	JumpInfo jump;
 	static const int GROUND_CHECK_RAYS_AMOUNT = 5;
@@ -64,6 +64,8 @@ private:
 	bool isGrounded = false;
 	float rayHeightDist;
 	const float RAY_EXTENTION = 0.1f;
+	Vector3 groundNormal = { 0.0f, 1.0f, 0.0f };
+	float closestGroundCollision = 999999.0f;
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
@@ -73,7 +75,7 @@ private:
 
 	// Gravity
 	bool gravityOn = true;
-	float gravityForce = 0.6f;
+	float gravityForce = 1.2f;
 	const float MAX_VELOCITY = 0.65f;
 	const float GROUNDED_DRAG = 0.88f;
 	const float AERIAL_DRAG = 0.92f;

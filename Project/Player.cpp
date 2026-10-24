@@ -165,6 +165,8 @@ void Player::NormalMovement()
 void Player::RayChecks()
 {
     isGrounded = false;
+    groundNormal = UP;
+    closestGroundCollision = 99999.0f;
 
     for (const Chunk* chunk : occupiedChunks)
     {
@@ -193,14 +195,21 @@ void Player::GroundCheck(const Triangle& tri)
 {
     for (int i = 0; i < GROUND_CHECK_RAYS_AMOUNT; i++)
     {
-        RayCollision groundRay = GetRayCollisionTriangle(groundCheckRays[i], tri.a, tri.b, tri.c);
+        RayCollision groundCollision = GetRayCollisionTriangle(groundCheckRays[i], tri.a, tri.b, tri.c);
 
-        if (groundRay.hit && groundRay.distance <= rayHeightDist) // Is groundeed
+        // No hit detected
+        if (!groundCollision.hit)
+            continue;
+
+        // Check if grounded
+        if (groundCollision.distance <= rayHeightDist && groundCollision.distance < closestGroundCollision)
         {
-            // Check how steep the ground is
-            float slopeAngle = Vector3Angle(groundRay.normal, UP) * RAD2DEG;
-            if (slopeAngle >= MAX_SLOPE_ANGLE)
+            float slopeAngle = Vector3Angle(groundCollision.normal, UP) * RAD2DEG;
+            if (slopeAngle > MAX_SLOPE_ANGLE)
                 continue;
+
+            closestGroundCollision = groundCollision.distance;
+            groundNormal = groundCollision.normal;
 
             // Refresh jump
             isGrounded = true;
@@ -211,16 +220,6 @@ void Player::GroundCheck(const Triangle& tri)
             {
                 velocity.y = 0.0f;
             }
-
-            float velocityIntoNormal = Vector3DotProduct(velocity, groundRay.normal);
-
-            if (velocityIntoNormal < 0.0f)
-            {
-                velocity = Vector3Reject(velocity, groundRay.normal);
-            }
-
-            // 1 collision found
-            break;
         }
     }
 }
@@ -364,6 +363,14 @@ void Player::CollisionDetection()
 
             // Correct position
             Vector3 correction = Vector3Scale(collisionInfo.normal, collisionInfo.penetration);
+
+            // Flatten if the surface isn't walkable
+            float slopeAngle = Vector3Angle(collisionInfo.normal, UP) * RAD2DEG;
+            if (slopeAngle > MAX_SLOPE_ANGLE)
+            {
+                correction.y = 0.0f;
+            }
+
             position = Vector3Add(position, correction);
             collider.SetPos(position);
         }
