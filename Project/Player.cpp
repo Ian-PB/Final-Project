@@ -256,20 +256,20 @@ void Player::FreeFly()
     float speed = 10.0f * GetFrameTime();
 
     // Move Forward or Backward
-    if (IsKeyDown(KEY_W))
+    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
     {
         position = Vector3Add(position, Vector3Scale(flatForward, speed));
     }
-    else if (IsKeyDown(KEY_S))
+    else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
     {
         position = Vector3Subtract(position, Vector3Scale(flatForward, speed));
     }
     // Move Left or Right
-    if (IsKeyDown(KEY_A))
+    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
     {
         position = Vector3Add(position, Vector3Scale(right, speed));
     }
-    else if (IsKeyDown(KEY_D))
+    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
     {
         position = Vector3Subtract(position, Vector3Scale(right, speed));
     }

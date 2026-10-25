@@ -56,6 +56,8 @@ private:
 
 	// Noise (FastNoiseLite is a library I added)
 	void SetupNoise();
+	void UpdatedSeed();
+	void UpdateAllDensities();
 	FastNoiseLite noise;
 	float frequency = 0.1f;
 	int noiseSeed;

@@ -26,20 +26,20 @@ void AerialState::Update()
     float speed = p.moveSpeed * deltaTime;
 
     // Move Forward or Backward
-    if (IsKeyDown(KEY_W))
+    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
     {
         p.velocity += Vector3Scale(flatForward, speed);
     }
-    else if (IsKeyDown(KEY_S))
+    else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
     {
         p.velocity -= Vector3Scale(flatForward, speed);
     }
     // Move Left or Right
-    if (IsKeyDown(KEY_A))
+    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
     {
         p.velocity += Vector3Scale(right, speed);
     }
-    else if (IsKeyDown(KEY_D))
+    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
     {
         p.velocity -= Vector3Scale(right, speed);
     }

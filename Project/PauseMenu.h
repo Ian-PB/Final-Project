@@ -23,7 +23,7 @@ private:
 		Player,
 		World
 	};
-	PanelOptions currentPanel;
+	PanelOptions currentPanel = PanelOptions::General;
 
 	// Pointers to editables
 	Player& player;
@@ -62,6 +62,10 @@ private:
 	const Vector2 ELEMENT_SIZE_SCALE = { 0.1f, 0.05f };
 	Vector2 ELEMENT_SIZE = { 0.0f, 0.0f };
 	float ELEMENT_SPACING = 0.0f;
+
+	// Panel Values
+	int worldSeed = 0;
+	bool noiseSeedEditMode = false;
 };
 
 #include "Player.h"

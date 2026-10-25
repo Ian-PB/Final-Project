@@ -36,20 +36,20 @@ void GroundedState::Update()
     Vector3 moveDir = { 0.0f, 0.0f, 0.0f };
 
     // Move Forward or Backward
-    if (IsKeyDown(KEY_W))
+    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
     {
         moveDir = Vector3Add(moveDir, flatForward);
     }
-    else if (IsKeyDown(KEY_S))
+    else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
     {
         moveDir = Vector3Subtract(moveDir, flatForward);
     }
     // Move Left or Right
-    if (IsKeyDown(KEY_A))
+    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
     {
         moveDir = Vector3Add(moveDir, right);
     }
-    else if (IsKeyDown(KEY_D))
+    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
     {
         moveDir = Vector3Subtract(moveDir, right);
     }

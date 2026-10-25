@@ -47,6 +47,8 @@ void PauseMenu::ToggleActive()
 
 	if (active)
 	{
+		worldSeed = world.noiseSeed;
+		noiseSeedEditMode = false;
 		EnableCursor();
 	}
 	else
@@ -114,14 +116,39 @@ void PauseMenu::DrawGeneralSettings()
 	Rectangle rect = { x, y, w, h };
 
 	// Setup helper lambda for increment the element
-	auto incrementElement = [&]() {
+	auto IncrementElement = [&]() {
 		elementNum++;
 		y = PANEL_START_POS.y + ELEMENT_SPACING * elementNum;
 		rect = { x, y, w, h };
 		};
 
-	DrawText("General", x, y, 30, TEXT_COLOR);
+	DrawText("General (Keybinds currently)", x, y, 30, TEXT_COLOR);
 	DrawRectangle(x, y + 32, GuiGetTextWidth("General") * 3, 2, TEXT_COLOR);
+	IncrementElement();
+
+	// Player Stuff
+	DrawText("WASD / Arrows - Move around", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+	DrawText("Space - Jump", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+	DrawText("Left Click - Shoot", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+	DrawText("Right Click - Swap build / break", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+	DrawText("Scroll wheel up/down - increase/decrease break/build size", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+
+	// World stuff
+	DrawText("C - Hollow Cube World", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+	DrawText("G - Randomize world with noise", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+
+	// Debug
+	DrawText("F1 - Toggle collider visuals", x, y, 20, TEXT_COLOR);
+	IncrementElement();
+	DrawText("F2 - Swap between free flying and normal movement", x, y, 20, TEXT_COLOR);
+	IncrementElement();
 }
 
 void PauseMenu::DrawPlayerSettings()
@@ -134,7 +161,7 @@ void PauseMenu::DrawPlayerSettings()
 	Rectangle rect = { x, y, w, h };
 
 	// Setup helper lambda for increment the element
-	auto incrementElement = [&]() {
+	auto IncrementElement = [&]() {
 		elementNum++;
 		y = PANEL_START_POS.y + ELEMENT_SPACING * elementNum;
 		rect = { x, y, w, h };
@@ -142,25 +169,25 @@ void PauseMenu::DrawPlayerSettings()
 
 	DrawText("Player", x, y, 30, TEXT_COLOR);
 	DrawRectangle(x, y + 32, GuiGetTextWidth("Player") * 3, 2, TEXT_COLOR);
-	incrementElement();
+	IncrementElement();
 
 	// Jump force Spinner
 	int playerJumpInt = player.jump.jumpForce * 10;
 	GuiSpinner(rect, "Jump Force", &playerJumpInt, 0, 50, false);
 	player.jump.jumpForce = playerJumpInt / 10.0f;
-	incrementElement();
+	IncrementElement();
 
 	// Move speed Spinner
 	int playerMoveSpeedInt = player.moveSpeed * 10;
 	GuiSpinner(rect, "Move Speed", &playerMoveSpeedInt, 0, 100, false);
 	player.moveSpeed = playerMoveSpeedInt / 10.0f;
-	incrementElement();
+	IncrementElement();
 
 	// Gravity Spinner
 	int playerGravityForceInt = player.gravityForce * 10;
 	GuiSpinner(rect, "Gravity Force", &playerGravityForceInt, 0, 100, false);
 	player.gravityForce = playerGravityForceInt / 10.0f;
-	incrementElement();
+	IncrementElement();
 }
 
 void PauseMenu::DrawWorldSettings()
@@ -173,7 +200,7 @@ void PauseMenu::DrawWorldSettings()
 	Rectangle rect = { x, y, w, h };
 
 	// Setup helper lambda for increment the element
-	auto incrementElement = [&]() {
+	auto IncrementElement = [&]() {
 		elementNum++;
 		y = PANEL_START_POS.y + ELEMENT_SPACING * elementNum;
 		rect = { x, y, w, h };
@@ -181,7 +208,22 @@ void PauseMenu::DrawWorldSettings()
 
 	DrawText("World", x, y, 30, TEXT_COLOR);
 	DrawRectangle(x, y + 32, GuiGetTextWidth("World") * 3, 2, TEXT_COLOR);
-	incrementElement();
+	IncrementElement();
+
+	// Seed input
+	if (GuiValueBox(rect, "Noise Seed", &worldSeed, 0, 9999, noiseSeedEditMode))
+	{
+		noiseSeedEditMode = !noiseSeedEditMode;
+
+		if (!noiseSeedEditMode && worldSeed != world.noiseSeed) // Changed
+		{
+			world.noiseSeed = worldSeed;
+			world.UpdatedSeed();
+			world.UpdateAllDensities();
+			world.completeRebuild = true;
+		}
+	}
+	IncrementElement();
 
 	// Surface Level Slider
 	float prevLevel = world.surfaceLevel;
@@ -190,7 +232,17 @@ void PauseMenu::DrawWorldSettings()
 	{
 		world.completeRebuild = true;
 	}
-	incrementElement();
+	IncrementElement();
+
+	// Frequency
+	float prevFreq = world.frequency;
+	GuiSliderBar(rect, "0", "5", &world.frequency, 0, 5);
+	if (prevFreq != world.frequency) // Changed
+	{
+		world.SetupNoise();
+		world.completeRebuild = true;
+	}
+	IncrementElement();
 }
 
 void PauseMenu::InitSemiConsts()

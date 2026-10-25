@@ -326,17 +326,7 @@ void World::NoiseWorldGen()
     noise.SetSeed(noiseSeed);
     completeRebuild = true;
 
-    // Reset densities
-    for (int x = 0; x < WIDTH; x++)
-    {
-        for (int y = 0; y < HEIGHT; y++)
-        {
-            for (int z = 0; z < DEPTH; z++)
-            {
-                chunks[x][y][z].UpdateDensities();
-            }
-        }
-    }
+    UpdateAllDensities();
 }
 
 void World::HollowBoxWorldGen()
@@ -377,31 +367,51 @@ void World::KeyboardInputs()
         HollowBoxWorldGen();
     }
 
-    if (IsKeyDown(KEY_UP))
-    {
-        surfaceLevel += 0.01f;
+    //if (IsKeyDown(KEY_UP))
+    //{
+    //    surfaceLevel += 0.01f;
 
-        if (surfaceLevel > 1.0f)
-            surfaceLevel = 1.0f;
+    //    if (surfaceLevel > 1.0f)
+    //        surfaceLevel = 1.0f;
 
-        completeRebuild = true;
-    }
-    else if (IsKeyDown(KEY_DOWN))
-    {
-        surfaceLevel -= 0.01f;
+    //    completeRebuild = true;
+    //}
+    //else if (IsKeyDown(KEY_DOWN))
+    //{
+    //    surfaceLevel -= 0.01f;
 
-        if (surfaceLevel < -1.0f)
-            surfaceLevel = -1.0f;
+    //    if (surfaceLevel < -1.0f)
+    //        surfaceLevel = -1.0f;
 
-        completeRebuild = true;
-    }
+    //    completeRebuild = true;
+    //}
 }
 
 // FastNoiseLite is a library I added
 void World::SetupNoise()
 {
     noiseSeed = (int)(rand() % 9999);
+    UpdatedSeed();
+}
+
+void World::UpdatedSeed()
+{
     noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
     noise.SetFrequency(frequency);
     noise.SetSeed(noiseSeed);
+}
+
+void World::UpdateAllDensities()
+{
+    // Reset densities
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                chunks[x][y][z].UpdateDensities();
+            }
+        }
+    }
 }
