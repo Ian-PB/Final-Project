@@ -41,7 +41,7 @@ void Player::Init()
 
     groundedState = std::make_shared<GroundedState>(*this);
     aerialState = std::make_shared<AerialState>(*this);
-    // slidingState = std::make_shared<SlidingState>(this);
+    slidingState = std::make_shared<SlidingState>(*this);
 
     state = groundedState;
 }
@@ -124,6 +124,11 @@ void Player::Draw2D()
         DrawText("isGrounded", 0, 120, 16, GREEN);
     else
         DrawText("isGrounded", 0, 120, 16, RED);
+
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+        DrawText("isSliding", 0, 140, 16, GREEN);
+    else
+        DrawText("isSliding", 0, 140, 16, RED);
 
     // Crossair
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);

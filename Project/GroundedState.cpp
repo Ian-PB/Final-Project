@@ -17,6 +17,13 @@ void GroundedState::Update()
         return;
     }
 
+    // Swap to sliding
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+    {
+        p.SwapState(p.slidingState);
+        return;
+    }
+
     // Jump will take you out of the grounded state
     if (IsKeyPressed(KEY_SPACE) && p.jump.CheckJump(p.velocity))
     {

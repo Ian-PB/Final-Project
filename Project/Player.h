@@ -14,7 +14,7 @@ class World;
 class PlayerState;
 class GroundedState;
 class AerialState;
-// class SlidingState;
+class SlidingState;
 
 class Player
 {
@@ -46,7 +46,7 @@ private:
 	std::shared_ptr<PlayerState> state;
 	std::shared_ptr<GroundedState> groundedState;
 	std::shared_ptr<AerialState> aerialState;
-	// std::shared_ptr<SlidingState> slidingState;
+	std::shared_ptr<SlidingState> slidingState;
 
 	// Jumping
 	struct JumpInfo
@@ -79,7 +79,8 @@ private:
 	const float MAX_VELOCITY = 0.65f;
 	const float GROUNDED_FRICTION = 0.88f;
 	const float AERIAL_DRAG = 0.92f;
-	
+	const float SLIDING_FRICTION = 1.0f;
+	const float SLIDING_MOVEMENT_STRENGTH = 0.1f;
 
 	void FreeFly();
 	bool freeFly = true;
@@ -115,11 +116,11 @@ private:
 	void SetRandLight(Vector3 pos);
 	Light& randLight;
 
-
+	// States
 	friend class GroundedState;
 	friend class AerialState;
-	// friend class SlidingState;
-
+	friend class SlidingState;
+	// Pause menu editting
 	friend class PauseMenu;
 };
 
@@ -127,4 +128,4 @@ private:
 #include "PlayerState.h"
 #include "GroundedState.h"
 #include "AerialState.h"
-// #include "SlidingState.h"
+#include "SlidingState.h"
