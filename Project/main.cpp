@@ -2,7 +2,6 @@
 #include "stdio.h"
 
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
 
 #include "game.h"
 
@@ -17,6 +16,8 @@ int main(void)
 {
     InitWindow(screenWidth, screenHeight, "Raylib StarterKit GPPI");
     ToggleFullscreen();
+
+    SetExitKey(KEY_F10);
 
     // Initialise Game
     game.Init();
@@ -42,7 +43,6 @@ int main(void)
 }
 
 int counter = 0;
-char message[11];
 
 void GameLoop(void)
 {
@@ -56,7 +56,6 @@ void GameLoop(void)
 
     // Draw the Game Objects
     game.Draw();
-
     counter++;
 
     EndDrawing();

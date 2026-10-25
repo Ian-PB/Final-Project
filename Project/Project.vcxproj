@@ -156,6 +156,7 @@
     <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MarchingTables.cpp" />
     <ClCompile Include="MeshCollider.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -172,6 +173,7 @@
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MarchingTables.h" />
     <ClInclude Include="MeshCollider.h" />
+    <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="World.h" />

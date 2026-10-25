@@ -119,6 +119,8 @@ private:
 	friend class GroundedState;
 	friend class AerialState;
 	// friend class SlidingState;
+
+	friend class PauseMenu;
 };
 
 #include "World.h"

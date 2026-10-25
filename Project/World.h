@@ -78,4 +78,6 @@ private:
 	Light& light;
 
 	void KeyboardInputs();
+
+	friend class PauseMenu;
 };

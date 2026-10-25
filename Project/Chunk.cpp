@@ -52,8 +52,8 @@ void Chunk::Draw()
 
 void Chunk::Update()
 {
-	if (IsKeyReleased(KEY_P))
-		showDebugPoints = !showDebugPoints;
+	//if (IsKeyReleased(KEY_P))
+	//	showDebugPoints = !showDebugPoints;
 
 	collider.Update();
 }

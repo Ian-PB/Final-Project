@@ -124,6 +124,9 @@ void Player::Draw2D()
         DrawText("isGrounded", 0, 120, 16, GREEN);
     else
         DrawText("isGrounded", 0, 120, 16, RED);
+
+    // Crossair
+    DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);
 }
 
 void Player::UpdatePositions()

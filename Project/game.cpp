@@ -10,6 +10,8 @@ void Game::Init()
     player->Init();
 
     world.InitColliders(player->GetPosRef());
+
+    pauseMenu = std::make_shared<PauseMenu>(*player, world);
 }
 
 void Game::Draw()
@@ -25,12 +27,19 @@ void Game::Draw()
 
     player->Draw2D();
     DrawFPS(0, 0);
-    // Crossair
-    DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);
+
+    pauseMenu->Draw();
 }
 
 void Game::Update()
 {
+    if (IsKeyPressed(KEY_ESCAPE))
+        pauseMenu->ToggleActive();
+
+    // Don't update the rest if paused
+    if (pauseMenu->IsActive())
+        return;
+
     world.Update();
 
     player->Update();
