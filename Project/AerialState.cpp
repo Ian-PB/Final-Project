@@ -10,10 +10,19 @@ AerialState::AerialState(Player& t_player) : PlayerState(t_player)
 void AerialState::Update()
 {
     // Leave state when not grounded to aerial state
-    if (p.isGrounded)
+    if (p.isGrounded && !hitGround)
     {
-        p.SwapState(p.groundedState);
-        return;
+        hitGround = true;
+        timer = 0.0f;
+    }
+
+    if (hitGround)
+    {
+        if (HitGroundTimer())
+        {
+            p.SwapState(p.groundedState);
+            return;
+        }
     }
 
     float deltaTime = GetFrameTime();
@@ -62,4 +71,21 @@ void AerialState::Update()
 
     p.velocity.x *= p.AERIAL_DRAG;
     p.velocity.z *= p.AERIAL_DRAG;
+}
+
+void AerialState::OnEnterState()
+{
+    hitGround = false;
+    timer = 0.0f;
+}
+
+bool AerialState::HitGroundTimer()
+{
+    if (timer >= TIME_TILL_STATE_CHANGE)
+    {
+        return true;
+    }
+
+    timer += GetFrameTime();
+    return false;
 }
