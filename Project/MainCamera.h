@@ -5,7 +5,7 @@
 class MainCamera
 {
 public:
-	MainCamera(Vector3& t_followPosition, Vector3 t_positionOffset);
+	MainCamera(Vector3& t_followPosition, float t_heightOffset);
 
 	void UpdatePos();
 	void Update();
@@ -15,15 +15,19 @@ public:
 	Vector3 GetForward() const { return forward; }
 	float GetYaw() const { return cameraYaw; }
 
+	void SetHeight(float t_height);
+
 private:
 	Camera camera;
 	Vector3& followPosition;
-	Vector3 positionOffset;
+	Vector3 positionOffset = { 0.0f, 0.0f, 0.0f };
+	float heightOffset = 0.0f;
 
 	Vector3 forward;
 
 	float cameraSensitivity = 0.003f;
 	float cameraYaw = 0.0f;
 	float cameraPitch = 0.0f;
+	float height = 0.0f;
 };
 

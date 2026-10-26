@@ -79,8 +79,10 @@ private:
 	const float MAX_VELOCITY = 0.65f;
 	const float GROUNDED_FRICTION = 0.88f;
 	const float AERIAL_DRAG = 0.92f;
-	const float SLIDING_FRICTION = 1.0f;
+	const float SLIDING_FRICTION = 0.99f;
 	const float SLIDING_MOVEMENT_STRENGTH = 0.1f;
+	const float MIN_SLIDE_SPEED = 0.1f;
+	float slideBoost = 1.5f;
 
 	void FreeFly();
 	bool freeFly = true;
@@ -105,7 +107,9 @@ private:
 	void CollisionDetection();
 	CapsuleCollider collider;
 	static const int MAX_COLLISION_ITERATIONS = 6;
-	float height = 3.0f;
+	const float STANDING_HEIGHT = 3.0f;
+	const float SLIDING_HEIGHT = 1.5f;
+	float height = STANDING_HEIGHT;
 	float radius = 1.0f;
 
 	// Debug

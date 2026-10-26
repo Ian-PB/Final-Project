@@ -13,8 +13,11 @@ void SlidingState::Update()
         p.SwapState(p.aerialState);
         return;
     }
+
+    float currentSpeed = Vector3Length(p.velocity);
     // If the slide key is released then swap to grounded
-    if (IsKeyReleased(KEY_LEFT_SHIFT))
+    // Or if the speed is low enough
+    if (IsKeyReleased(KEY_LEFT_SHIFT) || currentSpeed < 0.01f)
     {
         p.SwapState(p.groundedState);
         return;
@@ -39,14 +42,14 @@ void SlidingState::Update()
     Vector3 moveDir = { 0.0f, 0.0f, 0.0f };
 
     // Move Forward or Backward
-    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
-    {
-        moveDir = Vector3Add(moveDir, flatForward);
-    }
-    else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
-    {
-        moveDir = Vector3Subtract(moveDir, flatForward);
-    }
+    //if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
+    //{
+    //    moveDir = Vector3Add(moveDir, flatForward);
+    //}
+    //else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
+    //{
+    //    moveDir = Vector3Subtract(moveDir, flatForward);
+    //}
     // Move Left or Right
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
     {
@@ -81,4 +84,19 @@ void SlidingState::Update()
     // Friction
     p.velocity.x *= p.SLIDING_FRICTION;
     p.velocity.z *= p.SLIDING_FRICTION;
+}
+
+void SlidingState::OnEnterState()
+{
+    float currentSpeed = Vector3Length(p.velocity);
+    float boostedSpeed = currentSpeed * p.slideBoost;
+
+    p.velocity = Vector3Scale(Vector3Normalize(p.velocity), boostedSpeed);
+
+    // Reduce height
+    p.height = p.SLIDING_HEIGHT;
+    p.collider.Setup(p.height, p.radius);
+
+    p.camera->SetHeight(p.height);
+    p.camera->UpdatePos();
 }

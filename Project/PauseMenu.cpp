@@ -99,7 +99,7 @@ void PauseMenu::DrawSideMenu()
 	incrementButton();
 
 	// Should be last
-	if (GuiButton(rect, "Exit Game (F10)"))
+	if (GuiButton(rect, "Exit Game (L)"))
 	{	
 		CloseWindow();
 		return;

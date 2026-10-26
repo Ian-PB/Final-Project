@@ -32,8 +32,8 @@ void Player::Init()
 {
     rayHeightDist = height / 2.0f + RAY_EXTENTION;
 
-    Vector3 camOffset = { 0.0f, height * 0.8f, 0.0f };
-    camera = std::make_shared<MainCamera>(position, camOffset);
+    camera = std::make_shared<MainCamera>(position, 0.8f);
+    camera->SetHeight(height);
 
     randLight.strength = 5.0f;
     light.strength = 25.0f;

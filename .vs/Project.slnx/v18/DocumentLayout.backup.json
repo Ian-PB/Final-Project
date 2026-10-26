@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\AerialState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\AerialState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\GroundedState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\GroundedState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\AerialState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\AerialState.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\SlidingState.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -19,8 +19,12 @@
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\MainCamera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\MainCamera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\MainCamera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\MainCamera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\PauseMenu.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -42,20 +46,20 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "PauseMenu.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\PauseMenu.cpp",
               "RelativeDocumentMoniker": "Project\\PauseMenu.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\PauseMenu.cpp",
               "RelativeToolTip": "Project\\PauseMenu.cpp",
-              "ViewState": "AgIAAL4AAAAAAAAAAAAqwNQAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAgwIAAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-24T23:02:22.862Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "PauseMenu.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\PauseMenu.h",
               "RelativeDocumentMoniker": "Project\\PauseMenu.h",
@@ -74,7 +78,7 @@
               "RelativeDocumentMoniker": "Project\\Player.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeToolTip": "Project\\Player.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAmwCMAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-23T18:12:31.12Z",
               "IsPinned": true,
@@ -82,13 +86,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeDocumentMoniker": "Project\\Player.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeToolTip": "Project\\Player.h",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAmwFYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAmwC4AAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-10-23T19:12:08.012Z",
               "IsPinned": true,
@@ -102,7 +106,7 @@
               "RelativeDocumentMoniker": "Project\\SlidingState.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\SlidingState.cpp",
               "RelativeToolTip": "Project\\SlidingState.cpp",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAmwB4AAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-10-25T13:22:45.822Z",
               "IsPinned": true,
@@ -111,28 +115,40 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AerialState.cpp",
-              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\AerialState.cpp",
-              "RelativeDocumentMoniker": "Project\\AerialState.cpp",
-              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\AerialState.cpp",
-              "RelativeToolTip": "Project\\AerialState.cpp",
-              "ViewState": "AgIAADwAAAAAAAAAAAAUwE4AAAARAAAAAAAAAA==",
+              "Title": "GroundedState.cpp",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\GroundedState.cpp",
+              "RelativeDocumentMoniker": "Project\\GroundedState.cpp",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\GroundedState.cpp",
+              "RelativeToolTip": "Project\\GroundedState.cpp",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAmwFkAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-10-25T13:31:43.767Z",
-              "IsPinned": true,
+              "WhenOpened": "2026-10-26T11:20:18.299Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AerialState.h",
-              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\AerialState.h",
-              "RelativeDocumentMoniker": "Project\\AerialState.h",
-              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\AerialState.h",
-              "RelativeToolTip": "Project\\AerialState.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAfAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "MainCamera.cpp",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\MainCamera.cpp",
+              "RelativeDocumentMoniker": "Project\\MainCamera.cpp",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\MainCamera.cpp",
+              "RelativeToolTip": "Project\\MainCamera.cpp",
+              "ViewState": "AgIAABgAAAAAAAAAAAAmwCkAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-10-26T11:14:02.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainCamera.h",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\MainCamera.h",
+              "RelativeDocumentMoniker": "Project\\MainCamera.h",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\MainCamera.h",
+              "RelativeToolTip": "Project\\MainCamera.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-10-25T22:08:45.263Z",
+              "WhenOpened": "2026-10-26T11:12:29.903Z",
               "EditorCaption": ""
             }
           ]

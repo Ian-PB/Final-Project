@@ -17,8 +17,9 @@ void GroundedState::Update()
         return;
     }
 
+    float currentSpeed = Vector3Length(p.velocity);
     // Swap to sliding
-    if (IsKeyDown(KEY_LEFT_SHIFT))
+    if (IsKeyDown(KEY_LEFT_SHIFT) && currentSpeed > p.MIN_SLIDE_SPEED)
     {
         p.SwapState(p.slidingState);
         return;
@@ -80,6 +81,15 @@ void GroundedState::Update()
 
     // Friction
     p.velocity = Vector3Scale(p.velocity, p.GROUNDED_FRICTION);
+}
+
+void GroundedState::OnEnterState()
+{
+    p.height = p.STANDING_HEIGHT;
+    p.collider.Setup(p.height, p.radius);
+
+    p.camera->SetHeight(p.height);
+    p.camera->UpdatePos();
 }
 
 bool GroundedState::OnWalkableSlope()

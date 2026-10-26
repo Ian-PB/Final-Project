@@ -1,6 +1,6 @@
 #include "MainCamera.h"
 
-MainCamera::MainCamera(Vector3& t_followPosition, Vector3 t_positionOffset) : followPosition(t_followPosition), positionOffset(t_positionOffset)
+MainCamera::MainCamera(Vector3& t_followPosition, float t_heightOffset) : followPosition(t_followPosition), heightOffset(t_heightOffset)
 {
     camera.position = GetPos();                         // Camera position
     camera.target = { 0.0f, 2.0f, 0.0f };               // Camera looking at point
@@ -35,4 +35,10 @@ void MainCamera::Update()
 
     forward = { cosf(cameraPitch) * sinf(cameraYaw), sinf(cameraPitch), cosf(cameraPitch) * cosf(cameraYaw) };
     camera.target = Vector3Add(camera.position, forward); // Face in new direction (forward)
+}
+
+void MainCamera::SetHeight(float t_height)
+{
+    height = t_height; 
+    positionOffset.y = height * heightOffset;
 }
