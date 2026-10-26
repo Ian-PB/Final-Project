@@ -51,14 +51,14 @@ void SlidingState::Update()
     //    moveDir = Vector3Subtract(moveDir, flatForward);
     //}
     // Move Left or Right
-    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
-    {
-        moveDir = Vector3Add(moveDir, right);
-    }
-    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
-    {
-        moveDir = Vector3Subtract(moveDir, right);
-    }
+    //if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
+    //{
+    //    moveDir = Vector3Add(moveDir, right);
+    //}
+    //else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
+    //{
+    //    moveDir = Vector3Subtract(moveDir, right);
+    //}
 
     // Project the movement along the grounds normal
     Vector3 projectedMovement = Vector3Normalize(Vector3Reject(moveDir, p.groundNormal));
