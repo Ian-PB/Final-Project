@@ -17,8 +17,8 @@ void GroundedState::Update()
         return;
     }
 
-    float currentSpeed = Vector3Length(p.velocity);
     // Swap to sliding
+    float currentSpeed = Vector3Length(p.velocity);
     if (IsKeyDown(KEY_LEFT_SHIFT) && currentSpeed > p.MIN_SLIDE_SPEED)
     {
         p.SwapState(p.slidingState);
@@ -26,7 +26,7 @@ void GroundedState::Update()
     }
 
     // Jump will take you out of the grounded state
-    if (IsKeyPressed(KEY_SPACE) && p.jump.CheckJump(p.velocity))
+    if (IsKeyDown(KEY_SPACE) && p.jump.CheckJump(p.velocity))
     {
         p.isGrounded = false;
         p.SwapState(p.aerialState);

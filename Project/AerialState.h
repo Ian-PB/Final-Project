@@ -11,7 +11,7 @@ public:
 private:
 	bool HitGroundTimer();
 	bool hitGround = false;
-	const float TIME_TILL_STATE_CHANGE = 0.1f;
+	const float TIME_TILL_STATE_CHANGE = 0.2f;
 	float timer = 0.0f;
 };
 

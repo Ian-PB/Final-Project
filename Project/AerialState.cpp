@@ -18,6 +18,14 @@ void AerialState::Update()
 
     if (hitGround)
     {
+        // Allow for straight change into sliding instead
+        float currentSpeed = Vector3Length(p.velocity);
+        if (IsKeyDown(KEY_LEFT_SHIFT) && currentSpeed > p.MIN_SLIDE_SPEED)
+        {
+            p.SwapState(p.slidingState);
+            return;
+        }
+
         if (HitGroundTimer())
         {
             p.SwapState(p.groundedState);
