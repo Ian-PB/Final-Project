@@ -100,7 +100,7 @@ void Chunk::ApplyMeshDataToModel()
 // Resources used to research how to do marching cubes:
 // https://www.youtube.com/watch?v=M3iI2l0ltbE 
 // https://mclark45.medium.com/marching-cubes-algorithm-618302629331 
-//https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
+// https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
 // https://paulbourke.net/geometry/polygonise/ 
 void Chunk::GenerateMeshData(float t_surfaceLevel)
 {

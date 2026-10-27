@@ -11,10 +11,12 @@
 // https://brooke.fyi/posts/cpp-character-controller-1/
 
 class World;
+// States
 class PlayerState;
 class GroundedState;
 class AerialState;
 class SlidingState;
+class CrouchingState;
 
 class Player
 {
@@ -37,6 +39,7 @@ private:
 	void RayChecks();
 	void CeilingCheck(const Triangle& tri);
 	void GroundCheck(const Triangle& tri);
+	bool OnWalkableSlope() const;
 
 	void UpdateOccupiedChunks();
 	std::vector<Chunk*> occupiedChunks;
@@ -47,6 +50,7 @@ private:
 	std::shared_ptr<GroundedState> groundedState;
 	std::shared_ptr<AerialState> aerialState;
 	std::shared_ptr<SlidingState> slidingState;
+	std::shared_ptr<CrouchingState> crouchingState;
 
 	// Jumping
 	struct JumpInfo
@@ -76,6 +80,8 @@ private:
 	// Gravity
 	bool gravityOn = true;
 	float gravityForce = 1.2f;
+
+	const float CROUCH_SPEED_MULT = 0.5f;
 	const float MAX_VELOCITY = 0.65f;
 	const float GROUNDED_FRICTION = 0.88f;
 	const float AERIAL_DRAG = 0.92f;
@@ -83,6 +89,7 @@ private:
 	const float SLIDING_MOVEMENT_STRENGTH = 0.1f;
 	const float MIN_SLIDE_SPEED = 0.1f;
 	float slideBoost = 1.5f;
+
 
 	void FreeFly();
 	bool freeFly = true;
@@ -124,6 +131,7 @@ private:
 	friend class GroundedState;
 	friend class AerialState;
 	friend class SlidingState;
+	friend class CrouchingState;
 	// Pause menu editting
 	friend class PauseMenu;
 };
@@ -133,3 +141,4 @@ private:
 #include "GroundedState.h"
 #include "AerialState.h"
 #include "SlidingState.h"
+#include "CrouchingState.h"

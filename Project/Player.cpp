@@ -3,10 +3,6 @@
 #include <string>
 #include <iostream>
 
-#include "PlayerState.h"
-#include "GroundedState.h"
-#include "AerialState.h"
-
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
@@ -42,6 +38,7 @@ void Player::Init()
     groundedState = std::make_shared<GroundedState>(*this);
     aerialState = std::make_shared<AerialState>(*this);
     slidingState = std::make_shared<SlidingState>(*this);
+    crouchingState = std::make_shared<CrouchingState>(*this);
 
     state = groundedState;
 }
@@ -112,7 +109,7 @@ void Player::Draw2D()
     DrawText("F2 toggle flying", 0, 55, 10, BLUE);
     std::string posString = "Pos: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z);
     DrawText(posString.c_str(), 0, 67, 10, WHITE);
-    std::string velocityString = "Velocity: " + std::to_string(velocity.x) + ", " + std::to_string(velocity.y) + ", " + std::to_string(velocity.z);
+    std::string velocityString = "Speed: " + std::to_string(Vector3Length(velocity));
     DrawText(velocityString.c_str(), 0, 80, 10, WHITE);
 
     if (jump.canJump)
@@ -228,6 +225,15 @@ void Player::GroundCheck(const Triangle& tri)
             jump.isJumping = false;
         }
     }
+}
+
+bool Player::OnWalkableSlope() const
+{
+    float slopeAngle = Vector3Angle(groundNormal, UP) * RAD2DEG;
+    if (slopeAngle < MAX_SLOPE_ANGLE)
+        return true;
+
+    return false;
 }
 
 void Player::UpdateOccupiedChunks()

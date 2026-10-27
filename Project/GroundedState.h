@@ -9,5 +9,4 @@ public:
 
 	virtual void OnEnterState() override;
 private:
-	bool OnWalkableSlope();
 };

@@ -19,10 +19,19 @@ void GroundedState::Update()
 
     // Swap to sliding
     float currentSpeed = Vector3Length(p.velocity);
-    if (IsKeyDown(KEY_LEFT_SHIFT) && currentSpeed > p.MIN_SLIDE_SPEED)
+    if (IsKeyDown(KEY_LEFT_SHIFT))
     {
-        p.SwapState(p.slidingState);
-        return;
+        // Slide if enough speed
+        if (currentSpeed > p.MIN_SLIDE_SPEED)
+        {
+            p.SwapState(p.slidingState);
+            return;
+        }
+        else // Crouch if not enough speed
+        {
+            p.SwapState(p.crouchingState);
+            return;
+        }
     }
 
     // Jump will take you out of the grounded state
@@ -73,7 +82,7 @@ void GroundedState::Update()
     p.velocity = Vector3Add(p.velocity, projectedMovement);
 
     // If the player isn't moving and the slope is walkable
-    if (moveDir == Vector3Zero() && OnWalkableSlope())
+    if (moveDir == Vector3Zero() && p.OnWalkableSlope())
         p.velocity.y = 0.0f; // Don't slide down it
 
     // Apply velocity to position
@@ -90,13 +99,4 @@ void GroundedState::OnEnterState()
 
     p.camera->SetHeight(p.height);
     p.camera->UpdatePos();
-}
-
-bool GroundedState::OnWalkableSlope()
-{
-    float slopeAngle = Vector3Angle(p.groundNormal, p.UP) * RAD2DEG;
-    if (slopeAngle < p.MAX_SLOPE_ANGLE)
-        return true;
-
-    return false;
 }

@@ -16,10 +16,16 @@ void SlidingState::Update()
 
     float currentSpeed = Vector3Length(p.velocity);
     // If the slide key is released then swap to grounded
-    // Or if the speed is low enough
-    if (IsKeyReleased(KEY_LEFT_SHIFT) || currentSpeed < 0.01f)
+    if (IsKeyReleased(KEY_LEFT_SHIFT))
     {
         p.SwapState(p.groundedState);
+        return;
+    }
+
+    // Swap to crouching state if the speed is low enough
+    if (currentSpeed < p.MIN_SLIDE_SPEED && p.OnWalkableSlope())
+    {
+        p.SwapState(p.crouchingState);
         return;
     }
 
