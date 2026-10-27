@@ -58,7 +58,7 @@ private:
 	
 	// Panel constants
 	Vector2 PANEL_START_POS = { 0.0f, 0.0f };
-	const float ELEMENT_SPACING_SCALE = 0.1f;
+	const float ELEMENT_SPACING_SCALE = 0.08f;
 	const Vector2 ELEMENT_SIZE_SCALE = { 0.1f, 0.05f };
 	Vector2 ELEMENT_SIZE = { 0.0f, 0.0f };
 	float ELEMENT_SPACING = 0.0f;

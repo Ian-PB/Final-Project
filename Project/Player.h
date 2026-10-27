@@ -73,7 +73,7 @@ private:
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
-	static const int MAX_SLOPE_ANGLE = 55;
+	/*static const*/ int MAX_SLOPE_ANGLE = 55;
 
 	Ray aboveCheckRay;
 
@@ -81,11 +81,11 @@ private:
 	bool gravityOn = true;
 	float gravityForce = 1.2f;
 
-	const float CROUCH_SPEED_MULT = 0.5f;
-	const float MAX_VELOCITY = 0.65f;
-	const float GROUNDED_FRICTION = 0.88f;
-	const float AERIAL_DRAG = 0.92f;
-	const float SLIDING_FRICTION = 0.99f;
+	/*const*/ float CROUCH_SPEED_MULT = 0.5f;
+	/*const*/ float MAX_VELOCITY = 0.65f;
+	/*const*/ float GROUNDED_FRICTION = 0.88f;
+	/*const*/ float AERIAL_DRAG = 0.92f;
+	/*const*/ float SLIDING_FRICTION = 0.99f;
 	const float SLIDING_MOVEMENT_STRENGTH = 0.1f;
 	const float MIN_SLIDE_SPEED = 0.1f;
 	float slideBoost = 1.5f;

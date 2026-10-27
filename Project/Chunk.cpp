@@ -179,12 +179,17 @@ void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 	for (int i = 0; i < SIZE*SIZE*SIZE; i++)
 	{
 		Vector3 pointWorldPos = Vector3Add(position, points[i].position);
-		if (Vector3Distance(pointWorldPos, t_pos) <= t_radius)
+		float dist = Vector3Distance(pointWorldPos, t_pos);
+
+		if (dist <= t_radius + EDIT_MARGIN)
 		{
+			// Signed distance: Neg = within radius, Pos = Outside radius
+			float newDensity = dist - t_radius;
+
 			if (destroy)
-				points[i].density = 1.0f;
+				points[i].density = fmaxf(points[i].density, -newDensity); // Keep highest value since 1 = air
 			else
-				points[i].density = -1.0f;
+				points[i].density = fminf(points[i].density, newDensity); // Keep lowest value since -1 = solid
 		}
 	}
 }

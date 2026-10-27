@@ -154,7 +154,7 @@ void PauseMenu::DrawGeneralSettings()
 void PauseMenu::DrawPlayerSettings()
 {
 	int elementNum = 0;
-	float x = PANEL_START_POS.x;
+	float x = PANEL_START_POS.x * 1.1f;
 	float y = PANEL_START_POS.y;
 	float w = ELEMENT_SIZE.x;
 	float h = ELEMENT_SIZE.y;
@@ -163,6 +163,14 @@ void PauseMenu::DrawPlayerSettings()
 	// Setup helper lambda for increment the element
 	auto IncrementElement = [&]() {
 		elementNum++;
+		y = PANEL_START_POS.y + ELEMENT_SPACING * elementNum;
+		rect = { x, y, w, h };
+		};
+
+	// Helper to move over a column
+	auto IncrementColumn = [&]() {
+		elementNum = 1;
+		x += ELEMENT_SPACING * 4.0f;
 		y = PANEL_START_POS.y + ELEMENT_SPACING * elementNum;
 		rect = { x, y, w, h };
 		};
@@ -187,6 +195,46 @@ void PauseMenu::DrawPlayerSettings()
 	int playerGravityForceInt = player.gravityForce * 10;
 	GuiSpinner(rect, "Gravity Force", &playerGravityForceInt, 0, 100, false);
 	player.gravityForce = playerGravityForceInt / 10.0f;
+	IncrementElement();
+
+	// Max standable slope
+	GuiSpinner(rect, "Max Standable Slope (DEG)", &player.MAX_SLOPE_ANGLE, 0, 180, false);
+	IncrementElement();
+
+	// Crouch speed mult
+	int crouchSpeedMultInt = player.CROUCH_SPEED_MULT * 10;
+	GuiSpinner(rect, "Crouch Speed Mult (Mult by 10)", &crouchSpeedMultInt, 0, 50, false);
+	player.CROUCH_SPEED_MULT = crouchSpeedMultInt / 10.0f;
+	IncrementElement();
+
+	// Grounded Friction
+	int groundedFrictionInt = player.GROUNDED_FRICTION * 100.0f;
+	GuiSpinner(rect, "Grounded Friction (Mult by 100)", &groundedFrictionInt, 0, 200, false);
+	player.GROUNDED_FRICTION = groundedFrictionInt / 100.0f;
+	IncrementElement();
+
+	// Sliding Friction
+	int slidingFrictionInt = player.SLIDING_FRICTION * 100.0f;
+	GuiSpinner(rect, "Sliding Friction (Mult by 100)", &slidingFrictionInt, 0, 200, false);
+	player.SLIDING_FRICTION = slidingFrictionInt / 100.0f;
+	IncrementElement();
+
+	// Sliding Boost
+	int slidingBoostInt = player.slideBoost * 10;
+	GuiSpinner(rect, "Slide Boost (Mult by 10)", &slidingBoostInt, 0, 50, false);
+	player.slideBoost = slidingBoostInt / 10.0f;
+	IncrementElement();
+
+	// Aerial Drag
+	int aerialDragInt = player.AERIAL_DRAG * 100.0f;
+	GuiSpinner(rect, "Aerial Drag (Mult by 100)", &aerialDragInt, 0, 200, false);
+	player.AERIAL_DRAG = aerialDragInt / 100.0f;
+	IncrementElement();
+
+	// Max Velocity
+	int maxVelocityInt = player.MAX_VELOCITY * 10;
+	GuiSpinner(rect, "Max Velocity", &maxVelocityInt, 0, 20, false);
+	player.MAX_VELOCITY = maxVelocityInt / 10.0f;
 	IncrementElement();
 }
 

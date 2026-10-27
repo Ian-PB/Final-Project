@@ -89,6 +89,7 @@ private:
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
 	float pointSpacing = 1.0f;
+	const float EDIT_MARGIN = 1.5f;
 
 	// Collision
 	MeshCollider collider;
