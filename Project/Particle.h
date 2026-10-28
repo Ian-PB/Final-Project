@@ -9,6 +9,7 @@ class Particle
 {
 public:
 	Particle(Model* t_model);
+	void SetModel(Model* t_model) { model = t_model; }
 
 	void Draw();
 	void Update();

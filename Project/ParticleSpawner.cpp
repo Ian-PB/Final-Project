@@ -6,6 +6,13 @@ ParticleSpawner::ParticleSpawner(Model* t_particleModel, int t_amount, int t_MAX
 		particles.push_back(std::make_shared<Particle>(particleModel));
 }
 
+void ParticleSpawner::SetModel(Model* t_particleModel)
+{
+	particleModel = t_particleModel;
+	for (std::shared_ptr<Particle> p : particles)
+		p->SetModel(particleModel);
+}
+
 void ParticleSpawner::Spawn(Vector3 t_pos)
 {
 	for (int i = 0; i < amount; i++)

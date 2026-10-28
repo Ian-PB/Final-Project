@@ -7,6 +7,7 @@ class ParticleSpawner
 {
 public:
 	ParticleSpawner(Model* t_particleModel, int t_amount, int t_MAX_AMOUNT);
+	void SetModel(Model* t_particleModel);
 
 	void Spawn(Vector3 t_pos);
 	void Draw();
