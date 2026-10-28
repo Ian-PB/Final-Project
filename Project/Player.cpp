@@ -22,13 +22,19 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     groundCheckRaysOffsets[4] = { 0.0f, 0.0f, -radius };
 
     aboveCheckRay.direction = UP;
-
-    testParticles.AddColor(RED);
-    testParticles.SetSpeeds(0.1f, 0.4f);
 }
 
 void Player::Init()
 {
+    particleModel = LoadModelFromMesh(GenMeshCube(1, 1, 1));
+    particleModel.materials[0].shader = Lighting::lightingShader;
+
+    testParticles = std::make_shared<ParticleSpawner>(&particleModel, 15, 300);
+    testParticles->AddColor(RED);
+    testParticles->SetSpeeds(0.1f, 0.4f);
+    testParticles->SetScales(0.2f, 1.2f);
+    testParticles->SetGravity(0.01f);
+
     rayHeightDist = height / 2.0f + RAY_EXTENTION;
 
     camera = std::make_shared<MainCamera>(position, 0.8f);
@@ -78,7 +84,7 @@ void Player::Update()
             rayRadius = 0.0f;
     }
 
-    testParticles.Update();
+    testParticles->Update();
 }
 
 void Player::Draw()
@@ -100,7 +106,7 @@ void Player::Draw()
 
     collider.Draw();
 
-    testParticles.Draw();
+    testParticles->Draw();
 }
 
 void Player::Draw2D()
@@ -364,7 +370,7 @@ void Player::ShootRay()
     shootRayCollision.point = closestHit;
     SetRandLight(shootRayCollision.point);
 
-    testParticles.Spawn(shootRayCollision.point);
+    testParticles->Spawn(shootRayCollision.point);
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);

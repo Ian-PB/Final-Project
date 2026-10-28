@@ -22,7 +22,8 @@ public:
 	static Light& CreateLight(Color t_color = WHITE);
 
 	// Send details to the shader given
-	static void SendToShader(Shader& shader);
+	static void SendToShader();
+	static Shader lightingShader;
 private:
 	// Reference to all lights
 	static std::vector<Light> lights;

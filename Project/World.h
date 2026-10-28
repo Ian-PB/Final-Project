@@ -51,9 +51,6 @@ private:
 
 	bool completeRebuild = false;
 
-	// Shader
-	Shader lightingShader;
-
 	// Noise (FastNoiseLite is a library I added)
 	void SetupNoise();
 	void UpdatedSeed();

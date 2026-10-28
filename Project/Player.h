@@ -128,7 +128,8 @@ private:
 	void SetRandLight(Vector3 pos);
 	Light& randLight;
 
-	ParticleSpawner testParticles;
+	Model particleModel;
+	std::shared_ptr<ParticleSpawner> testParticles;
 
 	// States
 	friend class GroundedState;

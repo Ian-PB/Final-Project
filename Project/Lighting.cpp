@@ -3,11 +3,13 @@
 #include <string>
 
 std::vector<Light> Lighting::lights;
+Shader Lighting::lightingShader = {};
 
 // Call to initialize lights vector
 void Lighting::Init()
 {
     lights.reserve(MAX_LIGHTS);
+    lightingShader = LoadShader("resources/Shaders/default.vs", "resources/Shaders/default.fs");
 }
 
 Light& Lighting::CreateLight(Color t_color)
@@ -25,11 +27,11 @@ Light& Lighting::CreateLight(Color t_color)
     return newLight;
 }
 
-void Lighting::SendToShader(Shader& shader)
+void Lighting::SendToShader()
 {
     int lightCount = std::min((int)lights.size(), MAX_LIGHTS);
-    int lightCountLocation = GetShaderLocation(shader, "lightCount");
-    SetShaderValue(shader, lightCountLocation, &lightCount, SHADER_UNIFORM_INT);
+    int lightCountLocation = GetShaderLocation(lightingShader, "lightCount");
+    SetShaderValue(lightingShader, lightCountLocation, &lightCount, SHADER_UNIFORM_INT);
 
     for (int i = 0; i < lightCount; i++)
     {
@@ -38,10 +40,10 @@ void Lighting::SendToShader(Shader& shader)
         std::string baseLocation = "lights[" + std::to_string(i) + "]";
 
         // Get locations of uniforms
-        int activeLoc = GetShaderLocation(shader, (baseLocation + ".lightOn").c_str());
-        int positionLoc = GetShaderLocation(shader, (baseLocation + ".position").c_str());
-        int colorLoc = GetShaderLocation(shader, (baseLocation + ".color").c_str());
-        int strengthLoc = GetShaderLocation(shader, (baseLocation + ".strength").c_str());
+        int activeLoc = GetShaderLocation(lightingShader, (baseLocation + ".lightOn").c_str());
+        int positionLoc = GetShaderLocation(lightingShader, (baseLocation + ".position").c_str());
+        int colorLoc = GetShaderLocation(lightingShader, (baseLocation + ".color").c_str());
+        int strengthLoc = GetShaderLocation(lightingShader, (baseLocation + ".strength").c_str());
 
         // Convert for use in shader
         int active = light.active ? 1 : 0;
@@ -50,10 +52,10 @@ void Lighting::SendToShader(Shader& shader)
         float strength = light.strength;
 
         // Send to shader
-        SetShaderValue(shader, activeLoc, &active, SHADER_UNIFORM_INT);
-        SetShaderValue(shader, positionLoc, &position, SHADER_UNIFORM_VEC3);
-        SetShaderValue(shader, colorLoc, &color, SHADER_UNIFORM_VEC3);
-        SetShaderValue(shader, strengthLoc, &strength, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(lightingShader, activeLoc, &active, SHADER_UNIFORM_INT);
+        SetShaderValue(lightingShader, positionLoc, &position, SHADER_UNIFORM_VEC3);
+        SetShaderValue(lightingShader, colorLoc, &color, SHADER_UNIFORM_VEC3);
+        SetShaderValue(lightingShader, strengthLoc, &strength, SHADER_UNIFORM_FLOAT);
     }
 
 }
