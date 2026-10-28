@@ -71,7 +71,11 @@ void Player::Update()
     if (IsMouseButtonReleased(0))
         ThrowBomb();
     if (IsMouseButtonReleased(1))
+    {
         breaking = !breaking;
+        bomb->SetBreaking(breaking);
+    }
+
 
     UpdateOccupiedChunks();
     CollisionDetection();

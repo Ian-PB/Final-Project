@@ -32,6 +32,12 @@ void Bomb::Update()
 
     // Drag
     velocity = Vector3Scale(velocity, 0.98f);
+
+    if (timerStarted)
+    {
+        if (ExplosionTimer())
+            Explode();
+    }
 }
 
 void Bomb::Throw(Vector3 t_pos, Vector3 t_vel)
@@ -43,11 +49,28 @@ void Bomb::Throw(Vector3 t_pos, Vector3 t_vel)
 
     collider.SetPos(position);
     UpdateOccupiedChunks();
+
+    timerStarted = true;
+    timer = 0.0f;
 }
 
 void Bomb::Explode()
 {
-    WORLD.EditSphere(position, explosionRadius, true);
+    active = false;
+
+    WORLD.EditSphere(position, explosionRadius, breaking);
+}
+
+bool Bomb::ExplosionTimer()
+{
+    if (timer >= TIMER_DURATION)
+    {
+        timer = 0.0f;
+        return true;
+    }
+
+    timer += GetFrameTime();
+    return false;
 }
 
 void Bomb::CollisionDetection()
