@@ -22,6 +22,9 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     groundCheckRaysOffsets[4] = { 0.0f, 0.0f, -radius };
 
     aboveCheckRay.direction = UP;
+
+    testParticles.AddColor(RED);
+    testParticles.SetSpeeds(0.1f, 0.4f);
 }
 
 void Player::Init()
@@ -74,6 +77,8 @@ void Player::Update()
         if (rayRadius < 0.0f) // Clamp
             rayRadius = 0.0f;
     }
+
+    testParticles.Update();
 }
 
 void Player::Draw()
@@ -94,6 +99,8 @@ void Player::Draw()
     }
 
     collider.Draw();
+
+    testParticles.Draw();
 }
 
 void Player::Draw2D()
@@ -356,6 +363,8 @@ void Player::ShootRay()
 
     shootRayCollision.point = closestHit;
     SetRandLight(shootRayCollision.point);
+
+    testParticles.Spawn(shootRayCollision.point);
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);

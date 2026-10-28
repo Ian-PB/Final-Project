@@ -160,6 +160,8 @@
     <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MarchingTables.cpp" />
     <ClCompile Include="MeshCollider.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleSpawner.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SlidingState.cpp" />
@@ -179,6 +181,8 @@
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MarchingTables.h" />
     <ClInclude Include="MeshCollider.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleSpawner.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />

@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include "Chunk.h"
+#include "ParticleSpawner.h"
 
 // Reading on Character Controllers
 // https://brooke.fyi/posts/cpp-character-controller-1/
@@ -126,6 +127,8 @@ private:
 
 	void SetRandLight(Vector3 pos);
 	Light& randLight;
+
+	ParticleSpawner testParticles;
 
 	// States
 	friend class GroundedState;
