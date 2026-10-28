@@ -2,6 +2,7 @@
 #include <raymath.h>
 #include <string>
 #include <iostream>
+#include "MeshCollider.h"
 
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
@@ -22,6 +23,9 @@ Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORA
     groundCheckRaysOffsets[4] = { 0.0f, 0.0f, -radius };
 
     aboveCheckRay.direction = UP;
+
+    bomb = std::make_shared<Bomb>(WORLD);
+    MeshCollider::AddTrackedPos(bomb->GetPosRef());
 }
 
 void Player::Init()
@@ -65,7 +69,7 @@ void Player::Update()
     Movement();
 
     if (IsMouseButtonReleased(0))
-        ShootRay();
+        ThrowBomb();
     if (IsMouseButtonReleased(1))
         breaking = !breaking;
 
@@ -83,6 +87,8 @@ void Player::Update()
         if (rayRadius < 0.0f) // Clamp
             rayRadius = 0.0f;
     }
+
+    bomb->Update();
 
     testParticles->Update();
 }
@@ -103,6 +109,8 @@ void Player::Draw()
 
         DrawSphere(shootRayCollision.point, 0.2, randLight.color);
     }
+
+    bomb->Draw();
 
     collider.Draw();
 
@@ -374,6 +382,17 @@ void Player::ShootRay()
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);
+}
+
+void Player::ThrowBomb()
+{
+    Vector3 startPos = camera->GetPos();
+    Vector3 distAhead = Vector3Scale(camera->GetForward(), 1.25f);
+    startPos = Vector3Add(startPos, distAhead);
+
+    Vector3 force = Vector3Scale(camera->GetForward(), 1.0f);
+
+    bomb->Throw(startPos, force);
 }
 
 void Player::CollisionDetection()

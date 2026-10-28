@@ -9,7 +9,8 @@ void Game::Init()
     player = std::make_shared<Player>(world);
     player->Init();
 
-    world.InitColliders(player->GetPosRef());
+    world.InitColliders();
+    MeshCollider::AddTrackedPos(player->GetPosRef());
 
     pauseMenu = std::make_shared<PauseMenu>(*player, world);
 }

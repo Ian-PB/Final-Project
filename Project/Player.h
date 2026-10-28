@@ -7,6 +7,8 @@
 #include <vector>
 #include "Chunk.h"
 #include "ParticleSpawner.h"
+#include "Bomb.h"
+
 
 // Reading on Character Controllers
 // https://brooke.fyi/posts/cpp-character-controller-1/
@@ -109,6 +111,9 @@ private:
 	bool breaking = true;
 	float rayRadius = 2.0f;
 	float radiusChange = 0.5f;
+
+	void ThrowBomb();
+	std::shared_ptr<Bomb> bomb;
 
 	World& WORLD;
 

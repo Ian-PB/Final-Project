@@ -84,6 +84,9 @@
     <ClCompile Include="SphereCollider.cpp">
       <Filter>Source Files\Colliders</Filter>
     </ClCompile>
+    <ClCompile Include="Bomb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="SphereCollider.h">
       <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Bomb.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

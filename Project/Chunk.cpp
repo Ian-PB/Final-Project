@@ -20,9 +20,9 @@ void Chunk::Init(FastNoiseLite* t_noise, Shader* t_shader)
 	SetupPoints();
 }
 
-void Chunk::InitCollider(Vector3& playerPos)
+void Chunk::InitCollider()
 {
-	collider.Init(playerPos, triangles, position);
+	collider.Init(triangles, position);
 }
 
 void Chunk::Draw()

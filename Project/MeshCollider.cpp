@@ -1,11 +1,17 @@
 #include "MeshCollider.h"
 #include <raymath.h>
 
-void MeshCollider::Init(Vector3& t_trackedPos, std::vector<Triangle>& t_triangles, Vector3& t_chunkPos)
+std::vector<Vector3*> MeshCollider::trackedPositions;
+
+void MeshCollider::Init(std::vector<Triangle>& t_triangles, Vector3& t_chunkPos)
 {
 	position = &t_chunkPos;
-	trackedPos = &t_trackedPos;
 	allTriangles = &t_triangles;
+}
+
+void MeshCollider::AddTrackedPos(Vector3& t_trackedPos)
+{
+	trackedPositions.push_back(&t_trackedPos);
 }
 
 void MeshCollider::Draw()
@@ -24,31 +30,40 @@ void MeshCollider::Draw()
 
 void MeshCollider::Update()
 {
-	active = TargetWithinBounds();
 	activeTriangles.clear();
-	
-	if (!active || allTriangles == nullptr)
+	active = false;
+
+	if (allTriangles == nullptr)
 		return;
 
-
-	for (const Triangle& t : *allTriangles)
+	for (const Vector3* trackedPos : trackedPositions)
 	{
-		Triangle worldTri = t;
+		// Not in bounds
+		if (!TargetWithinBounds(trackedPos))
+			continue;
 
-		worldTri.a = Vector3Add(t.a, *position);
-		worldTri.b = Vector3Add(t.b, *position);
-		worldTri.c = Vector3Add(t.c, *position);
+		active = true;
 
-		float closestDist = std::min(std::min(Vector3Distance(worldTri.a, *trackedPos), Vector3Distance(worldTri.b, *trackedPos)), Vector3Distance(worldTri.c, *trackedPos));
 
-		if (closestDist <= trackingRadius)
+		for (const Triangle& t : *allTriangles)
 		{
-			activeTriangles.push_back(worldTri);
+			Triangle worldTri = t;
+
+			worldTri.a = Vector3Add(t.a, *position);
+			worldTri.b = Vector3Add(t.b, *position);
+			worldTri.c = Vector3Add(t.c, *position);
+
+			float closestDist = std::min(std::min(Vector3Distance(worldTri.a, *trackedPos), Vector3Distance(worldTri.b, *trackedPos)), Vector3Distance(worldTri.c, *trackedPos));
+
+			if (closestDist <= trackingRadius)
+			{
+				activeTriangles.push_back(worldTri);
+			}
 		}
 	}
 }
 
-bool MeshCollider::TargetWithinBounds()
+bool MeshCollider::TargetWithinBounds(const Vector3* trackedPos)
 {
 	return trackedPos->x >= bounds.min.x - trackingRadius &&
 		trackedPos->x <= bounds.max.x + trackingRadius &&
