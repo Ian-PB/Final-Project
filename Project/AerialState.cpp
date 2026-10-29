@@ -12,6 +12,7 @@ void AerialState::Update()
     // Leave state when not grounded to aerial state
     if (p.isGrounded && !hitGround)
     {
+        p.velocity.y = 0.0f;
         hitGround = true;
         timer = 0.0f;
     }
