@@ -76,13 +76,13 @@ private:
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
-	/*static const*/ int MAX_SLOPE_ANGLE = 55;
+	/*static const*/ int MAX_SLOPE_ANGLE = 65;
 
 	Ray aboveCheckRay;
 
 	// Gravity
 	bool gravityOn = true;
-	float gravityForce = 1.2f;
+	float gravityForce = 1.05f;
 
 	/*const*/ float CROUCH_SPEED_MULT = 0.5f;
 	/*const*/ float MAX_VELOCITY = 0.65f;

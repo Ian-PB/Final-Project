@@ -52,6 +52,11 @@ void GameLoop(void)
     // Should be outside BeginDrawing(); and EndDrawing();
     game.Update();
 
+    if (IsKeyPressed(KEY_F))
+    {
+        ToggleFullscreen();
+    }
+
     ClearBackground(BLACK);
 
     // Draw the Game Objects
