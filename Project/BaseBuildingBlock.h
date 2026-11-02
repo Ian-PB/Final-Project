@@ -12,6 +12,8 @@ enum class EditTypes
 class BaseBuildingBlock
 {
 public:
+	BaseBuildingBlock(const Camera& t_cam);
+
 	void Init();
 	void Draw(EditTypes t_editType);
 	void Update(EditTypes t_editType);
@@ -29,10 +31,13 @@ protected:
 	// Arrow bounding boxes (x, y, z)
 	BoundingBox boundingBoxes[3];
 private:
+	int CheckArrowSelectedOn();
 	void UpdateArrowBounds();
 
 	float arrowHeadHeight = 0.5f;
 	float arrowHeadBase = 0.3f;
 	float arrowLength = 3.0f;
 	float lineWidth = 0.1f;
+
+	const Camera& CAMERA;
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include <memory>
 #include "BaseBuildingBlock.h"
 
 class StructureBuilding
@@ -15,7 +16,7 @@ private:
 	void GetEditModeInputs();
 	EditTypes editMode = EditTypes::Move;
 
-	BaseBuildingBlock testObject;
+	std::shared_ptr<BaseBuildingBlock> testObject;
 
 	Camera3D camera;
 };

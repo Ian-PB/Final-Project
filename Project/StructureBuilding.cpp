@@ -15,7 +15,9 @@ void StructureBuilding::Init()
 {
     DisableCursor();
 
-    testObject.Init();
+    testObject = std::make_shared<BaseBuildingBlock>(camera);
+
+    testObject->Init();
 }
 
 void StructureBuilding::Draw()
@@ -24,7 +26,7 @@ void StructureBuilding::Draw()
 
     DrawPlane({ 0.0f, 0.0f, 0.0f }, { 100, 100 }, RAYWHITE);
 
-    testObject.Draw(editMode);
+    testObject->Draw(editMode);
 
 	EndMode3D();
 
@@ -38,7 +40,7 @@ void StructureBuilding::Update()
     UpdateCamera(&camera, CAMERA_FREE);
     GetEditModeInputs();
 
-    testObject.Update(editMode);
+    testObject->Update(editMode);
 }
 
 void StructureBuilding::GetEditModeInputs()

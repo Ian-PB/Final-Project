@@ -1,5 +1,10 @@
 #include "BaseBuildingBlock.h"
+#include <raymath.h>
 #include <algorithm>
+
+BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
+{
+}
 
 void BaseBuildingBlock::Init()
 {
@@ -46,9 +51,6 @@ void BaseBuildingBlock::Update(EditTypes t_editType)
 
 void BaseBuildingBlock::MoveDraw()
 {
-	// Draw 3 arrows (X, Y, Z)
-	// Use cylinder and cone as point
-
 	// X
 	Vector3 endPosX = position;
 	endPosX.x += arrowLength;
@@ -82,6 +84,10 @@ void BaseBuildingBlock::MoveDraw()
 
 void BaseBuildingBlock::MoveUpdate()
 {
+	int selectedAxis = CheckArrowSelectedOn();
+
+	if (selectedAxis == -1)
+		return;
 }
 
 void BaseBuildingBlock::RotateDraw()
@@ -95,12 +101,67 @@ void BaseBuildingBlock::RotateUpdate()
 
 void BaseBuildingBlock::ScaleDraw()
 {
-	// Draw 3 arrows (Up, Left, Right)
-	// Use cylinder and cube as point
+	// X
+	Vector3 endPosX = position;
+	endPosX.x += arrowLength;
+	Vector3 cubePosX = endPosX;
+	cubePosX.x += arrowHeadBase / 2.0f;
+
+	DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, RED);
+	DrawCube(cubePosX, arrowHeadBase, arrowHeadBase, arrowHeadBase, RED);
+	DrawBoundingBox(boundingBoxes[0], RED);
+
+	// Y
+	Vector3 endPosY = position;
+	endPosY.y += arrowLength;
+	Vector3 cubePosY = endPosY;
+	cubePosY.y += arrowHeadBase / 2.0f;
+
+	DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, BLUE);
+	DrawCube(cubePosY, arrowHeadBase, arrowHeadBase, arrowHeadBase, BLUE);
+	DrawBoundingBox(boundingBoxes[1], BLUE);
+
+	// Z
+	Vector3 endPosZ = position;
+	endPosZ.z += arrowLength;
+	Vector3 cubePosZ = endPosZ;
+	cubePosZ.z += arrowHeadBase / 2.0f;
+
+	DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, GREEN);
+	DrawCube(cubePosZ, arrowHeadBase, arrowHeadBase, arrowHeadBase, GREEN);
+	DrawBoundingBox(boundingBoxes[2], GREEN);
 }
 
 void BaseBuildingBlock::ScaleUpdate()
 {
+	int selectedAxis = CheckArrowSelectedOn();
+
+	if (selectedAxis == -1)
+		return;
+}
+
+int BaseBuildingBlock::CheckArrowSelectedOn()
+{	
+	int selectedAxis = -1; // If -1 returned then not on any
+
+	Vector3 dir = Vector3Normalize(Vector3Subtract(CAMERA.target, CAMERA.position));
+	Ray ray = { CAMERA.position, dir };
+
+	float closestDist = 9999.0f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		RayCollision collision = GetRayCollisionBox(ray, boundingBoxes[i]);
+
+		if (collision.hit && collision.distance < closestDist)
+		{
+			closestDist = collision.distance;
+			selectedAxis = i;
+		}
+	}
+
+	// Return -1 if none pressed
+	return -1;
 }
 
 void BaseBuildingBlock::UpdateArrowBounds()
