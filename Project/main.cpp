@@ -4,12 +4,21 @@
 #define RAYGUI_IMPLEMENTATION
 
 #include "game.h"
+#include "StructureBuilding.h"
 
 const int screenWidth = 800;
 const int screenHeight = 600;
 
 void GameLoop(void);
 
+enum class LaunchTypes
+{
+    Game,
+    StructureBuilding
+};
+
+static const LaunchTypes LAUNCH_TYPE = LaunchTypes::StructureBuilding;
+StructureBuilding structureBuilding;
 Game game;
 
 int main(void)
@@ -19,8 +28,18 @@ int main(void)
 
     SetExitKey(KEY_L);
 
-    // Initialise Game
-    game.Init();
+    // Initialise
+    switch (LAUNCH_TYPE)
+    {
+    case LaunchTypes::Game:
+        game.Init();
+        break;
+    case LaunchTypes::StructureBuilding:
+        structureBuilding.Init();
+        break;
+    default:
+        break;
+    }
 
     // For web builds, do not use WindowShouldClose
     // see https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5)#41-avoid-raylib-whilewindowshouldclose-loop
@@ -49,8 +68,17 @@ void GameLoop(void)
     BeginDrawing();
 
     // Update Game Data
-    // Should be outside BeginDrawing(); and EndDrawing();
-    game.Update();
+    switch (LAUNCH_TYPE)
+    {
+    case LaunchTypes::Game:
+        game.Update();
+        break;
+    case LaunchTypes::StructureBuilding:
+        structureBuilding.Update();
+        break;
+    default:
+        break;
+    }
 
     if (IsKeyPressed(KEY_F))
     {
@@ -60,7 +88,17 @@ void GameLoop(void)
     ClearBackground(BLACK);
 
     // Draw the Game Objects
-    game.Draw();
+    switch (LAUNCH_TYPE)
+    {
+    case LaunchTypes::Game:
+        game.Draw();
+        break;
+    case LaunchTypes::StructureBuilding:
+        structureBuilding.Draw();
+        break;
+    default:
+        break;
+    }
     counter++;
 
     EndDrawing();
