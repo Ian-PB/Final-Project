@@ -8,6 +8,13 @@ enum class EditTypes
 	Rotate,
 	Scale
 };
+enum class Axis
+{
+	None = -1,
+	X = 0,
+	Y = 1,
+	Z = 2
+};
 
 class BaseBuildingBlock
 {
@@ -28,11 +35,14 @@ protected:
 
 	Vector3 position = {0.0f , 2.0f, 0.0f}; // Middle of object
 
+private:
+
+	Axis CheckArrowSelectedOn();
+	void UpdateArrowBounds();
 	// Arrow bounding boxes (x, y, z)
 	BoundingBox boundingBoxes[3];
-private:
-	int CheckArrowSelectedOn();
-	void UpdateArrowBounds();
+	Axis selectedAxis = Axis::None;
+
 
 	float arrowHeadHeight = 0.5f;
 	float arrowHeadBase = 0.3f;

@@ -57,9 +57,16 @@ void BaseBuildingBlock::MoveDraw()
 	Vector3 pointStartPosX = endPosX;
 	pointStartPosX.x += arrowHeadHeight;
 
-	DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, RED);
-	DrawCylinderEx(pointStartPosX, endPosX, 0, arrowHeadBase, 10, RED);
-	DrawBoundingBox(boundingBoxes[0], RED);
+	if (selectedAxis == Axis::X)
+	{
+		DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, MAROON);
+		DrawCylinderEx(pointStartPosX, endPosX, 0, arrowHeadBase, 10, MAROON);
+	}
+	else
+	{
+		DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, RED);
+		DrawCylinderEx(pointStartPosX, endPosX, 0, arrowHeadBase, 10, RED);
+	}
 
 	// Y
 	Vector3 endPosY = position;
@@ -67,9 +74,16 @@ void BaseBuildingBlock::MoveDraw()
 	Vector3 pointStartPosY = endPosY;
 	pointStartPosY.y += arrowHeadHeight;
 
-	DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, BLUE);
-	DrawCylinderEx(pointStartPosY, endPosY, 0, arrowHeadBase, 10, BLUE);
-	DrawBoundingBox(boundingBoxes[1], BLUE);
+	if (selectedAxis == Axis::Y)
+	{
+		DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, DARKBLUE);
+		DrawCylinderEx(pointStartPosY, endPosY, 0, arrowHeadBase, 10, DARKBLUE);
+	}
+	else
+	{
+		DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, BLUE);
+		DrawCylinderEx(pointStartPosY, endPosY, 0, arrowHeadBase, 10, BLUE);
+	}
 
 	// Z
 	Vector3 endPosZ = position;
@@ -77,16 +91,23 @@ void BaseBuildingBlock::MoveDraw()
 	Vector3 pointStartPosZ = endPosZ;
 	pointStartPosZ.z += arrowHeadHeight;
 
-	DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, GREEN);
-	DrawCylinderEx(pointStartPosZ, endPosZ, 0, arrowHeadBase, 10, GREEN);
-	DrawBoundingBox(boundingBoxes[2], GREEN);
+	if (selectedAxis == Axis::Z)
+	{
+		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, DARKGREEN);
+		DrawCylinderEx(pointStartPosZ, endPosZ, 0, arrowHeadBase, 10, DARKGREEN);
+	}
+	else
+	{
+		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, GREEN);
+		DrawCylinderEx(pointStartPosZ, endPosZ, 0, arrowHeadBase, 10, GREEN);
+	}
 }
 
 void BaseBuildingBlock::MoveUpdate()
 {
-	int selectedAxis = CheckArrowSelectedOn();
+	selectedAxis = CheckArrowSelectedOn();
 
-	if (selectedAxis == -1)
+	if (selectedAxis == Axis::None)
 		return;
 }
 
@@ -107,9 +128,16 @@ void BaseBuildingBlock::ScaleDraw()
 	Vector3 cubePosX = endPosX;
 	cubePosX.x += arrowHeadBase / 2.0f;
 
-	DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, RED);
-	DrawCube(cubePosX, arrowHeadBase, arrowHeadBase, arrowHeadBase, RED);
-	DrawBoundingBox(boundingBoxes[0], RED);
+	if (selectedAxis == Axis::X)
+	{
+		DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, BROWN);
+		DrawCube(cubePosX, arrowHeadBase, arrowHeadBase, arrowHeadBase, BROWN);
+	}
+	else
+	{
+		DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, RED);
+		DrawCube(cubePosX, arrowHeadBase, arrowHeadBase, arrowHeadBase, RED);
+	}
 
 	// Y
 	Vector3 endPosY = position;
@@ -117,9 +145,16 @@ void BaseBuildingBlock::ScaleDraw()
 	Vector3 cubePosY = endPosY;
 	cubePosY.y += arrowHeadBase / 2.0f;
 
-	DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, BLUE);
-	DrawCube(cubePosY, arrowHeadBase, arrowHeadBase, arrowHeadBase, BLUE);
-	DrawBoundingBox(boundingBoxes[1], BLUE);
+	if (selectedAxis == Axis::Y)
+	{
+		DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, DARKBLUE);
+		DrawCube(cubePosY, arrowHeadBase, arrowHeadBase, arrowHeadBase, DARKBLUE);
+	}
+	else
+	{
+		DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, BLUE);
+		DrawCube(cubePosY, arrowHeadBase, arrowHeadBase, arrowHeadBase, BLUE);
+	}
 
 	// Z
 	Vector3 endPosZ = position;
@@ -127,21 +162,28 @@ void BaseBuildingBlock::ScaleDraw()
 	Vector3 cubePosZ = endPosZ;
 	cubePosZ.z += arrowHeadBase / 2.0f;
 
-	DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, GREEN);
-	DrawCube(cubePosZ, arrowHeadBase, arrowHeadBase, arrowHeadBase, GREEN);
-	DrawBoundingBox(boundingBoxes[2], GREEN);
+	if (selectedAxis == Axis::Z)
+	{
+		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, DARKGREEN);
+		DrawCube(cubePosZ, arrowHeadBase, arrowHeadBase, arrowHeadBase, DARKGREEN);
+	}
+	else
+	{
+		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, GREEN);
+		DrawCube(cubePosZ, arrowHeadBase, arrowHeadBase, arrowHeadBase, GREEN);
+	}
 }
 
 void BaseBuildingBlock::ScaleUpdate()
 {
-	int selectedAxis = CheckArrowSelectedOn();
+	selectedAxis = CheckArrowSelectedOn();
 
-	if (selectedAxis == -1)
+	if (selectedAxis == Axis::None)
 		return;
 }
 
-int BaseBuildingBlock::CheckArrowSelectedOn()
-{	
+Axis BaseBuildingBlock::CheckArrowSelectedOn()
+{
 	int selectedAxis = -1; // If -1 returned then not on any
 
 	Vector3 dir = Vector3Normalize(Vector3Subtract(CAMERA.target, CAMERA.position));
@@ -161,7 +203,7 @@ int BaseBuildingBlock::CheckArrowSelectedOn()
 	}
 
 	// Return -1 if none pressed
-	return -1;
+	return static_cast<Axis>(selectedAxis);
 }
 
 void BaseBuildingBlock::UpdateArrowBounds()
