@@ -26,14 +26,19 @@ public:
 	void Update(EditTypes t_editType);
 
 protected:
-	virtual void MoveDraw();
+	void Move();
 	virtual void MoveUpdate();
-	virtual void RotateDraw();
+	virtual void MoveDraw();
+	void Rotate();
 	virtual void RotateUpdate();
-	virtual void ScaleDraw();
+	virtual void RotateDraw();
+	void Scale();
 	virtual void ScaleUpdate();
+	virtual void ScaleDraw();
 
+	Model model;
 	Vector3 position = {0.0f , 2.0f, 0.0f}; // Middle of object
+	Vector3 scale = {1.0f , 1.0f, 1.0f};
 
 private:
 
@@ -41,7 +46,9 @@ private:
 	void UpdateArrowBounds();
 	// Arrow bounding boxes (x, y, z)
 	BoundingBox boundingBoxes[3];
+	Axis hoveredAxis = Axis::None;
 	Axis selectedAxis = Axis::None;
+	float changeSpeedMult = 0.05f;
 
 
 	float arrowHeadHeight = 0.5f;

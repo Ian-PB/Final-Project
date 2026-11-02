@@ -4,6 +4,7 @@
 
 BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 {
+	model = LoadModelFromMesh(GenMeshCube(1, 1, 1));
 }
 
 void BaseBuildingBlock::Init()
@@ -13,6 +14,9 @@ void BaseBuildingBlock::Init()
 
 void BaseBuildingBlock::Draw(EditTypes t_editType)
 {
+	DrawModelEx(model, position, { 1, 1, 1 }, 0, scale, WHITE);
+	DrawModelWiresEx(model, position, { 1, 1, 1 }, 0, scale, DARKGRAY);
+
 	switch (t_editType)
 	{
 	case EditTypes::Move:
@@ -32,6 +36,18 @@ void BaseBuildingBlock::Draw(EditTypes t_editType)
 
 void BaseBuildingBlock::Update(EditTypes t_editType)
 {
+	hoveredAxis = CheckArrowSelectedOn();
+
+	// Set selected axis to the hovered axis
+	if (IsMouseButtonPressed(0))
+	{
+		selectedAxis = hoveredAxis;
+	}
+	else if (IsMouseButtonReleased(0))
+	{
+		selectedAxis = Axis::None;
+	}
+
 	switch (t_editType)
 	{
 	case EditTypes::Move:
@@ -49,15 +65,43 @@ void BaseBuildingBlock::Update(EditTypes t_editType)
 	}
 }
 
+void BaseBuildingBlock::Move()
+{
+	Vector2 mouseMove = GetMouseDelta() * changeSpeedMult;
+
+	if (selectedAxis == Axis::X)
+	{
+		position.x -= mouseMove.x;
+	}
+	else if (selectedAxis == Axis::Y)
+	{
+		position.y -= mouseMove.y;
+	}
+	else if (selectedAxis == Axis::Z)
+	{
+		position.z -= mouseMove.x;
+	}
+
+	UpdateArrowBounds();
+}
+
+void BaseBuildingBlock::MoveUpdate()
+{
+	if (selectedAxis == Axis::None)
+		return;
+
+	Move();
+}
+
 void BaseBuildingBlock::MoveDraw()
 {
 	// X
 	Vector3 endPosX = position;
-	endPosX.x += arrowLength;
+	endPosX.x += arrowLength * scale.x;
 	Vector3 pointStartPosX = endPosX;
 	pointStartPosX.x += arrowHeadHeight;
 
-	if (selectedAxis == Axis::X)
+	if (hoveredAxis == Axis::X)
 	{
 		DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, MAROON);
 		DrawCylinderEx(pointStartPosX, endPosX, 0, arrowHeadBase, 10, MAROON);
@@ -70,11 +114,11 @@ void BaseBuildingBlock::MoveDraw()
 
 	// Y
 	Vector3 endPosY = position;
-	endPosY.y += arrowLength;
+	endPosY.y += arrowLength * scale.y;
 	Vector3 pointStartPosY = endPosY;
 	pointStartPosY.y += arrowHeadHeight;
 
-	if (selectedAxis == Axis::Y)
+	if (hoveredAxis == Axis::Y)
 	{
 		DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, DARKBLUE);
 		DrawCylinderEx(pointStartPosY, endPosY, 0, arrowHeadBase, 10, DARKBLUE);
@@ -87,11 +131,11 @@ void BaseBuildingBlock::MoveDraw()
 
 	// Z
 	Vector3 endPosZ = position;
-	endPosZ.z += arrowLength;
+	endPosZ.z += arrowLength * scale.z;
 	Vector3 pointStartPosZ = endPosZ;
 	pointStartPosZ.z += arrowHeadHeight;
 
-	if (selectedAxis == Axis::Z)
+	if (hoveredAxis == Axis::Z)
 	{
 		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, DARKGREEN);
 		DrawCylinderEx(pointStartPosZ, endPosZ, 0, arrowHeadBase, 10, DARKGREEN);
@@ -103,12 +147,12 @@ void BaseBuildingBlock::MoveDraw()
 	}
 }
 
-void BaseBuildingBlock::MoveUpdate()
+void BaseBuildingBlock::Rotate()
 {
-	selectedAxis = CheckArrowSelectedOn();
+}
 
-	if (selectedAxis == Axis::None)
-		return;
+void BaseBuildingBlock::RotateUpdate()
+{
 }
 
 void BaseBuildingBlock::RotateDraw()
@@ -116,19 +160,28 @@ void BaseBuildingBlock::RotateDraw()
 	// Draw 3 circle outlines (Up, Left, Right) encasing object
 }
 
-void BaseBuildingBlock::RotateUpdate()
+
+void BaseBuildingBlock::Scale()
 {
+}
+
+void BaseBuildingBlock::ScaleUpdate()
+{
+	if (hoveredAxis == Axis::None)
+		return;
+
+	Scale();
 }
 
 void BaseBuildingBlock::ScaleDraw()
 {
 	// X
 	Vector3 endPosX = position;
-	endPosX.x += arrowLength;
+	endPosX.x += arrowLength * scale.x;
 	Vector3 cubePosX = endPosX;
 	cubePosX.x += arrowHeadBase / 2.0f;
 
-	if (selectedAxis == Axis::X)
+	if (hoveredAxis == Axis::X)
 	{
 		DrawCylinderEx(position, endPosX, lineWidth, lineWidth, 10, BROWN);
 		DrawCube(cubePosX, arrowHeadBase, arrowHeadBase, arrowHeadBase, BROWN);
@@ -141,11 +194,11 @@ void BaseBuildingBlock::ScaleDraw()
 
 	// Y
 	Vector3 endPosY = position;
-	endPosY.y += arrowLength;
+	endPosY.y += arrowLength * scale.y;
 	Vector3 cubePosY = endPosY;
 	cubePosY.y += arrowHeadBase / 2.0f;
 
-	if (selectedAxis == Axis::Y)
+	if (hoveredAxis == Axis::Y)
 	{
 		DrawCylinderEx(position, endPosY, lineWidth, lineWidth, 10, DARKBLUE);
 		DrawCube(cubePosY, arrowHeadBase, arrowHeadBase, arrowHeadBase, DARKBLUE);
@@ -158,11 +211,11 @@ void BaseBuildingBlock::ScaleDraw()
 
 	// Z
 	Vector3 endPosZ = position;
-	endPosZ.z += arrowLength;
+	endPosZ.z += arrowLength * scale.z;
 	Vector3 cubePosZ = endPosZ;
 	cubePosZ.z += arrowHeadBase / 2.0f;
 
-	if (selectedAxis == Axis::Z)
+	if (hoveredAxis == Axis::Z)
 	{
 		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, DARKGREEN);
 		DrawCube(cubePosZ, arrowHeadBase, arrowHeadBase, arrowHeadBase, DARKGREEN);
@@ -174,17 +227,9 @@ void BaseBuildingBlock::ScaleDraw()
 	}
 }
 
-void BaseBuildingBlock::ScaleUpdate()
-{
-	selectedAxis = CheckArrowSelectedOn();
-
-	if (selectedAxis == Axis::None)
-		return;
-}
-
 Axis BaseBuildingBlock::CheckArrowSelectedOn()
 {
-	int selectedAxis = -1; // If -1 returned then not on any
+	int axis = -1; 
 
 	Vector3 dir = Vector3Normalize(Vector3Subtract(CAMERA.target, CAMERA.position));
 	Ray ray = { CAMERA.position, dir };
@@ -198,12 +243,12 @@ Axis BaseBuildingBlock::CheckArrowSelectedOn()
 		if (collision.hit && collision.distance < closestDist)
 		{
 			closestDist = collision.distance;
-			selectedAxis = i;
+			axis = i;
 		}
 	}
 
 	// Return -1 if none pressed
-	return static_cast<Axis>(selectedAxis);
+	return static_cast<Axis>(axis);
 }
 
 void BaseBuildingBlock::UpdateArrowBounds()
