@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AerialState.cpp" />
+    <ClCompile Include="BaseBuildingBlock.cpp" />
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="CapsuleCollider.cpp" />
     <ClCompile Include="Chunk.cpp" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AerialState.h" />
+    <ClInclude Include="BaseBuildingBlock.h" />
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Chunk.h" />

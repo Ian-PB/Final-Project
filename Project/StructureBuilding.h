@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include "BaseBuildingBlock.h"
 
 class StructureBuilding
 {
@@ -11,6 +12,11 @@ public:
 	void Update();
 
 private:
+	void GetEditModeInputs();
+	EditTypes editMode = EditTypes::Move;
+
+	BaseBuildingBlock testObject;
+
 	Camera3D camera;
 };
 

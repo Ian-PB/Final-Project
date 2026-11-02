@@ -14,6 +14,8 @@ StructureBuilding::StructureBuilding()
 void StructureBuilding::Init()
 {
     DisableCursor();
+
+    testObject.Init();
 }
 
 void StructureBuilding::Draw()
@@ -22,10 +24,31 @@ void StructureBuilding::Draw()
 
     DrawPlane({ 0.0f, 0.0f, 0.0f }, { 100, 100 }, RAYWHITE);
 
+    testObject.Draw(editMode);
+
 	EndMode3D();
+
+    // Quick crosshair
+    DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 3, WHITE);
+    DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, RED);
 }
 
 void StructureBuilding::Update()
 {
     UpdateCamera(&camera, CAMERA_FREE);
+    GetEditModeInputs();
+
+    testObject.Update(editMode);
+}
+
+void StructureBuilding::GetEditModeInputs()
+{
+    if (IsKeyPressed(KEY_ONE))
+        editMode = EditTypes::Move;
+
+    else if (IsKeyPressed(KEY_TWO))
+        editMode = EditTypes::Rotate;
+
+    else if (IsKeyPressed(KEY_THREE))
+        editMode = EditTypes::Scale;
 }

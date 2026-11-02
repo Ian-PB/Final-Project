@@ -25,6 +25,12 @@
     <Filter Include="Source Files\PlayerStates">
       <UniqueIdentifier>{f7862c7b-96b6-49ea-b6bc-88f37360dbe6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\StructureBuilding">
+      <UniqueIdentifier>{d14f1b9c-7f27-47b8-8b3a-c206f23d40a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\StructureBuilding">
+      <UniqueIdentifier>{5f094fc9-0ca6-414f-b17b-960ccb1af0f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -87,8 +93,11 @@
     <ClCompile Include="Bomb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BaseBuildingBlock.cpp">
+      <Filter>Source Files\StructureBuilding</Filter>
+    </ClCompile>
     <ClCompile Include="StructureBuilding.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\StructureBuilding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,8 +167,11 @@
     <ClInclude Include="Bomb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseBuildingBlock.h">
+      <Filter>Header Files\StructureBuilding</Filter>
+    </ClInclude>
     <ClInclude Include="StructureBuilding.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\StructureBuilding</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
