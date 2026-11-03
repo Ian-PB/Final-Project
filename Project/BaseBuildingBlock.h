@@ -53,6 +53,8 @@ private:
 	void UpdateTransformMatrix();
 
 	Axis CheckArrowSelectedOn();
+	Axis CheckCircleSelectedOn();
+	RayCollision GetCircleCollision(const Ray& ray, float radius);
 	void UpdateArrowBounds();
 	// Arrow bounding boxes (x, y, z)
 	BoundingBox boundingBoxes[3];
@@ -67,6 +69,7 @@ private:
 	float arrowHeadBase = 0.3f;
 	float arrowLength = 3.0f;
 	float lineWidth = 0.1f;
+	const float ROTATION_CIRCLE_RADIUS_MULT = 1.25f;
 
 	const Camera& CAMERA;
 };

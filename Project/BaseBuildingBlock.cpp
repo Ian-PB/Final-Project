@@ -43,8 +43,6 @@ void BaseBuildingBlock::Update(EditTypes t_editType)
 	if (!selected)
 		return;
 
-	hoveredAxis = CheckArrowSelectedOn();
-
 	// Set selected axis to the hovered axis
 	if (IsMouseButtonPressed(0))
 	{
@@ -111,6 +109,8 @@ void BaseBuildingBlock::Move()
 
 void BaseBuildingBlock::MoveUpdate()
 {
+	hoveredAxis = CheckArrowSelectedOn();
+
 	if (selectedAxis == Axis::None)
 		return;
 
@@ -181,20 +181,49 @@ void BaseBuildingBlock::Rotate()
 
 void BaseBuildingBlock::RotateUpdate()
 {
+	hoveredAxis = CheckCircleSelectedOn();
+
+	if (selectedAxis == Axis::None)
+		return;
+
+	Rotate();
 }
 
 void BaseBuildingBlock::RotateDraw()
 {
 	// Draw 3 circle outlines (Up, Left, Right) encasing object
 	float largestScale = std::max(scale.x, std::max(scale.y, scale.z));
-	float radius = largestScale * 1.25f;
+	float radius = largestScale * ROTATION_CIRCLE_RADIUS_MULT;
 
 	// X Rotation
-	DrawCircle3D(position, radius, { 0, 1, 0 }, 90, RED);
+	if (hoveredAxis == Axis::X)
+	{
+		DrawCircle3D(position, radius, { 0, 1, 0 }, 90, BLACK);
+	}
+	else
+	{
+		DrawCircle3D(position, radius, { 0, 1, 0 }, 90, RED);
+	}
+
 	// Y Rotation
-	DrawCircle3D(position, radius, { 1, 0, 0 }, 90, BLUE);
+	if (hoveredAxis == Axis::Y)
+	{
+		DrawCircle3D(position, radius, { 1, 0, 0 }, 90, BLACK);
+	}
+	else
+	{
+		DrawCircle3D(position, radius, { 1, 0, 0 }, 90, BLUE);
+	}
+
 	// Z Rotation
-	DrawCircle3D(position, radius, { 0, 0, 0 }, 0, GREEN);
+	if (hoveredAxis == Axis::Z)
+	{
+		DrawCircle3D(position, radius, { 0, 0, 0 }, 0, BLACK);
+	}
+	else
+	{
+		DrawCircle3D(position, radius, { 0, 0, 0 }, 0, GREEN);
+	}
 }
 
 
@@ -230,6 +259,8 @@ void BaseBuildingBlock::Scale()
 
 void BaseBuildingBlock::ScaleUpdate()
 {
+	hoveredAxis = CheckArrowSelectedOn();
+
 	if (hoveredAxis == Axis::None)
 		return;
 
@@ -320,6 +351,69 @@ Axis BaseBuildingBlock::CheckArrowSelectedOn()
 
 	// Return -1 if none pressed
 	return static_cast<Axis>(axis);
+}
+
+Axis BaseBuildingBlock::CheckCircleSelectedOn()
+{
+	Axis axis = Axis::None;
+
+	float largestScale = std::max(scale.x, std::max(scale.y, scale.z));
+	float radius = largestScale * ROTATION_CIRCLE_RADIUS_MULT;
+
+	Vector3 dir = Vector3Normalize(Vector3Subtract(CAMERA.target, CAMERA.position));
+	Ray ray = { CAMERA.position, dir };
+
+	float closestDist = 9999.0f;
+
+	// Quad points (X locked)
+	Vector3 p1 = { position.x, position.y - radius, position.z - radius };
+	Vector3 p2 = { position.x, position.y + radius, position.z - radius };
+	Vector3 p3 = { position.x, position.y + radius, position.z + radius };
+	Vector3 p4 = { position.x, position.y - radius, position.z + radius };
+
+	RayCollision xCircleCollision = GetRayCollisionQuad(ray, p1, p2, p3, p4);
+
+	if (xCircleCollision.hit && xCircleCollision.distance < closestDist)
+	{
+		axis = Axis::X;
+		closestDist = xCircleCollision.distance;
+	}
+
+	// Quad points (Y locked)
+	p1 = { position.x - radius, position.y, position.z - radius };
+	p2 = { position.x + radius, position.y, position.z - radius };
+	p3 = { position.x + radius, position.y, position.z + radius };
+	p4 = { position.x - radius, position.y, position.z + radius };
+
+	RayCollision yCircleCollision = GetRayCollisionQuad(ray, p1, p2, p3, p4);
+
+	if (yCircleCollision.hit && yCircleCollision.distance < closestDist)
+	{
+		axis = Axis::Y;
+		closestDist = yCircleCollision.distance;
+	}
+
+	// Quad points (Z locked)
+	p1 = { position.x - radius, position.y - radius, position.z };
+	p2 = { position.x + radius, position.y - radius, position.z };
+	p3 = { position.x + radius, position.y + radius, position.z };
+	p4 = { position.x - radius, position.y + radius, position.z };
+
+	RayCollision zCircleCollision = GetRayCollisionQuad(ray, p1, p2, p3, p4);
+
+	if (zCircleCollision.hit && zCircleCollision.distance < closestDist)
+	{
+		axis = Axis::Z;
+		closestDist = zCircleCollision.distance;
+	}
+
+	// Return -1 if none pressed
+	return axis;
+}
+
+RayCollision BaseBuildingBlock::GetCircleCollision(const Ray& ray, float radius)
+{
+	return RayCollision();
 }
 
 void BaseBuildingBlock::UpdateArrowBounds()
