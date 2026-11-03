@@ -64,6 +64,7 @@ protected:
 private:
 	virtual float SignedDist(Vector3 t_pointPos);
 	static const float MIN_SCALE;
+	static const float SIGNED_DIST_SKIN;
 
 	void UpdateTransformMatrix();
 

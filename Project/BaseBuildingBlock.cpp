@@ -3,6 +3,7 @@
 #include <algorithm>
 
 const float BaseBuildingBlock::MIN_SCALE = 0.02f;
+const float BaseBuildingBlock::SIGNED_DIST_SKIN = 0.2f;
 
 BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 {
@@ -387,7 +388,7 @@ float BaseBuildingBlock::SignedDist(Vector3 t_pointPos)
 {
 	// Invert removes the position, scale and rotation
 	Matrix transformInv = MatrixInvert(transform);
-	Vector3 halfDimensions = { 0.5f, 0.5f, 0.5f };
+	Vector3 halfDimensions = { 0.5f + SIGNED_DIST_SKIN, 0.5f + SIGNED_DIST_SKIN, 0.5f + SIGNED_DIST_SKIN };
 
 	// Convert to local coords
 	Vector3 localPoint = Vector3Transform(t_pointPos, transformInv);

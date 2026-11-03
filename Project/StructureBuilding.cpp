@@ -121,7 +121,7 @@ void StructureBuilding::Bake()
             if (modified)
             {
                 chunk->SetDirty();
-                world.QueueChunkChangeAtPos(obj->GetPos());
+                world.QueueChunkChangeAtPos(chunk->GetPosition());
             }
         }
     }
