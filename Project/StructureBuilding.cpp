@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <iostream>
+#include <algorithm>
 
 StructureBuilding::StructureBuilding()
 {
@@ -100,8 +101,6 @@ void StructureBuilding::Bake()
 {
     for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
     {
-        std::cout << obj->GetPos().x << ", " << obj->GetPos().y << ", " << obj->GetPos().z << std::endl;
-
         std::vector<Chunk*> chunks = world.GetChunksInBounds(obj->GetBounds());
 
         // Loop through all intersecting chunks
@@ -114,13 +113,9 @@ void StructureBuilding::Bake()
                 Point& point = chunk->GetPointAt(i);
                 Vector3 worldPointPos = Vector3Add(point.position, chunk->GetPosition());
 
-                if (obj->IsPointInside(worldPointPos))
-                {
-                    // Solid
-                    point.density = -1;
-
+                // Change densities
+                if (obj->ChangePointDensity(worldPointPos, point.density))
                     modified = true;
-                }
             }
 
             if (modified)

@@ -88,18 +88,15 @@ RayCollision BaseBuildingBlock::CheckIfClicked(const Ray& ray)
 	return collision;
 }
 
-bool BaseBuildingBlock::IsPointInside(Vector3 t_point)
+bool BaseBuildingBlock::ChangePointDensity(Vector3 t_point, float& t_density)
 {
-	// Invert removes the position, scale and rotation
-	Matrix transformInv = MatrixInvert(transform);
-	// Convert to local coords
-	Vector3 localPoint = Vector3Transform(t_point, transformInv);
+	float signedDist = SignedDist(t_point);
 
-	bool inAxisX = localPoint.x >= -0.5f && localPoint.x <= 0.5f;
-	bool inAxisY = localPoint.y >= -0.5f && localPoint.y <= 0.5f;
-	bool inAxisZ = localPoint.z >= -0.5f && localPoint.z <= 0.5f;
+	if (signedDist <= 0)
+		t_density = -1;
 
-	return inAxisX && inAxisY && inAxisZ;
+	// If minus it's within
+	return signedDist <= 0;
 }
 
 void BaseBuildingBlock::Move()
@@ -380,6 +377,21 @@ void BaseBuildingBlock::UpdateBounds()
 		// If more than current
 		bounds.max = Vector3Max(bounds.max, point);
 	}
+}
+
+// https://iquilezles.org/articles/distfunctions/
+float BaseBuildingBlock::SignedDist(Vector3 t_pointPos)
+{
+	// Invert removes the position, scale and rotation
+	Matrix transformInv = MatrixInvert(transform);
+	Vector3 halfDimensions = { 0.5f, 0.5f, 0.5f };
+	// Convert to local coords
+	Vector3 localPoint = Vector3Transform(t_pointPos, transformInv);
+
+	Vector3 absPointPos = { std::abs(localPoint.x), std::abs(localPoint.y), std::abs(localPoint.z) };
+	Vector3 q = Vector3Subtract(absPointPos, halfDimensions);
+
+	return Vector3Length(Vector3Max(q, Vector3Zero())) + std::min(std::max(q.x, std::max(q.y, q.z)), 0.0f);
 }
 
 void BaseBuildingBlock::UpdateTransformMatrix()

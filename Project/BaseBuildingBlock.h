@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include <raymath.h>
 
 enum class EditTypes
 {
@@ -30,7 +31,7 @@ public:
 
 	void SetSelected(bool s) { selected = s; }
 
-	virtual bool IsPointInside(Vector3 t_point);
+	virtual bool ChangePointDensity(Vector3 t_point, float& t_density);
 
 	void SetPos(Vector3 t_pos) { position = t_pos; UpdateTransformMatrix(); UpdateArrowBounds(); }
 	Vector3 GetPos() const { return position; }
@@ -38,6 +39,8 @@ public:
 	BoundingBox GetBounds() const { return bounds; }
 
 protected:
+	Vector3 GetHalfDimensions() const { return Vector3Scale(scale, 0.5f); }
+
 	void Move();
 	virtual void MoveUpdate();
 	virtual void MoveDraw();
@@ -59,6 +62,7 @@ protected:
 	Vector3 rotation = {0.0f , 0.0f, 0.0f};
 
 private:
+	virtual float SignedDist(Vector3 t_pointPos);
 	static const float MIN_SCALE;
 
 	void UpdateTransformMatrix();
