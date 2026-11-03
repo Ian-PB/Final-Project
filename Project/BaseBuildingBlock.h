@@ -21,9 +21,14 @@ class BaseBuildingBlock
 public:
 	BaseBuildingBlock(const Camera& t_cam);
 
-	void Init();
 	void Draw(EditTypes t_editType);
 	void Update(EditTypes t_editType);
+
+	RayCollision CheckIfClicked(const Ray& ray);
+
+	bool IsDragging() const { return isDragging; }
+
+	void SetSelected(bool s) { selected = s; }
 
 protected:
 	void Move();
@@ -37,10 +42,15 @@ protected:
 	virtual void ScaleDraw();
 
 	Model model;
+	Matrix transform{};
 	Vector3 position = {0.0f , 2.0f, 0.0f}; // Middle of object
 	Vector3 scale = {1.0f , 1.0f, 1.0f};
 
 private:
+
+	static const float MIN_SCALE;
+
+	void UpdateTransformMatrix();
 
 	Axis CheckArrowSelectedOn();
 	void UpdateArrowBounds();
@@ -48,8 +58,10 @@ private:
 	BoundingBox boundingBoxes[3];
 	Axis hoveredAxis = Axis::None;
 	Axis selectedAxis = Axis::None;
+	bool isDragging = false;
 	float changeSpeedMult = 0.05f;
 
+	bool selected = false;
 
 	float arrowHeadHeight = 0.5f;
 	float arrowHeadBase = 0.3f;

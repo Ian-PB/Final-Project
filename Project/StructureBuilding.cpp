@@ -1,6 +1,7 @@
 #include "StructureBuilding.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <iostream>
 
 StructureBuilding::StructureBuilding()
 {
@@ -15,9 +16,8 @@ void StructureBuilding::Init()
 {
     DisableCursor();
 
-    testObject = std::make_shared<BaseBuildingBlock>(camera);
 
-    testObject->Init();
+    objects.push_back(std::make_shared<BaseBuildingBlock>(camera));
 }
 
 void StructureBuilding::Draw()
@@ -26,7 +26,10 @@ void StructureBuilding::Draw()
 
     DrawPlane({ 0.0f, 0.0f, 0.0f }, { 100, 100 }, RAYWHITE);
 
-    testObject->Draw(editMode);
+    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+    {
+        obj->Draw(editMode);
+    }
 
 	EndMode3D();
 
@@ -37,10 +40,69 @@ void StructureBuilding::Draw()
 
 void StructureBuilding::Update()
 {
-    UpdateCamera(&camera, CAMERA_FREE);
+    // Temp
+    if (IsKeyPressed(KEY_N))
+    {
+        objects.push_back(std::make_shared<BaseBuildingBlock>(camera));
+
+    }
+
+    if (IsMouseButtonPressed(0))
+    {
+        CheckObjectClicked();
+    }
+
+    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+    {
+        isDragging = obj->IsDragging();
+
+        if (isDragging)
+            break;
+    }
+
+    if (!isDragging)
+        UpdateCamera(&camera, CAMERA_FREE);
+
     GetEditModeInputs();
 
-    testObject->Update(editMode);
+    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+    {
+        obj->Update(editMode);
+    }
+}
+
+void StructureBuilding::CheckObjectClicked()
+{
+    Vector3 dir = Vector3Normalize(Vector3Subtract(camera.target, camera.position));
+    Ray ray = { camera.position, dir };
+
+    float closestDist = 9999.0f;
+    int closestIndex = -1;
+
+    for (int i = 0; i < objects.size(); i++)
+    {
+        RayCollision collision = objects[i]->CheckIfClicked(ray);
+
+        if (collision.hit && collision.distance < closestDist)
+        {
+            closestDist = collision.distance;
+            closestIndex = i;
+        }
+    }
+
+    std::cout << closestIndex << std::endl;
+
+    // Not over any
+    if (closestIndex == -1)
+        return;
+
+    // Disable last one
+    if (selectedObject != nullptr)
+        selectedObject->SetSelected(false);
+
+    // Set selected object
+    selectedObject = objects[closestIndex];
+    selectedObject->SetSelected(true);
 }
 
 void StructureBuilding::GetEditModeInputs()

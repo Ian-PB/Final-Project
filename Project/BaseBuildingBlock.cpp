@@ -2,20 +2,23 @@
 #include <raymath.h>
 #include <algorithm>
 
+const float BaseBuildingBlock::MIN_SCALE = 0.02f;
+
 BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 {
 	model = LoadModelFromMesh(GenMeshCube(1, 1, 1));
-}
 
-void BaseBuildingBlock::Init()
-{
 	UpdateArrowBounds();
+	UpdateTransformMatrix();
 }
 
 void BaseBuildingBlock::Draw(EditTypes t_editType)
 {
 	DrawModelEx(model, position, { 1, 1, 1 }, 0, scale, WHITE);
 	DrawModelWiresEx(model, position, { 1, 1, 1 }, 0, scale, DARKGRAY);
+
+	if (!selected)
+		return;
 
 	switch (t_editType)
 	{
@@ -36,16 +39,29 @@ void BaseBuildingBlock::Draw(EditTypes t_editType)
 
 void BaseBuildingBlock::Update(EditTypes t_editType)
 {
+	// Only update is selected
+	if (!selected)
+		return;
+
 	hoveredAxis = CheckArrowSelectedOn();
 
 	// Set selected axis to the hovered axis
 	if (IsMouseButtonPressed(0))
 	{
 		selectedAxis = hoveredAxis;
+
+		if (selectedAxis != Axis::None)
+		{
+			isDragging = true;
+			EnableCursor();
+		}
 	}
 	else if (IsMouseButtonReleased(0))
 	{
 		selectedAxis = Axis::None;
+
+		isDragging = false;
+		DisableCursor();
 	}
 
 	switch (t_editType)
@@ -63,6 +79,13 @@ void BaseBuildingBlock::Update(EditTypes t_editType)
 	default:
 		break;
 	}
+}
+
+RayCollision BaseBuildingBlock::CheckIfClicked(const Ray& ray)
+{
+	RayCollision collision = GetRayCollisionMesh(ray, model.meshes[0], transform);
+
+	return collision;
 }
 
 void BaseBuildingBlock::Move()
@@ -83,6 +106,7 @@ void BaseBuildingBlock::Move()
 	}
 
 	UpdateArrowBounds();
+	UpdateTransformMatrix();
 }
 
 void BaseBuildingBlock::MoveUpdate()
@@ -97,7 +121,7 @@ void BaseBuildingBlock::MoveDraw()
 {
 	// X
 	Vector3 endPosX = position;
-	endPosX.x += arrowLength * scale.x;
+	endPosX.x += arrowLength + (scale.x * 0.5f);
 	Vector3 pointStartPosX = endPosX;
 	pointStartPosX.x += arrowHeadHeight;
 
@@ -114,7 +138,7 @@ void BaseBuildingBlock::MoveDraw()
 
 	// Y
 	Vector3 endPosY = position;
-	endPosY.y += arrowLength * scale.y;
+	endPosY.y += arrowLength + (scale.y * 0.5f);
 	Vector3 pointStartPosY = endPosY;
 	pointStartPosY.y += arrowHeadHeight;
 
@@ -131,7 +155,7 @@ void BaseBuildingBlock::MoveDraw()
 
 	// Z
 	Vector3 endPosZ = position;
-	endPosZ.z += arrowLength * scale.z;
+	endPosZ.z += arrowLength + (scale.z * 0.5f);
 	Vector3 pointStartPosZ = endPosZ;
 	pointStartPosZ.z += arrowHeadHeight;
 
@@ -149,6 +173,10 @@ void BaseBuildingBlock::MoveDraw()
 
 void BaseBuildingBlock::Rotate()
 {
+
+
+	UpdateArrowBounds();
+	UpdateTransformMatrix();
 }
 
 void BaseBuildingBlock::RotateUpdate()
@@ -163,6 +191,32 @@ void BaseBuildingBlock::RotateDraw()
 
 void BaseBuildingBlock::Scale()
 {
+	Vector2 mouseMove = GetMouseDelta() * changeSpeedMult;
+
+	if (selectedAxis == Axis::X)
+	{
+		scale.x -= mouseMove.x;
+		if (scale.x <= MIN_SCALE)
+			scale.x = MIN_SCALE;
+	}
+	else if (selectedAxis == Axis::Y)
+	{
+		scale.y -= mouseMove.y;
+		if (scale.y <= MIN_SCALE)
+			scale.y = MIN_SCALE;
+	}
+	else if (selectedAxis == Axis::Z)
+	{
+		scale.z -= mouseMove.x;
+		if (scale.z <= MIN_SCALE)
+			scale.z = MIN_SCALE;
+	}
+
+	UpdateArrowBounds();
+	UpdateTransformMatrix();
+
+	UpdateArrowBounds();
+	UpdateTransformMatrix();
 }
 
 void BaseBuildingBlock::ScaleUpdate()
@@ -177,7 +231,7 @@ void BaseBuildingBlock::ScaleDraw()
 {
 	// X
 	Vector3 endPosX = position;
-	endPosX.x += arrowLength * scale.x;
+	endPosX.x += arrowLength + (scale.x * 0.5f);
 	Vector3 cubePosX = endPosX;
 	cubePosX.x += arrowHeadBase / 2.0f;
 
@@ -194,7 +248,7 @@ void BaseBuildingBlock::ScaleDraw()
 
 	// Y
 	Vector3 endPosY = position;
-	endPosY.y += arrowLength * scale.y;
+	endPosY.y += arrowLength + (scale.y * 0.5f);
 	Vector3 cubePosY = endPosY;
 	cubePosY.y += arrowHeadBase / 2.0f;
 
@@ -211,7 +265,7 @@ void BaseBuildingBlock::ScaleDraw()
 
 	// Z
 	Vector3 endPosZ = position;
-	endPosZ.z += arrowLength * scale.z;
+	endPosZ.z += arrowLength + (scale.z * 0.5f);
 	Vector3 cubePosZ = endPosZ;
 	cubePosZ.z += arrowHeadBase / 2.0f;
 
@@ -225,6 +279,14 @@ void BaseBuildingBlock::ScaleDraw()
 		DrawCylinderEx(position, endPosZ, lineWidth, lineWidth, 10, GREEN);
 		DrawCube(cubePosZ, arrowHeadBase, arrowHeadBase, arrowHeadBase, GREEN);
 	}
+}
+
+void BaseBuildingBlock::UpdateTransformMatrix()
+{
+	transform = MatrixMultiply(
+		MatrixScale(scale.x, scale.y, scale.z),
+		MatrixTranslate(position.x, position.y, position.z)
+	);
 }
 
 Axis BaseBuildingBlock::CheckArrowSelectedOn()
@@ -253,17 +315,18 @@ Axis BaseBuildingBlock::CheckArrowSelectedOn()
 
 void BaseBuildingBlock::UpdateArrowBounds()
 {
-	float totalLength = arrowLength + arrowHeadHeight;
-
 	// X Bounds
+	float totalLengthX = arrowLength + arrowHeadHeight + (scale.x * 0.5f);
 	boundingBoxes[0].min = { position.x - arrowHeadBase, position.y - arrowHeadBase, position.z - arrowHeadBase};
-	boundingBoxes[0].max = { position.x + totalLength, position.y + arrowHeadBase, position.z + arrowHeadBase };
+	boundingBoxes[0].max = { position.x + totalLengthX, position.y + arrowHeadBase, position.z + arrowHeadBase };
 
 	// Y Bounds
+	float totalLengthY = arrowLength + arrowHeadHeight + (scale.y * 0.5f);
 	boundingBoxes[1].min = { position.x - arrowHeadBase, position.y - arrowHeadBase, position.z - arrowHeadBase };
-	boundingBoxes[1].max = { position.x + arrowHeadBase, position.y + totalLength, position.z + arrowHeadBase };
+	boundingBoxes[1].max = { position.x + arrowHeadBase, position.y + totalLengthY, position.z + arrowHeadBase };
 
 	// Z Bounds
+	float totalLengthZ = arrowLength + arrowHeadHeight + (scale.z * 0.5f);
 	boundingBoxes[2].min = { position.x - arrowHeadBase, position.y - arrowHeadBase, position.z - arrowHeadBase };
-	boundingBoxes[2].max = {position.x + arrowHeadBase, position.y + arrowHeadBase, position.z + totalLength };
+	boundingBoxes[2].max = {position.x + arrowHeadBase, position.y + arrowHeadBase, position.z + totalLengthZ };
 }
