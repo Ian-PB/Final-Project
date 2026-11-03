@@ -37,6 +37,7 @@ public:
 	Vector3 GetPos() const { return position; }
 
 	BoundingBox GetBounds() const { return bounds; }
+	float GetBoundingSkin() { return SIGNED_DIST_SKIN; }
 
 protected:
 	Vector3 GetHalfDimensions() const { return Vector3Scale(scale, 0.5f); }

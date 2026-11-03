@@ -101,6 +101,10 @@ void StructureBuilding::Bake()
 {
     for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
     {
+        BoundingBox objBounds = obj->GetBounds();
+        objBounds.min = Vector3SubtractValue(objBounds.min, obj->GetBoundingSkin());
+        objBounds.max = Vector3AddValue(objBounds.max, obj->GetBoundingSkin());
+
         std::vector<Chunk*> chunks = world.GetChunksInBounds(obj->GetBounds());
 
         // Loop through all intersecting chunks
