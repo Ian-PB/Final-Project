@@ -115,7 +115,7 @@ void StructureBuilding::Bake()
 
                 // Change densities
                 if (obj->ChangePointDensity(worldPointPos, point.density))
-                    modified = true;
+                   modified = true;
             }
 
             if (modified)

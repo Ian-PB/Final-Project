@@ -58,7 +58,7 @@ protected:
 	BoundingBox bounds;
 
 	Vector3 position = {0.0f , 2.0f, 0.0f}; // Middle of object
-	Vector3 scale = {1.0f , 1.0f, 1.0f};
+	Vector3 scale = {1.2f , 1.2f, 1.2f};
 	Vector3 rotation = {0.0f , 0.0f, 0.0f};
 
 private:

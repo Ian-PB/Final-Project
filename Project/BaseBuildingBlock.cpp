@@ -91,12 +91,15 @@ RayCollision BaseBuildingBlock::CheckIfClicked(const Ray& ray)
 bool BaseBuildingBlock::ChangePointDensity(Vector3 t_point, float& t_density)
 {
 	float signedDist = SignedDist(t_point);
+	float startDensity = t_density;
 
-	if (signedDist <= 0)
-		t_density = -1;
+	float newDensity = Clamp(signedDist, -1, 1);
 
-	// If minus it's within
-	return signedDist <= 0;
+	// Building
+	t_density = std::min(t_density, newDensity);
+
+	// If not the same as before return true
+	return startDensity != t_density;
 }
 
 void BaseBuildingBlock::Move()
@@ -385,6 +388,7 @@ float BaseBuildingBlock::SignedDist(Vector3 t_pointPos)
 	// Invert removes the position, scale and rotation
 	Matrix transformInv = MatrixInvert(transform);
 	Vector3 halfDimensions = { 0.5f, 0.5f, 0.5f };
+
 	// Convert to local coords
 	Vector3 localPoint = Vector3Transform(t_pointPos, transformInv);
 
