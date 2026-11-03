@@ -186,6 +186,15 @@ void BaseBuildingBlock::RotateUpdate()
 void BaseBuildingBlock::RotateDraw()
 {
 	// Draw 3 circle outlines (Up, Left, Right) encasing object
+	float largestScale = std::max(scale.x, std::max(scale.y, scale.z));
+	float radius = largestScale * 1.25f;
+
+	// X Rotation
+	DrawCircle3D(position, radius, { 0, 1, 0 }, 90, RED);
+	// Y Rotation
+	DrawCircle3D(position, radius, { 1, 0, 0 }, 90, BLUE);
+	// Z Rotation
+	DrawCircle3D(position, radius, { 0, 0, 0 }, 0, GREEN);
 }
 
 
