@@ -14,8 +14,8 @@ BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 
 void BaseBuildingBlock::Draw(EditTypes t_editType)
 {
-	DrawModelEx(model, position, { 1, 1, 1 }, 0, scale, WHITE);
-	DrawModelWiresEx(model, position, { 1, 1, 1 }, 0, scale, DARKGRAY);
+	DrawModel(model, { 0, 0, 0 }, 1.0f, WHITE);
+	DrawModelWires(model, { 0, 0, 0 }, 1.0f, DARKGRAY);
 
 	if (!selected)
 		return;
@@ -173,7 +173,20 @@ void BaseBuildingBlock::MoveDraw()
 
 void BaseBuildingBlock::Rotate()
 {
+	Vector2 mouseMove = GetMouseDelta() * changeSpeedMult;
 
+	if (selectedAxis == Axis::X)
+	{
+		rotation.x -= mouseMove.y;
+	}
+	else if (selectedAxis == Axis::Y)
+	{
+		rotation.y -= mouseMove.x;
+	}
+	else if (selectedAxis == Axis::Z)
+	{
+		rotation.z -= mouseMove.y;
+	}
 
 	UpdateArrowBounds();
 	UpdateTransformMatrix();
@@ -323,10 +336,18 @@ void BaseBuildingBlock::ScaleDraw()
 
 void BaseBuildingBlock::UpdateTransformMatrix()
 {
+	Matrix scaleMatrix = MatrixScale(scale.x, scale.y, scale.z);
+
+	Matrix rotationMatrix = MatrixRotateXYZ({ rotation.x, rotation.y, rotation.z });
+
+	Matrix translationMatrix = MatrixTranslate(position.x, position.y, position.z);
+
 	transform = MatrixMultiply(
-		MatrixScale(scale.x, scale.y, scale.z),
-		MatrixTranslate(position.x, position.y, position.z)
+		MatrixMultiply(scaleMatrix, rotationMatrix),
+		translationMatrix
 	);
+
+	model.transform = transform;
 }
 
 Axis BaseBuildingBlock::CheckArrowSelectedOn()
