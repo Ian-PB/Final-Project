@@ -20,6 +20,8 @@ void BaseBuildingBlock::Draw(EditTypes t_editType)
 	if (!selected)
 		return;
 
+	DrawBoundingBox(bounds, PURPLE);
+
 	switch (t_editType)
 	{
 	case EditTypes::Move:
@@ -350,6 +352,34 @@ void BaseBuildingBlock::ScaleDraw()
 
 void BaseBuildingBlock::UpdateBounds()
 {
+	// 0.5 since base cube is 1 on each axis
+	Vector3 corners[8] =
+	{
+		{-0.5f, -0.5f, -0.5f}, // 0
+		{ 0.5f, -0.5f, -0.5f}, // 1
+		{-0.5f,  0.5f, -0.5f}, // 2
+		{ 0.5f,  0.5f, -0.5f}, // 3
+		{-0.5f, -0.5f,  0.5f}, // 4
+		{ 0.5f, -0.5f,  0.5f}, // 5
+		{-0.5f,  0.5f,  0.5f}, // 6
+		{ 0.5f,  0.5f,  0.5f}  // 7
+	};
+
+	// Apply the rotation, scale and position
+	Vector3 firstPoint = Vector3Transform(corners[0], transform);
+
+	bounds.min = firstPoint;
+	bounds.max = firstPoint;
+
+	for (int i = 1; i < 8; i++)
+	{
+		Vector3 point = Vector3Transform(corners[i], transform);
+
+		// If less than current
+		bounds.min = Vector3Min(bounds.min, point);
+		// If more than current
+		bounds.max = Vector3Max(bounds.max, point);
+	}
 }
 
 void BaseBuildingBlock::UpdateTransformMatrix()
@@ -366,6 +396,7 @@ void BaseBuildingBlock::UpdateTransformMatrix()
 	);
 
 	model.transform = transform;
+	UpdateBounds();
 }
 
 Axis BaseBuildingBlock::CheckArrowSelectedOn()

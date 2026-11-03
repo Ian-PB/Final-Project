@@ -91,18 +91,28 @@ void StructureBuilding::Update()
     // Bake objects into the world
     if (IsKeyPressed(KEY_B))
     {
-        for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
-        {
-            std::cout << obj->GetPos().x << ", " << obj->GetPos().y << ", " << obj->GetPos().z << std::endl;
+        Bake();
+    }
+    world.Update();
+}
 
-            // std::vector<Chunk*> chunks = world.GetChunksInBounds(obj->GetBounds());
-            Chunk& chunk = world.GetChunkFromWorldPos(obj->GetPos());
+void StructureBuilding::Bake()
+{
+    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+    {
+        std::cout << obj->GetPos().x << ", " << obj->GetPos().y << ", " << obj->GetPos().z << std::endl;
+
+        std::vector<Chunk*> chunks = world.GetChunksInBounds(obj->GetBounds());
+
+        // Loop through all intersecting chunks
+        for (Chunk* chunk : chunks)
+        {
             bool modified = false;
 
-            for (int i = 0; i < chunk.GetPointAmount(); i++)
+            for (int i = 0; i < chunk->GetPointAmount(); i++)
             {
-                Point& point = chunk.GetPointAt(i);
-                Vector3 worldPointPos = Vector3Add(point.position, chunk.GetPosition());
+                Point& point = chunk->GetPointAt(i);
+                Vector3 worldPointPos = Vector3Add(point.position, chunk->GetPosition());
 
                 if (obj->IsPointInside(worldPointPos))
                 {
@@ -115,12 +125,11 @@ void StructureBuilding::Update()
 
             if (modified)
             {
-                chunk.SetDirty();
+                chunk->SetDirty();
                 world.QueueChunkChangeAtPos(obj->GetPos());
             }
         }
     }
-    world.Update();
 }
 
 void StructureBuilding::SpawnObject()

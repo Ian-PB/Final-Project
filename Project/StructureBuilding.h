@@ -15,6 +15,8 @@ public:
 	void Update();
 
 private:
+	void Bake();
+
 	void SpawnObject();
 	void CheckObjectClicked();
 
