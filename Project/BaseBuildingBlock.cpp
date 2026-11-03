@@ -86,6 +86,20 @@ RayCollision BaseBuildingBlock::CheckIfClicked(const Ray& ray)
 	return collision;
 }
 
+bool BaseBuildingBlock::IsPointInside(Vector3 t_point)
+{
+	// Invert removes the position, scale and rotation
+	Matrix transformInv = MatrixInvert(transform);
+	// Convert to local coords
+	Vector3 localPoint = Vector3Transform(t_point, transformInv);
+
+	bool inAxisX = localPoint.x >= -0.5f && localPoint.x <= 0.5f;
+	bool inAxisY = localPoint.y >= -0.5f && localPoint.y <= 0.5f;
+	bool inAxisZ = localPoint.z >= -0.5f && localPoint.z <= 0.5f;
+
+	return inAxisX && inAxisY && inAxisZ;
+}
+
 void BaseBuildingBlock::Move()
 {
 	Vector2 mouseMove = GetMouseDelta() * changeSpeedMult;
@@ -430,11 +444,6 @@ Axis BaseBuildingBlock::CheckCircleSelectedOn()
 
 	// Return -1 if none pressed
 	return axis;
-}
-
-RayCollision BaseBuildingBlock::GetCircleCollision(const Ray& ray, float radius)
-{
-	return RayCollision();
 }
 
 void BaseBuildingBlock::UpdateArrowBounds()

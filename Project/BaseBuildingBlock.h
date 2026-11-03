@@ -30,6 +30,8 @@ public:
 
 	void SetSelected(bool s) { selected = s; }
 
+	virtual bool IsPointInside(Vector3 t_point);
+
 protected:
 	void Move();
 	virtual void MoveUpdate();
@@ -55,7 +57,6 @@ private:
 
 	Axis CheckArrowSelectedOn();
 	Axis CheckCircleSelectedOn();
-	RayCollision GetCircleCollision(const Ray& ray, float radius);
 	void UpdateArrowBounds();
 	// Arrow bounding boxes (x, y, z)
 	BoundingBox boundingBoxes[3];
@@ -70,7 +71,7 @@ private:
 	float arrowHeadBase = 0.3f;
 	float arrowLength = 3.0f;
 	float lineWidth = 0.1f;
-	const float ROTATION_CIRCLE_RADIUS_MULT = 1.25f;
+	const float ROTATION_CIRCLE_RADIUS_MULT = 1.1f;
 
 	const Camera& CAMERA;
 };
