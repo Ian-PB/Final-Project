@@ -63,6 +63,9 @@ public:
 
 	void ClearChunk(WallFlags walls = {});
 
+	int GetPointAmount() const { return SIZE * SIZE * SIZE; }
+	Point& GetPointAt(int i) { return points[i]; }
+
 private:
 	bool dirty = false;
 

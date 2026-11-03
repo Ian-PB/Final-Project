@@ -348,6 +348,10 @@ void BaseBuildingBlock::ScaleDraw()
 	}
 }
 
+void BaseBuildingBlock::UpdateBounds()
+{
+}
+
 void BaseBuildingBlock::UpdateTransformMatrix()
 {
 	Matrix scaleMatrix = MatrixScale(scale.x, scale.y, scale.z);

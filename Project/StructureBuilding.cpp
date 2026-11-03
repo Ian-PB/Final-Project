@@ -59,8 +59,6 @@ void StructureBuilding::Draw()
 
 void StructureBuilding::Update()
 {
-    world.Update();
-
     // Temp
     if (IsKeyPressed(KEY_N))
     {
@@ -89,6 +87,40 @@ void StructureBuilding::Update()
     {
         obj->Update(editMode);
     }
+
+    // Bake objects into the world
+    if (IsKeyPressed(KEY_B))
+    {
+        for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+        {
+            std::cout << obj->GetPos().x << ", " << obj->GetPos().y << ", " << obj->GetPos().z << std::endl;
+
+            // std::vector<Chunk*> chunks = world.GetChunksInBounds(obj->GetBounds());
+            Chunk& chunk = world.GetChunkFromWorldPos(obj->GetPos());
+            bool modified = false;
+
+            for (int i = 0; i < chunk.GetPointAmount(); i++)
+            {
+                Point& point = chunk.GetPointAt(i);
+                Vector3 worldPointPos = Vector3Add(point.position, chunk.GetPosition());
+
+                if (obj->IsPointInside(worldPointPos))
+                {
+                    // Solid
+                    point.density = -1;
+
+                    modified = true;
+                }
+            }
+
+            if (modified)
+            {
+                chunk.SetDirty();
+                world.QueueChunkChangeAtPos(obj->GetPos());
+            }
+        }
+    }
+    world.Update();
 }
 
 void StructureBuilding::SpawnObject()

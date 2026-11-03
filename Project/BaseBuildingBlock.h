@@ -33,6 +33,9 @@ public:
 	virtual bool IsPointInside(Vector3 t_point);
 
 	void SetPos(Vector3 t_pos) { position = t_pos; UpdateTransformMatrix(); UpdateArrowBounds(); }
+	Vector3 GetPos() const { return position; }
+
+	BoundingBox GetBounds() const { return bounds; }
 
 protected:
 	void Move();
@@ -45,14 +48,17 @@ protected:
 	virtual void ScaleUpdate();
 	virtual void ScaleDraw();
 
+	virtual void UpdateBounds();
+
 	Model model;
 	Matrix transform{};
+	BoundingBox bounds;
+
 	Vector3 position = {0.0f , 2.0f, 0.0f}; // Middle of object
 	Vector3 scale = {1.0f , 1.0f, 1.0f};
 	Vector3 rotation = {0.0f , 0.0f, 0.0f};
 
 private:
-
 	static const float MIN_SCALE;
 
 	void UpdateTransformMatrix();

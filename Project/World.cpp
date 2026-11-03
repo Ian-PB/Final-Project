@@ -382,6 +382,20 @@ void World::EmptyWorldGen()
     }
 }
 
+void World::QueueChunkChangeAtPos(Vector3 t_pos)
+{
+    int chunkIndex = GetChunkIndexFromWorldPos(t_pos);
+
+    {
+        std::lock_guard<std::mutex> lock(jobMutex);
+
+        chunksThatNeedWork.push(chunkIndex);
+        jobsRemaining++;
+    }
+
+    jobCondition.notify_one();
+}
+
 void World::KeyboardInputs()
 {
     if (IsKeyReleased(KEY_G))
