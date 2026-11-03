@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "BaseBuildingBlock.h"
+#include "World.h"
 
 class StructureBuilding
 {
@@ -14,6 +15,7 @@ public:
 	void Update();
 
 private:
+	void SpawnObject();
 	void CheckObjectClicked();
 
 	void GetEditModeInputs();
@@ -25,5 +27,9 @@ private:
 	Camera3D camera;
 
 	bool isDragging = false;
+
+	World world;
+	Vector3 worldCenter;
+	Vector3 worldSize;
 };
 

@@ -183,6 +183,17 @@ void World::WorkerLoop()
     }
 }
 
+Vector3 World::GetSizeDimensions() const
+{
+    Vector3 dimensions = GetDimensions(); // Based on chunks
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+    dimensions.x *= chunkSize;
+    dimensions.y *= chunkSize;
+    dimensions.z *= chunkSize;
+
+    return dimensions;
+}
+
 Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
 {
     float chunkSize = chunks[0][0][0].GetChunkSize();
@@ -350,6 +361,22 @@ void World::HollowBoxWorldGen()
                 walls.negZWall = (z == DEPTH - 1);
 
                 chunks[x][y][z].ClearChunk(walls);
+            }
+        }
+    }
+}
+
+void World::EmptyWorldGen()
+{
+    completeRebuild = true;
+
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                chunks[x][y][z].ClearChunk();
             }
         }
     }

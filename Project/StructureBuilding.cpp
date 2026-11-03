@@ -5,8 +5,6 @@
 
 StructureBuilding::StructureBuilding()
 {
-    camera.position = { 0.0f, 2.0f, 0.0f };                     // Camera position
-    camera.target = { 2.0f, 0.0f, 0.0f };               // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };                   // Camera up vector (rotation towards target)
     camera.fovy = 60.0f;                                // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
@@ -16,20 +14,41 @@ void StructureBuilding::Init()
 {
     DisableCursor();
 
+    Lighting::Init();
+    world.Init();
+    worldSize = world.GetSizeDimensions();
+    worldCenter = Vector3Multiply(worldSize, { 0.5f, 0.5f, 0.5f });
+    world.EmptyWorldGen();
 
-    objects.push_back(std::make_shared<BaseBuildingBlock>(camera));
+    camera.position = { worldCenter.x, 2.0f, worldCenter.z };
+    camera.target = { worldCenter.x + 2.0f, 2.0f, worldCenter.z };
+
+    SpawnObject();
 }
 
 void StructureBuilding::Draw()
 {
 	BeginMode3D(camera);
 
-    DrawPlane({ 0.0f, 0.0f, 0.0f }, { 100, 100 }, RAYWHITE);
+        // Ground
+        DrawPlane({ worldCenter.x, 0.0f, worldCenter.z }, { worldSize.x, worldSize.z }, GRAY);
+        // Corner pillar
+        DrawCylinder({ 0.0f, 0.0f, 0.0f }, 0.2f, 0.2f, worldSize.y, 5, RED);
+        DrawCylinder({ worldSize.x, 0.0f, 0.0f }, 0.2f, 0.2f, worldSize.y, 5, RED);
+        DrawCylinder({ 0.0f, 0.0f, worldSize.z }, 0.2f, 0.2f, worldSize.y, 5, RED);
+        DrawCylinder({ worldSize.x, 0.0f, worldSize.z }, 0.2f, 0.2f, worldSize.y, 5, RED);
+        // Roof edges
+        DrawCylinderEx({ 0.0f, worldSize.y, 0.0f }, { worldSize.x, worldSize.y, 0.0f }, 0.2f, 0.2f, worldSize.y, RED);
+        DrawCylinderEx({ 0.0f, worldSize.y, 0.0f }, { 0.0f, worldSize.y, worldSize.z }, 0.2f, 0.2f, worldSize.y, RED);
+        DrawCylinderEx({ 0.0f, worldSize.y, worldSize.z }, { worldSize.x, worldSize.y, worldSize.z }, 0.2f, 0.2f, worldSize.y, RED);
+        DrawCylinderEx({ worldSize.x, worldSize.y, worldSize.z }, { worldSize.x, worldSize.y, 0.0f }, 0.2f, 0.2f, worldSize.y, RED);
 
-    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
-    {
-        obj->Draw(editMode);
-    }
+        for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+        {
+            obj->Draw(editMode);
+        }
+
+        world.Draw();
 
 	EndMode3D();
 
@@ -40,11 +59,12 @@ void StructureBuilding::Draw()
 
 void StructureBuilding::Update()
 {
+    world.Update();
+
     // Temp
     if (IsKeyPressed(KEY_N))
     {
-        objects.push_back(std::make_shared<BaseBuildingBlock>(camera));
-
+        SpawnObject();
     }
 
     if (IsMouseButtonPressed(0))
@@ -69,6 +89,15 @@ void StructureBuilding::Update()
     {
         obj->Update(editMode);
     }
+}
+
+void StructureBuilding::SpawnObject()
+{
+    std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<BaseBuildingBlock>(camera);
+    Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
+    newObj->SetPos(pos);
+
+    objects.push_back(newObj);
 }
 
 void StructureBuilding::CheckObjectClicked()

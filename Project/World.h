@@ -26,6 +26,7 @@ public:
 	void Update();
 
 	Vector3 GetDimensions() const { return { WIDTH, HEIGHT, DEPTH }; }
+	Vector3 GetSizeDimensions() const;
 	const Chunk& GetChunk(int x, int y, int z) const { return chunks[x][y][z]; }
 	Chunk& GetChunkFromWorldPos(Vector3 t_pos);
 	std::vector<Chunk*> GetChunksInBounds(BoundingBox t_bounds);
@@ -35,7 +36,7 @@ public:
 
 	// World editting
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
-
+	void EmptyWorldGen();
 private:
 	void UpdateAllChunks();
 

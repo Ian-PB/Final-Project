@@ -32,6 +32,8 @@ public:
 
 	virtual bool IsPointInside(Vector3 t_point);
 
+	void SetPos(Vector3 t_pos) { position = t_pos; UpdateTransformMatrix(); UpdateArrowBounds(); }
+
 protected:
 	void Move();
 	virtual void MoveUpdate();
