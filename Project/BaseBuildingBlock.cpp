@@ -7,6 +7,11 @@ const float BaseBuildingBlock::SIGNED_DIST_SKIN = 0.2f;
 
 BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 {
+	
+}
+
+void BaseBuildingBlock::InitModel()
+{
 	model = LoadModelFromMesh(GenMeshCube(1, 1, 1));
 
 	UpdateArrowBounds();

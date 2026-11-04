@@ -4,6 +4,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "SphereBuildingBlock.h"
+
 StructureBuilding::StructureBuilding()
 {
     camera.up = { 0.0f, 1.0f, 0.0f };                   // Camera up vector (rotation towards target)
@@ -133,9 +135,10 @@ void StructureBuilding::Bake()
 
 void StructureBuilding::SpawnObject()
 {
-    std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<BaseBuildingBlock>(camera);
+    std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<SphereBuildingBlock>(camera);
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
+    newObj->InitModel();
 
     objects.push_back(newObj);
 }

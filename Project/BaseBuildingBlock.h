@@ -21,6 +21,7 @@ class BaseBuildingBlock
 {
 public:
 	BaseBuildingBlock(const Camera& t_cam);
+	virtual void InitModel();
 
 	void Draw(EditTypes t_editType);
 	void Update(EditTypes t_editType);
@@ -31,7 +32,7 @@ public:
 
 	void SetSelected(bool s) { selected = s; }
 
-	virtual bool ChangePointDensity(Vector3 t_point, float& t_density);
+	bool ChangePointDensity(Vector3 t_point, float& t_density);
 
 	void SetPos(Vector3 t_pos) { position = t_pos; UpdateTransformMatrix(); UpdateArrowBounds(); }
 	Vector3 GetPos() const { return position; }
@@ -43,16 +44,18 @@ protected:
 	Vector3 GetHalfDimensions() const { return Vector3Scale(scale, 0.5f); }
 
 	void Move();
-	virtual void MoveUpdate();
-	virtual void MoveDraw();
+	void MoveUpdate();
+	void MoveDraw();
 	void Rotate();
-	virtual void RotateUpdate();
-	virtual void RotateDraw();
+	void RotateUpdate();
+	void RotateDraw();
 	void Scale();
-	virtual void ScaleUpdate();
-	virtual void ScaleDraw();
+	void ScaleUpdate();
+	void ScaleDraw();
 
 	virtual void UpdateBounds();
+	void UpdateTransformMatrix();
+	void UpdateArrowBounds();
 
 	Model model;
 	Matrix transform{};
@@ -62,16 +65,15 @@ protected:
 	Vector3 scale = {1.2f , 1.2f, 1.2f};
 	Vector3 rotation = {0.0f , 0.0f, 0.0f};
 
+	static const float SIGNED_DIST_SKIN;
+
 private:
 	virtual float SignedDist(Vector3 t_pointPos);
 	static const float MIN_SCALE;
-	static const float SIGNED_DIST_SKIN;
 
-	void UpdateTransformMatrix();
 
 	Axis CheckArrowSelectedOn();
 	Axis CheckCircleSelectedOn();
-	void UpdateArrowBounds();
 	// Arrow bounding boxes (x, y, z)
 	BoundingBox boundingBoxes[3];
 	Axis hoveredAxis = Axis::None;

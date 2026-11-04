@@ -167,6 +167,7 @@
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SlidingState.cpp" />
+    <ClCompile Include="SphereBuildingBlock.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="StructureBuilding.cpp" />
     <ClCompile Include="World.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="SlidingState.h" />
+    <ClInclude Include="SphereBuildingBlock.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="StructureBuilding.h" />
     <ClInclude Include="World.h" />

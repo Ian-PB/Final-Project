@@ -99,6 +99,9 @@
     <ClCompile Include="StructureBuilding.cpp">
       <Filter>Source Files\StructureBuilding</Filter>
     </ClCompile>
+    <ClCompile Include="SphereBuildingBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="StructureBuilding.h">
       <Filter>Header Files\StructureBuilding</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereBuildingBlock.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
