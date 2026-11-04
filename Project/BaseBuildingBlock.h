@@ -40,6 +40,8 @@ public:
 	BoundingBox GetBounds() const { return bounds; }
 	float GetBoundingSkin() { return SIGNED_DIST_SKIN; }
 
+	Axis GetHoveredAxis() const { return hoveredAxis; }
+
 protected:
 	Vector3 GetHalfDimensions() const { return Vector3Scale(scale, 0.5f); }
 
@@ -67,6 +69,8 @@ protected:
 
 	static const float SIGNED_DIST_SKIN;
 
+	bool selected = false;
+
 private:
 	virtual float SignedDist(Vector3 t_pointPos);
 	static const float MIN_SCALE;
@@ -81,7 +85,6 @@ private:
 	bool isDragging = false;
 	float changeSpeedMult = 0.05f;
 
-	bool selected = false;
 
 	float arrowHeadHeight = 0.5f;
 	float arrowHeadBase = 0.3f;

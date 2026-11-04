@@ -1,10 +1,11 @@
 #include "StructureBuilding.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <raygui.h>
 #include <iostream>
-#include <algorithm>
 
 #include "SphereBuildingBlock.h"
+#include "CylinderBuildingBlock.h"
 
 StructureBuilding::StructureBuilding()
 {
@@ -26,7 +27,7 @@ void StructureBuilding::Init()
     camera.position = { worldCenter.x, 2.0f, worldCenter.z };
     camera.target = { worldCenter.x + 2.0f, 2.0f, worldCenter.z };
 
-    SpawnObject();
+    SpawnCube();
 }
 
 void StructureBuilding::Draw()
@@ -46,9 +47,13 @@ void StructureBuilding::Draw()
         DrawCylinderEx({ 0.0f, worldSize.y, worldSize.z }, { worldSize.x, worldSize.y, worldSize.z }, 0.2f, 0.2f, worldSize.y, RED);
         DrawCylinderEx({ worldSize.x, worldSize.y, worldSize.z }, { worldSize.x, worldSize.y, 0.0f }, 0.2f, 0.2f, worldSize.y, RED);
 
-        for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+
+        if (displayObjs)
         {
-            obj->Draw(editMode);
+            for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+            {
+                obj->Draw(editMode);
+            }
         }
 
         world.Draw();
@@ -58,6 +63,9 @@ void StructureBuilding::Draw()
     // Quick crosshair
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 3, WHITE);
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, RED);
+
+    if (currentUiMode != UiModes::Off)
+        DrawUI();
 }
 
 void StructureBuilding::Update()
@@ -65,12 +73,26 @@ void StructureBuilding::Update()
     // Temp
     if (IsKeyPressed(KEY_N))
     {
-        SpawnObject();
+        if (currentUiMode == UiModes::Off)
+        {
+            currentUiMode = UiModes::SpawnObj;
+            EnableCursor();
+        }
+        else
+        {
+            currentUiMode = UiModes::Off;
+            DisableCursor();
+        }
     }
+
+    // Don't update the rest if in a menu
+    if (currentUiMode != UiModes::Off)
+        return;
 
     if (IsMouseButtonPressed(0))
     {
-        CheckObjectClicked();
+        if (!IsHoveringAxis())
+            CheckObjectClicked();
     }
 
     for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
@@ -86,17 +108,71 @@ void StructureBuilding::Update()
 
     GetEditModeInputs();
 
-    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+    if (displayObjs)
     {
-        obj->Update(editMode);
+        for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+        {
+            obj->Update(editMode);
+        }
     }
 
     // Bake objects into the world
     if (IsKeyPressed(KEY_B))
     {
         Bake();
+        displayObjs = false;
     }
     world.Update();
+}
+
+void StructureBuilding::DrawUI()
+{
+    switch (currentUiMode)
+    {
+    case UiModes::SpawnObj:
+        DrawSpawnObjUI();
+        break;
+    case UiModes::EditSelectedObj:
+        DrawSpawnObjUI();
+        break;
+    }
+}
+
+void StructureBuilding::DrawSpawnObjUI()
+{
+    bool objSpawned = false;
+    Rectangle bounds{};
+    bounds.width = GetScreenWidth() * 0.05f;
+    bounds.height = GetScreenHeight() * 0.05f;
+
+    bounds.x = GetScreenWidth() * 0.05f;
+    bounds.y = GetScreenHeight() * 0.05f;
+    if (GuiButton(bounds, "Cube"))
+    {
+        SpawnCube();
+        objSpawned = true;
+    }
+
+    bounds.x += GetScreenWidth() * 0.1f;
+    if (GuiButton(bounds, "Sphere"))
+    {
+        SpawnSphere();
+        objSpawned = true;
+    }
+
+    bounds.x += GetScreenWidth() * 0.1f;
+    if (GuiButton(bounds, "Cylinder"))
+    {
+        SpawnCylinder();
+        objSpawned = true;
+    }
+
+    // If any buttons were pressed remove ui
+    if (objSpawned)
+    {
+        currentUiMode = UiModes::Off;
+        DisableCursor();
+    }
 }
 
 void StructureBuilding::Bake()
@@ -133,9 +209,29 @@ void StructureBuilding::Bake()
     }
 }
 
-void StructureBuilding::SpawnObject()
+void StructureBuilding::SpawnCube()
+{
+    std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<BaseBuildingBlock>(camera);
+    Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
+    newObj->SetPos(pos);
+    newObj->InitModel();
+
+    objects.push_back(newObj);
+}
+
+void StructureBuilding::SpawnSphere()
 {
     std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<SphereBuildingBlock>(camera);
+    Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
+    newObj->SetPos(pos);
+    newObj->InitModel();
+
+    objects.push_back(newObj);
+}
+
+void StructureBuilding::SpawnCylinder()
+{
+    std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<CylinderBuildingBlock>(camera);
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
@@ -187,4 +283,15 @@ void StructureBuilding::GetEditModeInputs()
 
     else if (IsKeyPressed(KEY_THREE))
         editMode = EditTypes::Scale;
+}
+
+bool StructureBuilding::IsHoveringAxis()
+{
+    for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
+    {
+        // An axis is hovered
+        if (obj->GetHoveredAxis() != Axis::None)
+            return true;
+    }
+    return false;
 }

@@ -5,6 +5,13 @@
 #include "BaseBuildingBlock.h"
 #include "World.h"
 
+enum class UiModes
+{
+	Off = -1,
+	SpawnObj,
+	EditSelectedObj
+};
+
 class StructureBuilding
 {
 public:
@@ -15,13 +22,22 @@ public:
 	void Update();
 
 private:
+	UiModes currentUiMode = UiModes::Off;
+	void DrawUI();
+	void DrawSpawnObjUI();
+
 	void Bake();
 
-	void SpawnObject();
+	void SpawnCube();
+	void SpawnSphere();
+	void SpawnCylinder();
 	void CheckObjectClicked();
 
 	void GetEditModeInputs();
 	EditTypes editMode = EditTypes::Move;
+
+	bool IsHoveringAxis();
+	bool displayObjs = true;
 
 	std::vector<std::shared_ptr<BaseBuildingBlock>> objects;
 	std::shared_ptr<BaseBuildingBlock> selectedObject;
