@@ -211,6 +211,24 @@ Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
     return chunks[x][y][z];
 }
 
+std::vector<Chunk*> World::GetAllChunks()
+{
+    std::vector<Chunk*> allChunks;
+
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                allChunks.push_back(&chunks[x][y][z]);
+            }
+        }
+    }
+
+    return allChunks;
+}
+
 std::vector<Chunk*> World::GetChunksInBounds(BoundingBox t_bounds)
 {
     std::vector<Chunk*> result;

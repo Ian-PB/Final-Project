@@ -103,7 +103,7 @@
       <Filter>Source Files\StructureBuilding</Filter>
     </ClCompile>
     <ClCompile Include="CylinderBuildingBlock.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\StructureBuilding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +183,7 @@
       <Filter>Header Files\StructureBuilding</Filter>
     </ClInclude>
     <ClInclude Include="CylinderBuildingBlock.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\StructureBuilding</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

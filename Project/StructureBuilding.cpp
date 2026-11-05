@@ -69,9 +69,18 @@ void StructureBuilding::Draw()
     else
     {
         // Keybinds Text
-        DrawText("T - Manually Edit Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f, 25, RED);
-        DrawText("N - Spawn New Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 30, 25, RED);
-        DrawText("DELETE - Remove Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 60, 25, RED);
+        if (displayObjs)
+        {
+            DrawText("B - Bake Objects into a mesh", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f, 25, RED);
+            DrawText("T - Manually Edit Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 30, 25, RED);
+            DrawText("N - Spawn New Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 60, 25, RED);
+            DrawText("DELETE - Remove Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 90, 25, RED);
+        }
+        else
+        {
+            DrawText("B - Undo Baking", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f, 25, RED);
+            DrawText("Enter - Save Mesh", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 30, 25, RED);
+        }
     }
 }
 

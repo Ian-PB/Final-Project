@@ -29,6 +29,7 @@ public:
 	Vector3 GetSizeDimensions() const;
 	const Chunk& GetChunk(int x, int y, int z) const { return chunks[x][y][z]; }
 	Chunk& GetChunkFromWorldPos(Vector3 t_pos);
+	std::vector<Chunk*> GetAllChunks();
 	std::vector<Chunk*> GetChunksInBounds(BoundingBox t_bounds);
 
 	int GetChunkIndexFromWorldPos(Vector3 t_pos);

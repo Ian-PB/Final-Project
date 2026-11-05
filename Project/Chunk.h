@@ -9,7 +9,7 @@ struct Point
 	Color color = RED;
 
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
-	float density = 0.0f; // -1 is solid while 1 is empty
+	float density = 1.0f; // -1 is solid while 1 is empty
 };
 
 struct CubeSection
@@ -64,7 +64,10 @@ public:
 	void ClearChunk(WallFlags walls = {});
 
 	int GetPointAmount() const { return SIZE * SIZE * SIZE; }
+	int GetPointsPerAxis() const { return SIZE; }
 	Point& GetPointAt(int i) { return points[i]; }
+	
+	Vector3 GetGlobalPos(Vector3 t_index) { return { (t_index.x * pointSpacing) + position.x, (t_index.y * pointSpacing) + position.y, (t_index.z * pointSpacing) + position.z }; }
 
 private:
 	bool dirty = false;
@@ -77,7 +80,6 @@ private:
 	Color GetColorFromDensity(float val);
 
 	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
-	Vector3 GetGlobalPos(Vector3 t_index) { return { (t_index.x * pointSpacing) + position.x, (t_index.y * pointSpacing) + position.y, (t_index.z * pointSpacing) + position.z }; }
 
 	MeshData meshData;
 	Mesh mesh;
