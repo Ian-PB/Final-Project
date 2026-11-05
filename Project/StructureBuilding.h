@@ -9,7 +9,7 @@ enum class UiModes
 {
 	Off = -1,
 	SpawnObj,
-	EditSelectedObj
+	SelectedEditting
 };
 
 class StructureBuilding
@@ -22,9 +22,22 @@ public:
 	void Update();
 
 private:
+	void CheckKeybinds();
+
 	UiModes currentUiMode = UiModes::Off;
 	void DrawUI();
 	void DrawSpawnObjUI();
+
+	void DrawSelectedEdittingPanel();
+	bool posXEditMode = false;
+	bool posYEditMode = false;
+	bool posZEditMode = false;
+	bool scaleXEditMode = false;
+	bool scaleYEditMode = false;
+	bool scaleZEditMode = false;
+	bool rotXEditMode = false;
+	bool rotYEditMode = false;
+	bool rotZEditMode = false;
 
 	void Bake();
 	void ResetBaking();

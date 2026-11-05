@@ -38,6 +38,12 @@ public:
 	void SetPos(Vector3 t_pos) { position = t_pos; UpdateTransformMatrix(); UpdateArrowBounds(); }
 	Vector3 GetPos() const { return position; }
 
+	void SetScale(Vector3 t_scale) { scale = t_scale; UpdateTransformMatrix(); UpdateArrowBounds(); }
+	Vector3 GetScale() const { return scale; }
+
+	void SetRotation(Vector3 t_rot) { rotation = t_rot; UpdateTransformMatrix(); UpdateArrowBounds(); }
+	Vector3 GetRotation() const { return rotation; }
+
 	BoundingBox GetBounds() const { return bounds; }
 	float GetBoundingSkin() { return SIGNED_DIST_SKIN; }
 

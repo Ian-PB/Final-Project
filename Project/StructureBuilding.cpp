@@ -70,29 +70,7 @@ void StructureBuilding::Draw()
 
 void StructureBuilding::Update()
 {
-    if (IsKeyPressed(KEY_N))
-    {
-        if (currentUiMode == UiModes::Off)
-        {
-            currentUiMode = UiModes::SpawnObj;
-            EnableCursor();
-        }
-        else
-        {
-            currentUiMode = UiModes::Off;
-            DisableCursor();
-        }
-    }
-
-    // Remove selected object
-    if (IsKeyPressed(KEY_DELETE))
-    {
-        if (RemoveSelectedObj())
-        {
-            // If a object was removed
-            selectedObject = nullptr;
-        }
-    }
+    CheckKeybinds();
 
     // Don't update the rest if in a menu
     if (currentUiMode != UiModes::Off)
@@ -125,6 +103,51 @@ void StructureBuilding::Update()
         }
     }
 
+    world.Update();
+}
+
+void StructureBuilding::CheckKeybinds()
+{
+    // Object spawn
+    if (IsKeyPressed(KEY_N))
+    {
+        if (currentUiMode == UiModes::Off)
+        {
+            currentUiMode = UiModes::SpawnObj;
+            EnableCursor();
+        }
+        else
+        {
+            currentUiMode = UiModes::Off;
+            DisableCursor();
+        }
+    }
+
+    // Swap open selected objects info
+    if (IsKeyPressed(KEY_T) && selectedObject != nullptr)
+    {
+        if (currentUiMode == UiModes::Off)
+        {
+            currentUiMode = UiModes::SelectedEditting;
+            EnableCursor();
+        }
+        else
+        {
+            currentUiMode = UiModes::Off;
+            DisableCursor();
+        }
+    }
+
+    // Remove selected object
+    if (IsKeyPressed(KEY_DELETE))
+    {
+        if (RemoveSelectedObj())
+        {
+            // If a object was removed
+            selectedObject = nullptr;
+        }
+    }
+
     // Bake objects into the world
     if (IsKeyPressed(KEY_B))
     {
@@ -133,7 +156,6 @@ void StructureBuilding::Update()
         else
             ResetBaking();
     }
-    world.Update();
 }
 
 void StructureBuilding::DrawUI()
@@ -143,8 +165,8 @@ void StructureBuilding::DrawUI()
     case UiModes::SpawnObj:
         DrawSpawnObjUI();
         break;
-    case UiModes::EditSelectedObj:
-        DrawSpawnObjUI();
+    case UiModes::SelectedEditting:
+        DrawSelectedEdittingPanel();
         break;
     }
 }
@@ -180,6 +202,96 @@ void StructureBuilding::DrawSpawnObjUI()
 
     // If any buttons were pressed remove ui
     if (objSpawned)
+    {
+        currentUiMode = UiModes::Off;
+        DisableCursor();
+    }
+}
+
+void StructureBuilding::DrawSelectedEdittingPanel()
+{
+    Rectangle panelRect;
+    panelRect.x = GetScreenWidth() * 0.02f;
+    panelRect.y = GetScreenHeight() * 0.02f;
+    panelRect.width = GetScreenWidth() * 0.3f;
+    panelRect.height = GetScreenHeight() * 0.3f;
+
+    DrawRectangleRounded(panelRect, 0.2, 10, LIGHTGRAY);
+
+    Rectangle elementRect;
+    elementRect.width = panelRect.width * 0.3f;
+    elementRect.height = panelRect.height * 0.1f;
+    elementRect.x = panelRect.x + panelRect.width * 0.15f;
+    elementRect.y = panelRect.y + panelRect.height * 0.05f;
+
+    // Position editting
+    Vector3 originalPos = selectedObject->GetPos();
+    int posX = originalPos.x;
+    int posY = originalPos.y;
+    int posZ = originalPos.z;
+
+    if (GuiSpinner(elementRect, "Position X", &posX, -worldSize.x, worldSize.x, posXEditMode))
+        posXEditMode = !posXEditMode;
+    elementRect.y += elementRect.height;
+    if (GuiSpinner(elementRect, "Position Y", &posY, -worldSize.y, worldSize.y, posYEditMode))
+        posYEditMode = !posYEditMode;
+    elementRect.y += elementRect.height;
+    if (GuiSpinner(elementRect, "Position Z", &posZ, -worldSize.z, worldSize.z, posZEditMode))
+        posZEditMode = !posZEditMode;
+    elementRect.y += elementRect.height;
+    selectedObject->SetPos({ (float)posX, (float)posY, (float)posZ });
+
+    // Spacing
+    elementRect.x = panelRect.x + panelRect.width * 0.15f;
+    elementRect.y += elementRect.width * 0.01f;
+
+    // Scale editting
+    Vector3 originalScale = selectedObject->GetScale();
+    int scaleX = originalScale.x;
+    int scaleY = originalScale.y;
+    int scaleZ = originalScale.z;
+
+    if (GuiSpinner(elementRect, "Scale X", &scaleX, 1, 999, scaleXEditMode))
+        scaleXEditMode = !scaleXEditMode;
+    elementRect.y += elementRect.height;
+    if (GuiSpinner(elementRect, "Scale Y", &scaleY, 1, 999, scaleYEditMode))
+        scaleYEditMode = !scaleYEditMode;
+    elementRect.y += elementRect.height;
+    if (GuiSpinner(elementRect, "Scale Z", &scaleZ, 1, 999, scaleZEditMode))
+        scaleZEditMode = !scaleZEditMode;
+    elementRect.y += elementRect.height;
+    selectedObject->SetScale({ (float)scaleX, (float)scaleY, (float)scaleZ });
+
+    // Spacing
+    elementRect.x = panelRect.x + panelRect.width * 0.15f;
+    elementRect.y += elementRect.width * 0.01f;
+
+    // Rotation editting
+    Vector3 originalRot = selectedObject->GetRotation();
+    int rotX = roundf(originalRot.x * RAD2DEG);
+    int rotY = roundf(originalRot.y * RAD2DEG);
+    int rotZ = roundf(originalRot.z * RAD2DEG);
+
+    if (GuiSpinner(elementRect, "Rotation X", &rotX, -180, 180, rotXEditMode))
+        rotXEditMode = !rotXEditMode;
+    elementRect.y += elementRect.height;
+    if (GuiSpinner(elementRect, "Rotation Y", &rotY, -180, 180, rotYEditMode))
+        rotYEditMode = !rotYEditMode;
+    elementRect.y += elementRect.height;
+    if (GuiSpinner(elementRect, "Rotation Z", &rotZ, -180, 180, rotZEditMode))
+        rotZEditMode = !rotZEditMode;
+    elementRect.y += elementRect.height;
+    selectedObject->SetRotation({ (float)rotX * DEG2RAD, (float)rotY * DEG2RAD, (float)rotZ * DEG2RAD });
+
+    // Follow the object while in this mode
+    camera.target = selectedObject->GetPos();
+
+    // Spacing
+    elementRect.x = panelRect.x + panelRect.width * 0.15f;
+    elementRect.y += elementRect.width * 0.1f;
+
+    // Close Button
+    if (GuiButton(elementRect, "Close (T)"))
     {
         currentUiMode = UiModes::Off;
         DisableCursor();
@@ -241,6 +353,7 @@ void StructureBuilding::SpawnCube()
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
+    selectedObject = newObj;
 
     objects.push_back(newObj);
 }
@@ -251,6 +364,7 @@ void StructureBuilding::SpawnSphere()
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
+    selectedObject = newObj;
 
     objects.push_back(newObj);
 }
@@ -261,6 +375,7 @@ void StructureBuilding::SpawnCylinder()
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
+    selectedObject = newObj;
 
     objects.push_back(newObj);
 }
