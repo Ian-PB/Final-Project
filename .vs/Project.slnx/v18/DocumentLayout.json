@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "Project\\StructureBuilding.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\StructureBuilding.cpp",
               "RelativeToolTip": "Project\\StructureBuilding.cpp",
-              "ViewState": "AgIAAAsBAAAAAAAAAAAowOcAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAIwNsAAACLAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-02T20:50:49.425Z",
               "IsPinned": true,
@@ -61,8 +61,7 @@
               "ViewState": "AgIAAAYAAAAAAAAAAAAAACYAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-02T20:47:31.448Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -100,8 +99,7 @@
               "RelativeToolTip": "Project\\BaseBuildingBlock.cpp",
               "ViewState": "AgIAAOcBAAAAAAAAAAAcwPYBAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-11-05T17:32:14.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-05T17:32:14.445Z"
             },
             {
               "$type": "Document",
@@ -113,8 +111,7 @@
               "RelativeToolTip": "Project\\BaseBuildingBlock.h",
               "ViewState": "AgIAAEMAAAAAAAAAAAAcwFEAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-11-04T22:34:53.329Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-04T22:34:53.329Z"
             }
           ]
         }

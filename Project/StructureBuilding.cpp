@@ -66,6 +66,13 @@ void StructureBuilding::Draw()
 
     if (currentUiMode != UiModes::Off)
         DrawUI();
+    else
+    {
+        // Keybinds Text
+        DrawText("T - Manually Edit Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f, 25, RED);
+        DrawText("N - Spawn New Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 30, 25, RED);
+        DrawText("DELETE - Remove Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 60, 25, RED);
+    }
 }
 
 void StructureBuilding::Update()
@@ -210,19 +217,17 @@ void StructureBuilding::DrawSpawnObjUI()
 
 void StructureBuilding::DrawSelectedEdittingPanel()
 {
-    Rectangle panelRect;
-    panelRect.x = GetScreenWidth() * 0.02f;
-    panelRect.y = GetScreenHeight() * 0.02f;
-    panelRect.width = GetScreenWidth() * 0.3f;
-    panelRect.height = GetScreenHeight() * 0.3f;
+    const Rectangle PANEL_RECT = { GetScreenWidth() * 0.02f, GetScreenHeight() * 0.02f, GetScreenWidth() * 0.2f, GetScreenHeight() * 0.4f };
+    DrawRectangleRounded(PANEL_RECT, 0.2, 10, LIGHTGRAY);
+    DrawRectangleRoundedLines(PANEL_RECT, 0.2, 10, DARKGRAY);
 
-    DrawRectangleRounded(panelRect, 0.2, 10, LIGHTGRAY);
-
+    // Element Setup
     Rectangle elementRect;
-    elementRect.width = panelRect.width * 0.3f;
-    elementRect.height = panelRect.height * 0.1f;
-    elementRect.x = panelRect.x + panelRect.width * 0.15f;
-    elementRect.y = panelRect.y + panelRect.height * 0.05f;
+    elementRect.width = PANEL_RECT.width * 0.7f;
+    elementRect.height = PANEL_RECT.height * 0.07f;
+    const float ELEMENT_X_START = PANEL_RECT.x + PANEL_RECT.width * 0.20f;
+    elementRect.x = ELEMENT_X_START;
+    elementRect.y = PANEL_RECT.y + PANEL_RECT.height * 0.1f;
 
     // Position editting
     Vector3 originalPos = selectedObject->GetPos();
@@ -242,8 +247,8 @@ void StructureBuilding::DrawSelectedEdittingPanel()
     selectedObject->SetPos({ (float)posX, (float)posY, (float)posZ });
 
     // Spacing
-    elementRect.x = panelRect.x + panelRect.width * 0.15f;
-    elementRect.y += elementRect.width * 0.01f;
+    elementRect.x = ELEMENT_X_START;
+    elementRect.y += elementRect.width * 0.02f;
 
     // Scale editting
     Vector3 originalScale = selectedObject->GetScale();
@@ -263,7 +268,7 @@ void StructureBuilding::DrawSelectedEdittingPanel()
     selectedObject->SetScale({ (float)scaleX, (float)scaleY, (float)scaleZ });
 
     // Spacing
-    elementRect.x = panelRect.x + panelRect.width * 0.15f;
+    elementRect.x = ELEMENT_X_START;
     elementRect.y += elementRect.width * 0.01f;
 
     // Rotation editting
@@ -287,7 +292,7 @@ void StructureBuilding::DrawSelectedEdittingPanel()
     camera.target = selectedObject->GetPos();
 
     // Spacing
-    elementRect.x = panelRect.x + panelRect.width * 0.15f;
+    elementRect.x = PANEL_RECT.x + PANEL_RECT.width * 0.15f;
     elementRect.y += elementRect.width * 0.1f;
 
     // Close Button
@@ -353,7 +358,12 @@ void StructureBuilding::SpawnCube()
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
+
+    // Select new object
+    if (selectedObject != nullptr)
+        selectedObject->SetSelected(false);
     selectedObject = newObj;
+    selectedObject->SetSelected(true);
 
     objects.push_back(newObj);
 }
@@ -364,7 +374,12 @@ void StructureBuilding::SpawnSphere()
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
+
+    // Select new object
+    if (selectedObject != nullptr)
+        selectedObject->SetSelected(false);
     selectedObject = newObj;
+    selectedObject->SetSelected(true);
 
     objects.push_back(newObj);
 }
@@ -375,7 +390,12 @@ void StructureBuilding::SpawnCylinder()
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();
+
+    // Select new object
+    if (selectedObject != nullptr)
+        selectedObject->SetSelected(false);
     selectedObject = newObj;
+    selectedObject->SetSelected(true);
 
     objects.push_back(newObj);
 }
@@ -401,13 +421,13 @@ void StructureBuilding::CheckObjectClicked()
 
     std::cout << closestIndex << std::endl;
 
-    // Not over any
-    if (closestIndex == -1)
-        return;
-
     // Disable last one
     if (selectedObject != nullptr)
         selectedObject->SetSelected(false);
+
+    // Not over any
+    if (closestIndex == -1)
+        return;
 
     // Set selected object
     selectedObject = objects[closestIndex];
