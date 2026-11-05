@@ -27,6 +27,7 @@ private:
 	void DrawSpawnObjUI();
 
 	void Bake();
+	void ResetBaking();
 
 	void SpawnCube();
 	void SpawnSphere();

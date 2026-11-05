@@ -128,8 +128,10 @@ void StructureBuilding::Update()
     // Bake objects into the world
     if (IsKeyPressed(KEY_B))
     {
-        Bake();
-        displayObjs = false;
+        if (displayObjs)
+            Bake();
+        else
+            ResetBaking();
     }
     world.Update();
 }
@@ -186,6 +188,8 @@ void StructureBuilding::DrawSpawnObjUI()
 
 void StructureBuilding::Bake()
 {
+    bool anyModificationsMade = false;
+
     for (const std::shared_ptr<BaseBuildingBlock> obj : objects)
     {
         BoundingBox objBounds = obj->GetBounds();
@@ -211,11 +215,24 @@ void StructureBuilding::Bake()
 
             if (modified)
             {
+                if (!anyModificationsMade)
+                    anyModificationsMade = true;
+
                 chunk->SetDirty();
                 world.QueueChunkChangeAtPos(chunk->GetPosition());
             }
         }
     }
+
+    // Only stop the display of objects if there was a single edit made
+    if (anyModificationsMade)
+        displayObjs = false;
+}
+
+void StructureBuilding::ResetBaking()
+{
+    world.EmptyWorldGen();
+    displayObjs = true;
 }
 
 void StructureBuilding::SpawnCube()

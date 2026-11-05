@@ -3,7 +3,7 @@
 #include <algorithm>
 
 const float BaseBuildingBlock::MIN_SCALE = 0.02f;
-const float BaseBuildingBlock::SIGNED_DIST_SKIN = 0.2f;
+const float BaseBuildingBlock::SIGNED_DIST_SKIN = 0.15f;
 
 BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 {
