@@ -70,7 +70,6 @@ void StructureBuilding::Draw()
 
 void StructureBuilding::Update()
 {
-    // Temp
     if (IsKeyPressed(KEY_N))
     {
         if (currentUiMode == UiModes::Off)
@@ -82,6 +81,16 @@ void StructureBuilding::Update()
         {
             currentUiMode = UiModes::Off;
             DisableCursor();
+        }
+    }
+
+    // Remove selected object
+    if (IsKeyPressed(KEY_DELETE))
+    {
+        if (RemoveSelectedObj())
+        {
+            // If a object was removed
+            selectedObject = nullptr;
         }
     }
 
@@ -183,7 +192,7 @@ void StructureBuilding::Bake()
         objBounds.min = Vector3SubtractValue(objBounds.min, obj->GetBoundingSkin());
         objBounds.max = Vector3AddValue(objBounds.max, obj->GetBoundingSkin());
 
-        std::vector<Chunk*> chunks = world.GetChunksInBounds(obj->GetBounds());
+        std::vector<Chunk*> chunks = world.GetChunksInBounds(objBounds);
 
         // Loop through all intersecting chunks
         for (Chunk* chunk : chunks)
@@ -283,6 +292,27 @@ void StructureBuilding::GetEditModeInputs()
 
     else if (IsKeyPressed(KEY_THREE))
         editMode = EditTypes::Scale;
+}
+
+bool StructureBuilding::RemoveSelectedObj()
+{
+    int indexToDelete = -1;
+
+    for (int i = 0; i < objects.size(); i++)
+    {
+        if (objects[i]->IsSelected())
+        {
+            indexToDelete = i;
+            break;
+        }
+    }
+
+    // Return early if none selected
+    if (indexToDelete == -1)
+        return false;
+
+    objects.erase(objects.begin() + indexToDelete);
+    return true;
 }
 
 bool StructureBuilding::IsHoveringAxis()

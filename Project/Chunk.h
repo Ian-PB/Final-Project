@@ -88,10 +88,10 @@ private:
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
 
 	int IndexFrom3D(int x, int y, int z) { return (x * SIZE * SIZE + y * SIZE + z); }
-	static const int SIZE = 20; // Amount of points in each direction
+	static const int SIZE = 50; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
-	float pointSpacing = 1.0f;
+	float pointSpacing = 0.4f;
 	const float EDIT_MARGIN = 1.5f;
 
 	// Collision

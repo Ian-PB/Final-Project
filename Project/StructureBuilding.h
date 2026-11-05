@@ -36,6 +36,7 @@ private:
 	void GetEditModeInputs();
 	EditTypes editMode = EditTypes::Move;
 
+	bool RemoveSelectedObj();
 	bool IsHoveringAxis();
 	bool displayObjs = true;
 

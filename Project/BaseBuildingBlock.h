@@ -31,6 +31,7 @@ public:
 	bool IsDragging() const { return isDragging; }
 
 	void SetSelected(bool s) { selected = s; }
+	bool IsSelected() const { return selected; }
 
 	bool ChangePointDensity(Vector3 t_point, float& t_density);
 
