@@ -30,6 +30,10 @@ void StructureBuilding::Init()
     SpawnCube();
 
     structureSaver = std::make_shared<StructureSaver>(world);
+
+    // Try spawn test structure
+    //StructureExport testStruct = StructureSaver::GetStructureFromFile(StructureTypes::None, "Name");
+    //StructureSaver::PlaceStructure(world, testStruct);
 }
 
 void StructureBuilding::Draw()

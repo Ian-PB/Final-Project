@@ -424,25 +424,6 @@ void World::KeyboardInputs()
     {
         HollowBoxWorldGen();
     }
-
-    //if (IsKeyDown(KEY_UP))
-    //{
-    //    surfaceLevel += 0.01f;
-
-    //    if (surfaceLevel > 1.0f)
-    //        surfaceLevel = 1.0f;
-
-    //    completeRebuild = true;
-    //}
-    //else if (IsKeyDown(KEY_DOWN))
-    //{
-    //    surfaceLevel -= 0.01f;
-
-    //    if (surfaceLevel < -1.0f)
-    //        surfaceLevel = -1.0f;
-
-    //    completeRebuild = true;
-    //}
 }
 
 // FastNoiseLite is a library I added

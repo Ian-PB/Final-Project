@@ -34,11 +34,57 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name)
     jsonObj["name"] = t_name;
     jsonObj["dimensions"] = { dimensions.x, dimensions.y, dimensions.z };
     jsonObj["densities"] = GetPointsToSave(bounds);
+    jsonObj["minBounds"] = { bounds.min.x, bounds.min.y, bounds.min.z };
+    jsonObj["maxBounds"] = { bounds.max.x, bounds.max.y, bounds.max.z };
 
     if (file.is_open())
     {
         file << jsonObj.dump(4);
     }
+}
+
+StructureExport StructureSaver::GetStructureFromFile(StructureTypes t_type, std::string t_name)
+{
+    json jsonObj;
+    std::string path = FILE_PATH + typeToFilePath.at(t_type) + t_name + ".json";
+    std::ifstream file(path);
+
+    if (!file.is_open()) 
+    {
+        std::cerr << "File not found at: " << path << '\n';
+        return StructureExport();
+    }
+
+    file >> jsonObj;
+
+    StructureExport exportedStructure;
+
+    exportedStructure.name = jsonObj["name"].get<std::string>();
+
+    exportedStructure.dimensions.x = jsonObj["dimensions"][0].get<float>();
+    exportedStructure.dimensions.y = jsonObj["dimensions"][1].get<float>();
+    exportedStructure.dimensions.z = jsonObj["dimensions"][2].get<float>();
+
+    exportedStructure.minBounds.x = jsonObj["minBounds"][0].get<float>();
+    exportedStructure.minBounds.y = jsonObj["minBounds"][1].get<float>();
+    exportedStructure.minBounds.z = jsonObj["minBounds"][2].get<float>();
+
+    exportedStructure.maxBounds.x = jsonObj["maxBounds"][0].get<float>();
+    exportedStructure.maxBounds.y = jsonObj["maxBounds"][1].get<float>();
+    exportedStructure.maxBounds.z = jsonObj["maxBounds"][2].get<float>();
+
+    exportedStructure.densities = jsonObj["densities"].get<std::vector<float>>();
+
+    return exportedStructure;
+}
+
+void StructureSaver::PlaceStructure(World& t_world, StructureExport t_structure, Vector3 t_minCornerPos)
+{
+    BoundingBox structBounds{};
+    structBounds.min = Vector3Add(t_structure.minBounds, t_minCornerPos);
+    structBounds.max = Vector3Add(t_structure.maxBounds, t_minCornerPos);
+
+    Chunk& chunkAtMin = t_world.GetChunkFromWorldPos(structBounds.min);
 }
 
 BoundingBox StructureSaver::FindStructureBounds()
@@ -80,6 +126,10 @@ BoundingBox StructureSaver::FindStructureBounds()
             bounds.max.z = std::max(globalPos.z, bounds.max.z);
         }
     }
+
+    // Set min to { 0, 0, 0 }
+    bounds.max = Vector3Subtract(bounds.max, bounds.min);
+    bounds.min = { 0.0f, 0.0f, 0.0f };
 
     return bounds;
 }

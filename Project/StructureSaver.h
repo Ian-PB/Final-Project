@@ -14,6 +14,15 @@ struct Index3D
 	int z = -1;
 };
 
+struct StructureExport
+{
+	std::string name = "Temp";
+	Vector3 dimensions = { 0.0f, 0.0f, 0.0f };
+	Vector3 minBounds = { 0.0f, 0.0f, 0.0f };
+	Vector3 maxBounds = { 0.0f, 0.0f, 0.0f };
+	std::vector<float> densities;
+};
+
 enum class StructureTypes
 {
 	None = -1,
@@ -26,6 +35,9 @@ public:
 	StructureSaver(World& t_world);
 
 	void SaveFile(StructureTypes t_type, std::string t_name);
+
+	static StructureExport GetStructureFromFile(StructureTypes t_type, std::string t_name);
+	static void PlaceStructure(World& t_world, StructureExport t_structure, Vector3 t_minCornerPos = { 0.0f, 0.0f, 0.0f });
 
 private:
 
