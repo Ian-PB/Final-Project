@@ -1,12 +1,13 @@
 #include "StructureSaver.h"
 #include <iostream>
 #include <fstream>
-#include <raymath.h>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 const std::string StructureSaver::FILE_PATH = "resources/Structures/";
 const std::map<StructureTypes, std::string> StructureSaver::typeToFilePath = {
     { StructureTypes::None, "None/" },
-    { StructureTypes::World, "World/" }
+    { StructureTypes::World, "Worlds/" }
 };
 const char StructureSaver::SPLITTING_CHAR = '@';
 
@@ -16,26 +17,36 @@ StructureSaver::StructureSaver(World& t_world) : world(t_world)
 
 void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name)
 {
-    std::string path = FILE_PATH + typeToFilePath.at(t_type) + t_name;
+    std::string path = FILE_PATH + typeToFilePath.at(t_type) + t_name + ".json";
+    std::cout << "Saved to: " << path << std::endl;
 
-    std::ofstream structureFile(path);
+    std::ofstream file(path);
 
-    PointBounds bounds = FindStructureBounds();
-    std::vector<float> pointDensities = GetPointsToSave(bounds);
+    BoundingBox bounds = FindStructureBounds();
 
-    for (const int& p : pointDensities)
+    Vector3 dimensions;
+    dimensions.x = std::abs(bounds.max.x - bounds.min.x);
+    dimensions.y = std::abs(bounds.max.y - bounds.min.y);
+    dimensions.z = std::abs(bounds.max.z - bounds.min.z);
+
+    // Create JSON Object
+    json jsonObj;
+    jsonObj["name"] = t_name;
+    jsonObj["dimensions"] = { dimensions.x, dimensions.y, dimensions.z };
+    jsonObj["densities"] = GetPointsToSave(bounds);
+
+    if (file.is_open())
     {
-        structureFile << p;
-        structureFile << SPLITTING_CHAR;
+        file << jsonObj.dump(4);
     }
 }
 
-PointBounds StructureSaver::FindStructureBounds()
+BoundingBox StructureSaver::FindStructureBounds()
 {
     // Same across all chunks
     int pointsPerAxis = world.GetChunk(0, 0, 0).GetPointsPerAxis();
-    PointBounds bounds;
-
+    BoundingBox bounds = {};
+    bool foundPoint = false;
 
     for (Chunk* chunk : world.GetAllChunks())
     {
@@ -45,47 +56,65 @@ PointBounds StructureSaver::FindStructureBounds()
             const Point& p = chunk->GetPointAt(i);
 
             // Ignore empty points
-            if (p.density >= 1)
+            if (p.density >= 1.0f)
                 continue;
 
             Index3D i3D = Get3DIndex(i, pointsPerAxis);
             Vector3 globalPos = chunk->GetGlobalPos({ (float)i3D.x, (float)i3D.y, (float)i3D.z });
 
-            // Check if it should be the new min
-            if (bounds.minPos.x < globalPos.x && bounds.minPos.y < globalPos.y && bounds.minPos.z < globalPos.z)
+            if (!foundPoint)
             {
-                bounds.minPos = globalPos;
-
-                Index3D i3D = Get3DIndex(i, pointsPerAxis);
-                bounds.minIndex3D = i3D;
+                bounds.min = globalPos;
+                bounds.max = globalPos;
+                foundPoint = true;
+                continue;
             }
-            // Check if it should be the new max
-            else if (bounds.maxPos.x > globalPos.x && bounds.maxPos.y > globalPos.y && bounds.maxPos.z > globalPos.z)
-            {
-                bounds.maxPos = globalPos;
 
-                Index3D i3D = Get3DIndex(i, pointsPerAxis);
-                bounds.maxIndex3D = i3D;
-            }
+            // Change each axis indepentantly
+            bounds.min.x = std::min(globalPos.x, bounds.min.x);
+            bounds.min.y = std::min(globalPos.y, bounds.min.y);
+            bounds.min.z = std::min(globalPos.z, bounds.min.z);
+
+            bounds.max.x = std::max(globalPos.x, bounds.max.x);
+            bounds.max.y = std::max(globalPos.y, bounds.max.y);
+            bounds.max.z = std::max(globalPos.z, bounds.max.z);
         }
     }
 
     return bounds;
 }
 
-std::vector<float> StructureSaver::GetPointsToSave(PointBounds t_bounds)
+std::vector<float> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
 {
     // Same across all chunks
     int pointsPerAxis = world.GetChunk(0, 0, 0).GetPointsPerAxis();
     std::vector<float> points;
 
-    for (int x = t_bounds.minIndex3D.x; x < t_bounds.maxIndex3D.x; x++)
+    // Get chunks in bounds
+    std::vector<Chunk*> chunks = world.GetChunksInBounds(t_bounds);
+    
+    for (Chunk* chunk : chunks)
     {
-        for (int y = t_bounds.minIndex3D.y; y < t_bounds.maxIndex3D.y; y++)
+        for (int x = 0; x < pointsPerAxis; x++)
         {
-            for (int z = t_bounds.minIndex3D.z; z < t_bounds.maxIndex3D.z; z++)
+            for (int y = 0; y < pointsPerAxis; y++)
             {
-                int i = GetFlatIndex(x, y, z, pointsPerAxis);
+                for (int z = 0; z < pointsPerAxis; z++)
+                {
+                    int i = GetFlatIndex({ x, y, z }, pointsPerAxis);
+
+                    Vector3 globalPos = chunk->GetGlobalPos({ (float)x, (float)y, (float)z });
+
+                    // Check if outside of bounds
+                    if (globalPos.x < t_bounds.min.x || globalPos.x > t_bounds.max.x ||
+                        globalPos.y < t_bounds.min.y || globalPos.y > t_bounds.max.y ||
+                        globalPos.z < t_bounds.min.z || globalPos.z > t_bounds.max.z)
+                    {
+                        continue;
+                    }
+
+                    points.push_back(chunk->GetPointAt(i).density);
+                }
             }
         }
     }

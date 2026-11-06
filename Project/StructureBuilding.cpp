@@ -28,6 +28,8 @@ void StructureBuilding::Init()
     camera.target = { worldCenter.x + 2.0f, 2.0f, worldCenter.z };
 
     SpawnCube();
+
+    structureSaver = std::make_shared<StructureSaver>(world);
 }
 
 void StructureBuilding::Draw()
@@ -132,7 +134,7 @@ void StructureBuilding::CheckKeybinds()
             currentUiMode = UiModes::SpawnObj;
             EnableCursor();
         }
-        else
+        else if (currentUiMode == UiModes::SpawnObj)
         {
             currentUiMode = UiModes::Off;
             DisableCursor();
@@ -147,7 +149,7 @@ void StructureBuilding::CheckKeybinds()
             currentUiMode = UiModes::SelectedEditting;
             EnableCursor();
         }
-        else
+        else if (currentUiMode == UiModes::SelectedEditting)
         {
             currentUiMode = UiModes::Off;
             DisableCursor();
@@ -172,6 +174,20 @@ void StructureBuilding::CheckKeybinds()
         else
             ResetBaking();
     }
+
+    if (IsKeyPressed(KEY_ENTER))
+    {
+        if (currentUiMode == UiModes::Off)
+        {
+            currentUiMode = UiModes::SavingStructure;
+            EnableCursor();
+        }
+        else if (currentUiMode == UiModes::SavingStructure)
+        {
+            currentUiMode = UiModes::Off;
+            DisableCursor();
+        }
+    }
 }
 
 void StructureBuilding::DrawUI()
@@ -183,6 +199,9 @@ void StructureBuilding::DrawUI()
         break;
     case UiModes::SelectedEditting:
         DrawSelectedEdittingPanel();
+        break;
+    case UiModes::SavingStructure:
+        DrawSavingStructurePanel();
         break;
     }
 }
@@ -309,6 +328,42 @@ void StructureBuilding::DrawSelectedEdittingPanel()
     {
         currentUiMode = UiModes::Off;
         DisableCursor();
+    }
+}
+
+void StructureBuilding::DrawSavingStructurePanel()
+{
+    const Rectangle PANEL_RECT = { GetScreenWidth() * 0.02f, GetScreenHeight() * 0.02f, GetScreenWidth() * 0.2f, GetScreenHeight() * 0.4f };
+    DrawRectangleRounded(PANEL_RECT, 0.2, 10, LIGHTGRAY);
+    DrawRectangleRoundedLines(PANEL_RECT, 0.2, 10, DARKGRAY);
+
+    // Element Setup
+    Rectangle elementRect;
+    elementRect.width = PANEL_RECT.width * 0.7f;
+    elementRect.height = PANEL_RECT.height * 0.07f;
+    const float ELEMENT_X_START = PANEL_RECT.x + PANEL_RECT.width * 0.15f;
+    elementRect.x = ELEMENT_X_START;
+    elementRect.y = PANEL_RECT.y + PANEL_RECT.height * 0.1f;
+
+    if (GuiTextBox(elementRect, structureName, MAX_NAME_SIZE, nameEditMode))
+        nameEditMode = !nameEditMode;
+
+    // Spacing
+    elementRect.x = ELEMENT_X_START;
+    elementRect.y += elementRect.width * 0.2f;
+
+    int selectedTypeInt = static_cast<int>(selectedType) + 1;
+    if (GuiDropdownBox(elementRect, "None;World;", &selectedTypeInt, typeDropDownOpen))
+        typeDropDownOpen = !typeDropDownOpen;
+    selectedType = static_cast<StructureTypes>(selectedTypeInt - 1); // Convert back to enum
+
+    // Spacing
+    elementRect.x = ELEMENT_X_START;
+    elementRect.y = PANEL_RECT.height * 0.9f;
+
+    if (GuiButton(elementRect, "Save To File"))
+    {
+        structureSaver->SaveFile(selectedType, structureName);
     }
 }
 

@@ -4,12 +4,14 @@
 #include <vector>
 #include "BaseBuildingBlock.h"
 #include "World.h"
+#include "StructureSaver.h"
 
 enum class UiModes
 {
 	Off = -1,
 	SpawnObj,
-	SelectedEditting
+	SelectedEditting,
+	SavingStructure
 };
 
 class StructureBuilding
@@ -39,6 +41,13 @@ private:
 	bool rotYEditMode = false;
 	bool rotZEditMode = false;
 
+	void DrawSavingStructurePanel();
+	static const int MAX_NAME_SIZE = 64;
+	char structureName[MAX_NAME_SIZE] = "Name";
+	bool nameEditMode = false;
+	StructureTypes selectedType = StructureTypes::None;
+	bool typeDropDownOpen = false;
+
 	void Bake();
 	void ResetBaking();
 
@@ -60,6 +69,8 @@ private:
 	Camera3D camera;
 
 	bool isDragging = false;
+
+	std::shared_ptr<StructureSaver> structureSaver;
 
 	World world;
 	Vector3 worldCenter;

@@ -1,6 +1,5 @@
 #pragma once
 #include <raylib.h>
-#include <raygui.h>
 #include <string>
 #include <map>
 #include <vector>
@@ -13,15 +12,6 @@ struct Index3D
 	int x = -1;
 	int y = -1;
 	int z = -1;
-};
-
-struct PointBounds
-{
-	Vector3 minPos = { -9999.0f, -9999.0f, -9999.0f };
-	Index3D minIndex3D;
-
-	Vector3 maxPos = { 9999.0f, 9999.0f, 9999.0f };
-	Index3D maxIndex3D;
 };
 
 enum class StructureTypes
@@ -39,8 +29,8 @@ public:
 
 private:
 
-	PointBounds FindStructureBounds();
-	std::vector<float> GetPointsToSave(PointBounds t_bounds);
+	BoundingBox FindStructureBounds();
+	std::vector<float> GetPointsToSave(BoundingBox t_bounds);
 
 	static const std::string FILE_PATH;
 	static const std::map<StructureTypes, std::string> typeToFilePath;
