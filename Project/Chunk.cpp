@@ -99,6 +99,7 @@ void Chunk::ApplyMeshDataToModel()
 // https://paulbourke.net/geometry/polygonise/ 
 void Chunk::GenerateMeshData(float t_surfaceLevel)
 {
+	surfaceLevel = t_surfaceLevel;
 	dirty = true;
 
 	triangles.clear();
@@ -141,7 +142,7 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 					cubeSection.colors[i] = points[index].color;
 				}
 
-				GetMeshVerticesForSection(cubeSection, t_surfaceLevel);
+				GetMeshVerticesForSection(cubeSection);
 			}
 		}
 	}
@@ -260,7 +261,7 @@ void Chunk::SetupPoints()
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
-				points[i].color = GetColorFromPos(globalPos);
+				points[i].color = GetColorFromDensity(points[i].density);
 			}
 		}
 	}
@@ -279,7 +280,7 @@ void Chunk::UpdateDensities()
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
-				points[i].color = GetColorFromPos(globalPos);
+				points[i].color = GetColorFromDensity(points[i].density);
 			}
 		}
 	}
@@ -290,20 +291,21 @@ void Chunk::UpdateDensities()
 // https://mclark45.medium.com/marching-cubes-algorithm-618302629331 
 //https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
 // https://paulbourke.net/geometry/polygonise/ 
-void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel)
+void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection)
 {
 	Vector3 vertlist[12] = {};
+	Color colorlist[12] = {};
 
 	int cubeindex = 0;
 	// Determine the index into the edge table which tells us which vertices are inside of the surface
-	if (t_cubeSection.val[0] < t_surfaceLevel) cubeindex |= 1;
-	if (t_cubeSection.val[1] < t_surfaceLevel) cubeindex |= 2;
-	if (t_cubeSection.val[2] < t_surfaceLevel) cubeindex |= 4;
-	if (t_cubeSection.val[3] < t_surfaceLevel) cubeindex |= 8;
-	if (t_cubeSection.val[4] < t_surfaceLevel) cubeindex |= 16;
-	if (t_cubeSection.val[5] < t_surfaceLevel) cubeindex |= 32;
-	if (t_cubeSection.val[6] < t_surfaceLevel) cubeindex |= 64;
-	if (t_cubeSection.val[7] < t_surfaceLevel) cubeindex |= 128;
+	if (t_cubeSection.val[0] < surfaceLevel) cubeindex |= 1;
+	if (t_cubeSection.val[1] < surfaceLevel) cubeindex |= 2;
+	if (t_cubeSection.val[2] < surfaceLevel) cubeindex |= 4;
+	if (t_cubeSection.val[3] < surfaceLevel) cubeindex |= 8;
+	if (t_cubeSection.val[4] < surfaceLevel) cubeindex |= 16;
+	if (t_cubeSection.val[5] < surfaceLevel) cubeindex |= 32;
+	if (t_cubeSection.val[6] < surfaceLevel) cubeindex |= 64;
+	if (t_cubeSection.val[7] < surfaceLevel) cubeindex |= 128;
 
 	// Cube is entirely in/out of the surface 
 	if (MarchingTables::EDGE_TABLE[cubeindex] == 0)
@@ -311,29 +313,65 @@ void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surface
 
 	// Find the vertices where the surface intersects the cube
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 1)
-		vertlist[0] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[1], t_cubeSection.val[0], t_cubeSection.val[1], t_surfaceLevel);
+	{
+		vertlist[0] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[1], t_cubeSection.val[0], t_cubeSection.val[1]);
+		colorlist[0] = ColorInterp(t_cubeSection.colors[0], t_cubeSection.colors[1], t_cubeSection.val[0], t_cubeSection.val[1]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 2)
-		vertlist[1] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[2], t_cubeSection.val[1], t_cubeSection.val[2], t_surfaceLevel);
+	{
+		vertlist[1] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[2], t_cubeSection.val[1], t_cubeSection.val[2]);
+		colorlist[1] = ColorInterp(t_cubeSection.colors[1], t_cubeSection.colors[2], t_cubeSection.val[1], t_cubeSection.val[2]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 4)
-		vertlist[2] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[3], t_cubeSection.val[2], t_cubeSection.val[3], t_surfaceLevel);
+	{
+		vertlist[2] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[3], t_cubeSection.val[2], t_cubeSection.val[3]);
+		colorlist[2] = ColorInterp(t_cubeSection.colors[2], t_cubeSection.colors[3], t_cubeSection.val[2], t_cubeSection.val[3]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 8)
-		vertlist[3] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[0], t_cubeSection.val[3], t_cubeSection.val[0], t_surfaceLevel);
+	{
+		vertlist[3] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[0], t_cubeSection.val[3], t_cubeSection.val[0]);
+		colorlist[3] = ColorInterp(t_cubeSection.colors[3], t_cubeSection.colors[0], t_cubeSection.val[3], t_cubeSection.val[0]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 16)
-		vertlist[4] = VertexInterp(t_cubeSection.p[4], t_cubeSection.p[5], t_cubeSection.val[4], t_cubeSection.val[5], t_surfaceLevel);
+	{
+		vertlist[4] = VertexInterp(t_cubeSection.p[4], t_cubeSection.p[5], t_cubeSection.val[4], t_cubeSection.val[5]);
+		colorlist[4] = ColorInterp(t_cubeSection.colors[4], t_cubeSection.colors[5], t_cubeSection.val[4], t_cubeSection.val[5]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 32)
-		vertlist[5] = VertexInterp(t_cubeSection.p[5], t_cubeSection.p[6], t_cubeSection.val[5], t_cubeSection.val[6], t_surfaceLevel);
+	{
+		vertlist[5] = VertexInterp(t_cubeSection.p[5], t_cubeSection.p[6], t_cubeSection.val[5], t_cubeSection.val[6]);
+		colorlist[5] = ColorInterp(t_cubeSection.colors[5], t_cubeSection.colors[6], t_cubeSection.val[5], t_cubeSection.val[6]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 64)
-		vertlist[6] = VertexInterp(t_cubeSection.p[6], t_cubeSection.p[7], t_cubeSection.val[6], t_cubeSection.val[7], t_surfaceLevel);
+	{
+		vertlist[6] = VertexInterp(t_cubeSection.p[6], t_cubeSection.p[7], t_cubeSection.val[6], t_cubeSection.val[7]);
+		colorlist[6] = ColorInterp(t_cubeSection.colors[6], t_cubeSection.colors[7], t_cubeSection.val[6], t_cubeSection.val[7]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 128)
-		vertlist[7] = VertexInterp(t_cubeSection.p[7], t_cubeSection.p[4], t_cubeSection.val[7], t_cubeSection.val[4], t_surfaceLevel);
+	{
+		vertlist[7] = VertexInterp(t_cubeSection.p[7], t_cubeSection.p[4], t_cubeSection.val[7], t_cubeSection.val[4]);
+		colorlist[7] = ColorInterp(t_cubeSection.colors[7], t_cubeSection.colors[4], t_cubeSection.val[7], t_cubeSection.val[4]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 256)
-		vertlist[8] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[4], t_cubeSection.val[0], t_cubeSection.val[4], t_surfaceLevel);
+	{
+		vertlist[8] = VertexInterp(t_cubeSection.p[0], t_cubeSection.p[4], t_cubeSection.val[0], t_cubeSection.val[4]);
+		colorlist[8] = ColorInterp(t_cubeSection.colors[0], t_cubeSection.colors[4], t_cubeSection.val[0], t_cubeSection.val[4]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 512)
-		vertlist[9] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[5], t_cubeSection.val[1], t_cubeSection.val[5], t_surfaceLevel);
+	{
+		vertlist[9] = VertexInterp(t_cubeSection.p[1], t_cubeSection.p[5], t_cubeSection.val[1], t_cubeSection.val[5]);
+		colorlist[9] = ColorInterp(t_cubeSection.colors[1], t_cubeSection.colors[5], t_cubeSection.val[1], t_cubeSection.val[5]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 1024)
-		vertlist[10] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[6], t_cubeSection.val[2], t_cubeSection.val[6], t_surfaceLevel);
+	{
+		vertlist[10] = VertexInterp(t_cubeSection.p[2], t_cubeSection.p[6], t_cubeSection.val[2], t_cubeSection.val[6]);
+		colorlist[10] = ColorInterp(t_cubeSection.colors[2], t_cubeSection.colors[6], t_cubeSection.val[2], t_cubeSection.val[6]);
+	}
 	if (MarchingTables::EDGE_TABLE[cubeindex] & 2048)
-		vertlist[11] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[7], t_cubeSection.val[3], t_cubeSection.val[7], t_surfaceLevel);
+	{
+		vertlist[11] = VertexInterp(t_cubeSection.p[3], t_cubeSection.p[7], t_cubeSection.val[3], t_cubeSection.val[7]);
+		colorlist[11] = ColorInterp(t_cubeSection.colors[3], t_cubeSection.colors[7], t_cubeSection.val[3], t_cubeSection.val[7]);
+	}
 
 	// Create the triangle 
 	for (int i = 0; MarchingTables::TRIANGULATIONS[cubeindex][i] != -1; i += 3)
@@ -348,9 +386,9 @@ void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surface
 		tri.b = vertlist[edgeB];
 		tri.c = vertlist[edgeC];
 
-		tri.aColor = GetColorFromPos(tri.a);
-		tri.bColor = GetColorFromPos(tri.b);
-		tri.cColor = GetColorFromPos(tri.c);
+		tri.aColor = colorlist[edgeA];
+		tri.bColor = colorlist[edgeB];
+		tri.cColor = colorlist[edgeC];
 
 		// Check if tri connects back to 0, 0, 0. If it does dont add it
 		if (tri.a == Vector3Zero() || tri.b == Vector3Zero() || tri.c == Vector3Zero())
@@ -371,24 +409,44 @@ void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surface
 // https://mclark45.medium.com/marching-cubes-algorithm-618302629331 
 // https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu 
 // https://paulbourke.net/geometry/polygonise/ 
-Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel)
+Vector3 Chunk::VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2)
 {
 	float wayAlongEdge;
 	Vector3 smoothedPoint;
 
-	if (abs(t_surfaceLevel - valp1) < 0.00001)
+	if (abs(surfaceLevel - valp1) < 0.00001)
 		return(p1);
-	if (abs(t_surfaceLevel - valp2) < 0.00001)
+	if (abs(surfaceLevel - valp2) < 0.00001)
 		return(p2);
 	if (abs(valp1 - valp2) < 0.00001)
 		return(p1);
 
-	wayAlongEdge = (t_surfaceLevel - valp1) / (valp2 - valp1);
+	wayAlongEdge = (surfaceLevel - valp1) / (valp2 - valp1);
 	smoothedPoint.x = p1.x + wayAlongEdge * (p2.x - p1.x);
 	smoothedPoint.y = p1.y + wayAlongEdge * (p2.y - p1.y);
 	smoothedPoint.z = p1.z + wayAlongEdge * (p2.z - p1.z);
 
 	return(smoothedPoint);
+}
+
+Color Chunk::ColorInterp(Color p1, Color p2, float valp1, float valp2)
+{
+	float wayAlongEdge;
+	Color smoothedColor;
+
+	if (abs(surfaceLevel - valp1) < 0.00001)
+		return(p1);
+	if (abs(surfaceLevel - valp2) < 0.00001)
+		return(p2);
+	if (abs(valp1 - valp2) < 0.00001)
+		return(p1);
+
+	wayAlongEdge = (surfaceLevel - valp1) / (valp2 - valp1);
+	smoothedColor.r = p1.r + wayAlongEdge * (p2.r - p1.r);
+	smoothedColor.g = p1.g + wayAlongEdge * (p2.g - p1.g);
+	smoothedColor.b = p1.b + wayAlongEdge * (p2.b - p1.b);
+
+	return smoothedColor;
 }
 
 void Chunk::SetTriangleNormal(Triangle& tri)
@@ -397,6 +455,21 @@ void Chunk::SetTriangleNormal(Triangle& tri)
 	Vector3 b = Vector3Subtract(tri.c, tri.a);
 
 	tri.normal = Vector3Normalize(Vector3CrossProduct(a, b));
+}
+
+Color Chunk::GetColorFromDensity(float t_density)
+{
+	Color color = RAYWHITE;
+
+	float minSurface = surfaceLevel - 0.1f;
+	float maxSurface = surfaceLevel + 0.1f;
+
+	if (t_density >= minSurface && t_density <= maxSurface)
+		color = GREEN;
+	else
+		color = RED;
+
+	return color;
 }
 
 Color Chunk::GetColorFromPos(Vector3 t_pos)

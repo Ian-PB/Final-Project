@@ -48,6 +48,7 @@ public:
 
 	void ApplyMeshDataToModel();
 	void GenerateMeshData(float t_surfaceLevel);
+	float surfaceLevel = 0.0f;
 	void UpdateDensities();
 
 	float GetChunkSize() const { return ((SIZE - 1) * pointSpacing); }
@@ -80,10 +81,12 @@ private:
 	bool dirty = false;
 
 	void SetupPoints();
-	void GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surfaceLevel);
-	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel);
+	void GetMeshVerticesForSection(CubeSection t_cubeSection);
+	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2);
+	Color ColorInterp(Color p1, Color p2, float valp1, float valp2);
 	static void SetTriangleNormal(Triangle& tri);
 
+	Color GetColorFromDensity(float t_density);
 	Color GetColorFromPos(Vector3 t_pos);
 
 	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
