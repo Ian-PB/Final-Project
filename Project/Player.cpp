@@ -7,7 +7,7 @@
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
-Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), randLight(Lighting::CreateLight(WHITE))
+Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
     shootRayCollision.distance = 9999.0f;
@@ -434,27 +434,6 @@ void Player::CollisionDetection()
 void Player::SetRandLight(Vector3 pos)
 {
     randLight.position = pos;
-
-    int randColor = rand() % 5;
-
-    switch (randColor)
-    {
-    case 0:
-        randLight.color = RED;
-        break;
-    case 1:
-        randLight.color = GREEN;
-        break;
-    case 2:
-        randLight.color = BLUE;
-        break;
-    case 3:
-        randLight.color = PURPLE;
-        break;
-    case 4:
-        randLight.color = GOLD;
-        break;
-    }
 }
 
 bool Player::JumpInfo::CheckJump(Vector3& t_velocity)

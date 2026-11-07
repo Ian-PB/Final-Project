@@ -472,19 +472,3 @@ Color Chunk::GetColorFromDensity(float t_density)
 	return color;
 }
 
-Color Chunk::GetColorFromPos(Vector3 t_pos)
-{
-	Color color = RAYWHITE;
-
-	float d = noise->GetNoise(t_pos.x, t_pos.y, t_pos.z);
-
-	if (d <= -0.5f)
-		color = RED;
-	else if (d <= 0.0f)
-		color = PURPLE;
-	else if (d <= 0.5f)
-		color = GREEN;
-
-	return color;
-}
-
