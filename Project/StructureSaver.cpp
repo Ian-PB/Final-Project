@@ -111,7 +111,7 @@ void StructureSaver::PlaceStructure(World& t_world, const StructureExport& t_str
 
             if (chunk->TryGetPointAtPos(pointWorldPos, pointToChange))
             {
-                pointToChange->density = p.density;
+                pointToChange->density = std::min(pointToChange->density, p.density);
             }
         }
     }
