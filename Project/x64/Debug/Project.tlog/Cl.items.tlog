@@ -1,8 +1,10 @@
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\AerialState.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\AerialState.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\BaseBuildingBlock.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\BaseBuildingBlock.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\Bomb.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\Bomb.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\CapsuleCollider.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\CapsuleCollider.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\Chunk.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\Chunk.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\CrouchingState.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\CrouchingState.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\CylinderBuildingBlock.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\CylinderBuildingBlock.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\CylinderCollider.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\CylinderCollider.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\game.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\game.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\GroundedState.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\GroundedState.obj
@@ -16,5 +18,10 @@ C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\ParticleSpawner.cpp;C:\Us
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\PauseMenu.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\PauseMenu.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\Player.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\Player.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\SlidingState.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\SlidingState.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\SphereBuildingBlock.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\SphereBuildingBlock.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\SphereCollider.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\SphereCollider.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\StructureBuilding.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\StructureBuilding.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\StructureData.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\StructureData.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\StructurePaster.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\StructurePaster.obj
+C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\StructureSaver.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\StructureSaver.obj
 C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\World.cpp;C:\Users\Ian\Desktop\CollegeWork\Final-Project\Project\x64\Debug\World.obj
