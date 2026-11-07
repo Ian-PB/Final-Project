@@ -94,13 +94,18 @@ StructureExport StructureSaver::GetStructureFromFile(StructureTypes t_type, std:
     return exportedStructure;
 }
 
-void StructureSaver::PlaceStructure(World& t_world, const StructureExport& t_structure, Vector3 t_minCornerPos)
+void StructureSaver::PlaceStructure(World& t_world, const StructureExport& t_structure, Vector3 t_centerBottomPos)
 {
     float chunkPointSpacing = t_world.GetChunk(0, 0, 0).GetPointSpacing();
+    BoundingBox structureBounds = { t_structure.minBounds, t_structure.maxBounds };
+
+    // Center of structure placement
+    Vector3 flatStructureMax = { structureBounds.max.x, 0.0f, structureBounds.max.z };
+    Vector3 minCornerPos = Vector3Subtract(t_centerBottomPos, flatStructureMax / 2.0f);
 
     for (const Point& p : t_structure.points)
     {
-        Vector3 pointWorldPos = Vector3Add(p.position, t_minCornerPos);
+        Vector3 pointWorldPos = Vector3Add(p.position, minCornerPos);
         BoundingBox edgeCheckBounds = { Vector3SubtractValue(pointWorldPos, chunkPointSpacing), Vector3AddValue(pointWorldPos,chunkPointSpacing) };
 
         std::vector<Chunk*> chunks = t_world.GetChunksInBounds(edgeCheckBounds);

@@ -38,7 +38,7 @@ public:
 	void SaveFile(StructureTypes t_type, std::string t_name);
 
 	static StructureExport GetStructureFromFile(StructureTypes t_type, std::string t_name);
-	static void PlaceStructure(World& t_world, const StructureExport& t_structure, Vector3 t_minCornerPos = { 0.0f, 0.0f, 0.0f });
+	static void PlaceStructure(World& t_world, const StructureExport& t_structure, Vector3 t_centerBottomPos = { 0.0f, 0.0f, 0.0f });
 
 private:
 
