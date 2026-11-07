@@ -78,7 +78,7 @@ void Chunk::ApplyMeshDataToModel()
 		mesh.colors[colorIndex] = meshData.colors[i].r;
 		mesh.colors[colorIndex + 1] = meshData.colors[i].g;
 		mesh.colors[colorIndex + 2] = meshData.colors[i].b;
-		mesh.colors[colorIndex + 4] = meshData.colors[i].a;
+		mesh.colors[colorIndex + 3] = meshData.colors[i].a;
 	}
 
 	// Upload Mesh and apply to Model
@@ -194,6 +194,7 @@ void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 				points[i].density = fminf(points[i].density, newDensity); // Keep lowest value since -1 = solid
 		}
 	}
+	int temp = 0;
 }
 
 void Chunk::ClearChunk(WallFlags walls)
