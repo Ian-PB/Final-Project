@@ -171,6 +171,8 @@
     <ClCompile Include="SphereBuildingBlock.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="StructureBuilding.cpp" />
+    <ClCompile Include="StructureData.cpp" />
+    <ClCompile Include="StructurePaster.cpp" />
     <ClCompile Include="StructureSaver.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -200,6 +202,8 @@
     <ClInclude Include="SphereBuildingBlock.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="StructureBuilding.h" />
+    <ClInclude Include="StructureData.h" />
+    <ClInclude Include="StructurePaster.h" />
     <ClInclude Include="StructureSaver.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

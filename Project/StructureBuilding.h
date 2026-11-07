@@ -5,6 +5,7 @@
 #include "BaseBuildingBlock.h"
 #include "World.h"
 #include "StructureSaver.h"
+#include "StructureData.h"
 
 enum class UiModes
 {

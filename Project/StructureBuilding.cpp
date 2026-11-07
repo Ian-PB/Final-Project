@@ -3,6 +3,8 @@
 #include <raymath.h>
 #include <raygui.h>
 #include <iostream>
+#include "StructureData.h"
+#include "StructurePaster.h"
 
 #include "SphereBuildingBlock.h"
 #include "CylinderBuildingBlock.h"
@@ -178,9 +180,10 @@ void StructureBuilding::CheckKeybinds()
     if (IsKeyPressed(KEY_O))
     {
         // Try spawn test structure
-        StructureExport testStruct = StructureSaver::GetStructureFromFile(StructureTypes::None, "Name");
-        StructureSaver::PlaceStructure(world, testStruct, camera.position);
+        StructureExport testStruct = StructurePaster::GetStructureFromFile(StructureTypes::None, "Name");
+        StructurePaster::PlaceStructure(world, testStruct, camera.position);
 
+        // Rebuild all chunks (Temp)
         for (Chunk* chunk : world.GetAllChunks())
         {
             chunk->SetDirty();
