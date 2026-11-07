@@ -382,7 +382,13 @@ void Player::ShootRay()
     shootRayCollision.point = closestHit;
     SetRandLight(shootRayCollision.point);
 
-    testParticles->Spawn(shootRayCollision.point);
+    Point* p = nullptr;
+    Color particleColor = WHITE;
+    if (WORLD.GetChunkFromWorldPos(shootRayCollision.point).TryGetPointAtPos(shootRayCollision.point, p))
+    {
+        particleColor = p->color;
+    }
+    testParticles->Spawn(shootRayCollision.point, particleColor);
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);

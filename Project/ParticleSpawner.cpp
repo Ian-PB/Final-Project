@@ -13,12 +13,12 @@ void ParticleSpawner::SetModel(Model* t_particleModel)
 		p->SetModel(particleModel);
 }
 
-void ParticleSpawner::Spawn(Vector3 t_pos)
+void ParticleSpawner::Spawn(Vector3 t_pos, Color t_color)
 {
 	for (int i = 0; i < amount; i++)
 	{
 		// Find an inactive particle and spawn it
-		SpawnSingle(t_pos);
+		SpawnSingle(t_pos, t_color);
 	}
 }
 
@@ -71,7 +71,7 @@ void ParticleSpawner::SetDrag(float t_dragAmount)
 	}
 }
 
-void ParticleSpawner::SpawnSingle(Vector3 t_pos)
+void ParticleSpawner::SpawnSingle(Vector3 t_pos, Color t_color)
 {
 	for (const std::shared_ptr<Particle> p : particles)
 	{
@@ -86,7 +86,7 @@ void ParticleSpawner::SpawnSingle(Vector3 t_pos)
 		float scale = ((rand() % (int)(maxScale * 10)) + (minScale * 10)) / 10.0f;
 
 		int randColor = rand() % colors.size();
-		Color color = colors[randColor];
+		Color color = t_color;
 
 		p->Spawn(t_pos, dir, speed, scale, color);
 		return;

@@ -466,9 +466,10 @@ Color Chunk::GetColorFromDensity(float t_density)
 
 	if (t_density >= minSurface && t_density <= maxSurface)
 		color = GREEN;
-	else
+	else if (t_density < minSurface)
 		color = RED;
+	else if (t_density > maxSurface)
+		color = BLUE;
 
 	return color;
 }
-

@@ -9,7 +9,7 @@ public:
 	ParticleSpawner(Model* t_particleModel, int t_amount, int t_MAX_AMOUNT);
 	void SetModel(Model* t_particleModel);
 
-	void Spawn(Vector3 t_pos);
+	void Spawn(Vector3 t_pos, Color t_color);
 	void Draw();
 	void Update();
 
@@ -22,7 +22,7 @@ public:
 	void SetDrag(float t_dragAmount);
 
 private:
-	void SpawnSingle(Vector3 t_pos);
+	void SpawnSingle(Vector3 t_pos, Color t_color);
 
 	Model* particleModel = nullptr;
 
