@@ -87,6 +87,8 @@ private:
 	static void SetTriangleNormal(Triangle& tri);
 
 	Color GetColorFromDensity(float t_density);
+	Color GetColorFromPoint(Point t_p);
+	Color GetColorFromPoint(Point t_p, Vector3 t_globalPos) const;
 
 	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
 

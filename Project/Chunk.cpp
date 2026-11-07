@@ -261,7 +261,7 @@ void Chunk::SetupPoints()
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
-				points[i].color = GetColorFromDensity(points[i].density);
+				points[i].color = GetColorFromPoint(points[i], globalPos);
 			}
 		}
 	}
@@ -280,7 +280,7 @@ void Chunk::UpdateDensities()
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
-				points[i].color = GetColorFromDensity(points[i].density);
+				points[i].color = GetColorFromPoint(points[i], globalPos);
 			}
 		}
 	}
@@ -461,8 +461,8 @@ Color Chunk::GetColorFromDensity(float t_density)
 {
 	Color color = RAYWHITE;
 
-	float minSurface = surfaceLevel - 0.1f;
-	float maxSurface = surfaceLevel + 0.1f;
+	float minSurface = surfaceLevel - 0.15f;
+	float maxSurface = surfaceLevel + 0.15f;
 
 	if (t_density >= minSurface && t_density <= maxSurface)
 		color = GREEN;
@@ -470,6 +470,64 @@ Color Chunk::GetColorFromDensity(float t_density)
 		color = RED;
 	else if (t_density > maxSurface)
 		color = BLUE;
+
+	return color;
+}
+
+Color Chunk::GetColorFromPoint(Point t_p)
+{
+	Color color = RAYWHITE;
+
+	float minSurface = surfaceLevel - 0.15f;
+	float maxSurface = surfaceLevel + 0.15f;
+
+	if (t_p.position.y < SIZE * 0.5f)
+	{
+		if (t_p.density >= minSurface && t_p.density <= maxSurface)
+			color = GRAY;
+		else if (t_p.density < minSurface)
+			color = PURPLE;
+		else if (t_p.density > maxSurface)
+			color = RED;
+	}
+	else
+	{
+		if (t_p.density >= minSurface && t_p.density <= maxSurface)
+			color = GREEN;
+		else if (t_p.density < minSurface)
+			color = RED;
+		else if (t_p.density > maxSurface)
+			color = BLUE;
+	}
+
+	return color;
+}
+
+Color Chunk::GetColorFromPoint(Point t_p, Vector3 t_globalPos)
+{
+	Color color = RAYWHITE;
+
+	float minSurface = surfaceLevel - 0.15f;
+	float maxSurface = surfaceLevel + 0.15f;
+
+	if (t_globalPos.y < SIZE)
+	{
+		if (t_p.density >= minSurface && t_p.density <= maxSurface)
+			color = GRAY;
+		else if (t_p.density < minSurface)
+			color = PURPLE;
+		else if (t_p.density > maxSurface)
+			color = RED;
+	}
+	else
+	{
+		if (t_p.density >= minSurface && t_p.density <= maxSurface)
+			color = GREEN;
+		else if (t_p.density < minSurface)
+			color = RED;
+		else if (t_p.density > maxSurface)
+			color = BLUE;
+	}
 
 	return color;
 }
