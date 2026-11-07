@@ -30,10 +30,6 @@ void StructureBuilding::Init()
     SpawnCube();
 
     structureSaver = std::make_shared<StructureSaver>(world);
-
-    // Try spawn test structure
-    //StructureExport testStruct = StructureSaver::GetStructureFromFile(StructureTypes::None, "Name");
-    //StructureSaver::PlaceStructure(world, testStruct);
 }
 
 void StructureBuilding::Draw()
@@ -170,7 +166,7 @@ void StructureBuilding::CheckKeybinds()
         }
     }
 
-    // Bake objects into the world
+    // Bake objects into the a
     if (IsKeyPressed(KEY_B))
     {
         if (displayObjs)
@@ -179,7 +175,20 @@ void StructureBuilding::CheckKeybinds()
             ResetBaking();
     }
 
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_O))
+    {
+        // Try spawn test structure
+        StructureExport testStruct = StructureSaver::GetStructureFromFile(StructureTypes::None, "Name");
+        StructureSaver::PlaceStructure(world, testStruct, camera.position);
+
+        for (Chunk* chunk : world.GetAllChunks())
+        {
+            chunk->SetDirty();
+            world.QueueChunkChangeAtPos(chunk->GetPosition());
+        }
+    }
+
+    if (IsKeyPressed(KEY_ENTER) && !displayObjs)
     {
         if (currentUiMode == UiModes::Off)
         {

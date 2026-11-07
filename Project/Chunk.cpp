@@ -222,6 +222,26 @@ void Chunk::ClearChunk(WallFlags walls)
 	}
 }
 
+bool Chunk::TryGetPointAtPos(Vector3 t_pos, Point*& t_point)
+{
+	// Convert to localPos
+	Vector3 localPos = Vector3Subtract(t_pos, position);
+
+	// Convert to grid index
+	int x = (int)std::round(localPos.x / pointSpacing);
+	int y = (int)std::round(localPos.y / pointSpacing);
+	int z = (int)std::round(localPos.z / pointSpacing);
+
+	// Bounds check
+	if (x < 0 || x >= SIZE || y < 0 || y >= SIZE || z < 0 || z >= SIZE)
+	{
+		return false;
+	}
+
+	t_point = &points[IndexFrom3D(x, y, z)];
+	return true;
+}
+
 void Chunk::SetupPoints()
 {
 	for (int x = 0; x < SIZE; x++)

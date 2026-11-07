@@ -48,6 +48,7 @@ public:
 	void UpdateDensities();
 
 	float GetChunkSize() const { return ((SIZE - 1) * pointSpacing); }
+	float GetPointSpacing() const { return pointSpacing; }
 	void SetPosition(Vector3 t_pos) { position = t_pos; }
 
 	bool IsDirty() const { return dirty; }
@@ -67,7 +68,10 @@ public:
 	int GetPointsPerAxis() const { return SIZE; }
 	Point& GetPointAt(int i) { return points[i]; }
 	
+	bool TryGetPointAtPos(Vector3 t_pos, Point*& t_point);
 	Vector3 GetGlobalPos(Vector3 t_index) { return { (t_index.x * pointSpacing) + position.x, (t_index.y * pointSpacing) + position.y, (t_index.z * pointSpacing) + position.z }; }
+
+	int IndexFrom3D(int x, int y, int z) { return (x * SIZE * SIZE + y * SIZE + z); }
 
 private:
 	bool dirty = false;
@@ -89,7 +93,6 @@ private:
 
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
 
-	int IndexFrom3D(int x, int y, int z) { return (x * SIZE * SIZE + y * SIZE + z); }
 	static const int SIZE = 50; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 

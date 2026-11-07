@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <raymath.h>
 using json = nlohmann::json;
 
 const std::string StructureSaver::FILE_PATH = "resources/Structures/";
@@ -24,18 +25,28 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name)
 
     BoundingBox bounds = FindStructureBounds();
 
-    Vector3 dimensions;
-    dimensions.x = std::abs(bounds.max.x - bounds.min.x);
-    dimensions.y = std::abs(bounds.max.y - bounds.min.y);
-    dimensions.z = std::abs(bounds.max.z - bounds.min.z);
-
     // Create JSON Object
     json jsonObj;
-    jsonObj["name"] = t_name;
-    jsonObj["dimensions"] = { dimensions.x, dimensions.y, dimensions.z };
-    jsonObj["densities"] = GetPointsToSave(bounds);
-    jsonObj["minBounds"] = { bounds.min.x, bounds.min.y, bounds.min.z };
-    jsonObj["maxBounds"] = { bounds.max.x, bounds.max.y, bounds.max.z };
+
+    std::vector<Point> points = GetPointsToSave(bounds);
+    for (const Point& p : points)
+    {
+        Vector3 correctedPointPos = Vector3Subtract(p.position, bounds.min);
+
+        jsonObj["points"].push_back({
+            { "position", { correctedPointPos.x, correctedPointPos.y, correctedPointPos.z } },
+            { "density", p.density }
+            // Color can be added later
+        });
+    }
+
+    BoundingBox boundsAroundZero;
+    // Set min to { 0, 0, 0 }
+    boundsAroundZero.min = { 0.0f, 0.0f, 0.0f };
+    boundsAroundZero.max = Vector3Subtract(bounds.max, bounds.min);
+
+    jsonObj["minBounds"] = { boundsAroundZero.min.x, boundsAroundZero.min.y, boundsAroundZero.min.z };
+    jsonObj["maxBounds"] = { boundsAroundZero.max.x, boundsAroundZero.max.y, boundsAroundZero.max.z };
 
     if (file.is_open())
     {
@@ -59,12 +70,6 @@ StructureExport StructureSaver::GetStructureFromFile(StructureTypes t_type, std:
 
     StructureExport exportedStructure;
 
-    exportedStructure.name = jsonObj["name"].get<std::string>();
-
-    exportedStructure.dimensions.x = jsonObj["dimensions"][0].get<float>();
-    exportedStructure.dimensions.y = jsonObj["dimensions"][1].get<float>();
-    exportedStructure.dimensions.z = jsonObj["dimensions"][2].get<float>();
-
     exportedStructure.minBounds.x = jsonObj["minBounds"][0].get<float>();
     exportedStructure.minBounds.y = jsonObj["minBounds"][1].get<float>();
     exportedStructure.minBounds.z = jsonObj["minBounds"][2].get<float>();
@@ -73,18 +78,43 @@ StructureExport StructureSaver::GetStructureFromFile(StructureTypes t_type, std:
     exportedStructure.maxBounds.y = jsonObj["maxBounds"][1].get<float>();
     exportedStructure.maxBounds.z = jsonObj["maxBounds"][2].get<float>();
 
-    exportedStructure.densities = jsonObj["densities"].get<std::vector<float>>();
+    for (const auto& jsonPoint : jsonObj["points"])
+    {
+        Point p;
+
+        p.position.x = jsonPoint["position"][0].get<float>();
+        p.position.y = jsonPoint["position"][1].get<float>();
+        p.position.z = jsonPoint["position"][2].get<float>();
+
+        p.density = jsonPoint["density"].get<float>();
+
+        exportedStructure.points.push_back(p);
+    }
 
     return exportedStructure;
 }
 
-void StructureSaver::PlaceStructure(World& t_world, StructureExport t_structure, Vector3 t_minCornerPos)
+void StructureSaver::PlaceStructure(World& t_world, const StructureExport& t_structure, Vector3 t_minCornerPos)
 {
-    BoundingBox structBounds{};
-    structBounds.min = Vector3Add(t_structure.minBounds, t_minCornerPos);
-    structBounds.max = Vector3Add(t_structure.maxBounds, t_minCornerPos);
+    float chunkPointSpacing = t_world.GetChunk(0, 0, 0).GetPointSpacing();
 
-    Chunk& chunkAtMin = t_world.GetChunkFromWorldPos(structBounds.min);
+    for (const Point& p : t_structure.points)
+    {
+        Vector3 pointWorldPos = Vector3Add(p.position, t_minCornerPos);
+        BoundingBox edgeCheckBounds = { Vector3SubtractValue(pointWorldPos, chunkPointSpacing), Vector3AddValue(pointWorldPos,chunkPointSpacing) };
+
+        std::vector<Chunk*> chunks = t_world.GetChunksInBounds(edgeCheckBounds);
+
+        for (Chunk* chunk : chunks)
+        {
+            Point* pointToChange = nullptr;
+
+            if (chunk->TryGetPointAtPos(pointWorldPos, pointToChange))
+            {
+                pointToChange->density = p.density;
+            }
+        }
+    }
 }
 
 BoundingBox StructureSaver::FindStructureBounds()
@@ -127,18 +157,14 @@ BoundingBox StructureSaver::FindStructureBounds()
         }
     }
 
-    // Set min to { 0, 0, 0 }
-    bounds.max = Vector3Subtract(bounds.max, bounds.min);
-    bounds.min = { 0.0f, 0.0f, 0.0f };
-
     return bounds;
 }
 
-std::vector<float> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
+std::vector<Point> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
 {
     // Same across all chunks
     int pointsPerAxis = world.GetChunk(0, 0, 0).GetPointsPerAxis();
-    std::vector<float> points;
+    std::vector<Point> points;
 
     // Get chunks in bounds
     std::vector<Chunk*> chunks = world.GetChunksInBounds(t_bounds);
@@ -151,8 +177,13 @@ std::vector<float> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
             {
                 for (int z = 0; z < pointsPerAxis; z++)
                 {
-                    int i = GetFlatIndex({ x, y, z }, pointsPerAxis);
+                    int i = chunk->IndexFrom3D(x, y, z);
+                    Point& globalPoint = chunk->GetPointAt(i);
 
+                    // Check if the point is just air
+                    if (globalPoint.density >= 1.0f)
+                        continue;
+    
                     Vector3 globalPos = chunk->GetGlobalPos({ (float)x, (float)y, (float)z });
 
                     // Check if outside of bounds
@@ -163,7 +194,9 @@ std::vector<float> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
                         continue;
                     }
 
-                    points.push_back(chunk->GetPointAt(i).density);
+                    globalPoint.position = globalPos;
+
+                    points.push_back(globalPoint);
                 }
             }
         }
@@ -175,9 +208,9 @@ std::vector<float> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
 Index3D StructureSaver::Get3DIndex(int i, int axisSize)
 {
     Index3D index3D;
-    index3D.x = i % axisSize;
+    index3D.x = i / (axisSize * axisSize);
     index3D.y = (i / axisSize) % axisSize;
-    index3D.z = i / (axisSize * axisSize);
+    index3D.z = i % axisSize;
 
     return index3D;
 }
