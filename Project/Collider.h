@@ -9,6 +9,10 @@ struct Triangle
 	Vector3 b;
 	Vector3 c;
 
+    Color aColor;
+    Color bColor;
+    Color cColor;
+
 	Vector3 normal;
 };
 

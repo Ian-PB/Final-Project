@@ -27,23 +27,6 @@ void Chunk::InitCollider()
 
 void Chunk::Draw()
 {
-	// Draw points
-	if (showDebugPoints)
-		for (int x = 0; x < SIZE; x++)
-		{
-			for (int y = 0; y < SIZE; y++)
-			{
-				for (int z = 0; z < SIZE; z++)
-				{
-					int i = IndexFrom3D(x, y, z);
-
-					Vector3 realPos = Vector3Add(position, points[i].position);
-
-					DrawModel(pointModel, realPos, 1.0f, points[i].color);
-				}
-			}
-		}
-
 	DrawModel(model, position, 1.0f, GRAY);
 	// DrawModelWires(model, position, 1.0f, LIGHTGRAY);
 
@@ -71,19 +54,31 @@ void Chunk::ApplyMeshDataToModel()
 	
 	mesh.vertices = (float*)MemAlloc(meshData.currentVertexCount * 3 * sizeof(float));
 	mesh.normals = (float*)MemAlloc(mesh.vertexCount * 3 * sizeof(float));
+	mesh.colors = (unsigned char*)MemAlloc(mesh.vertexCount * 4);
 
 	// Apply all info to mesh
 	for (int i = 0; i < mesh.vertexCount; i++)
 	{
+		int vertA = i * 3;
+		int vertB = i * 3 + 1;
+		int vertC = i * 3 + 2;
+
 		// Vertices
-		mesh.vertices[i * 3 + 0] = meshData.vertices[i].x;
-		mesh.vertices[i * 3 + 1] = meshData.vertices[i].y;
-		mesh.vertices[i * 3 + 2] = meshData.vertices[i].z;
+		mesh.vertices[vertA] = meshData.vertices[i].x;
+		mesh.vertices[vertB] = meshData.vertices[i].y;
+		mesh.vertices[vertC] = meshData.vertices[i].z;
 
 		// Normals
-		mesh.normals[i * 3 + 0] = meshData.normals[i].x;
-		mesh.normals[i * 3 + 1] = meshData.normals[i].y;
-		mesh.normals[i * 3 + 2] = meshData.normals[i].z;
+		mesh.normals[vertA] = meshData.normals[i].x;
+		mesh.normals[vertB] = meshData.normals[i].y;
+		mesh.normals[vertC] = meshData.normals[i].z;
+
+		// Colors
+		int colorIndex = i * 4;
+		mesh.colors[colorIndex] = meshData.colors[i].r;
+		mesh.colors[colorIndex + 1] = meshData.colors[i].g;
+		mesh.colors[colorIndex + 2] = meshData.colors[i].b;
+		mesh.colors[colorIndex + 4] = meshData.colors[i].a;
 	}
 
 	// Upload Mesh and apply to Model
@@ -110,6 +105,7 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 
 	meshData.vertices.clear();
 	meshData.normals.clear();
+	meshData.colors.clear();
 
 	for (int x = 0; x < SIZE - 1; x++)
 	{
@@ -142,6 +138,7 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 					int index = px * SIZE * SIZE + py * SIZE + pz;
 					cubeSection.p[i] = points[index].position;
 					cubeSection.val[i] = points[index].density;
+					cubeSection.colors[i] = points[index].color;
 				}
 
 				GetMeshVerticesForSection(cubeSection, t_surfaceLevel);
@@ -159,6 +156,11 @@ void Chunk::GenerateMeshData(float t_surfaceLevel)
 		meshData.normals.push_back(tri.normal);
 		meshData.normals.push_back(tri.normal);
 		meshData.normals.push_back(tri.normal);
+
+		// Set each vert to have it's point's color
+		meshData.colors.push_back(tri.aColor);
+		meshData.colors.push_back(tri.bColor);
+		meshData.colors.push_back(tri.cColor);
 	}
 
 	meshData.currentVertexCount = (int)meshData.vertices.size();
@@ -216,7 +218,7 @@ void Chunk::ClearChunk(WallFlags walls)
 				else
 					points[i].density = 1; // Empty
 
-				points[i].color = GetColorFromDensity(points[i].density);
+				points[i].color = RAYWHITE;
 			}
 		}
 	}
@@ -257,7 +259,7 @@ void Chunk::SetupPoints()
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
-				points[i].color = GetColorFromDensity(points[i].density);
+				points[i].color = GetColorFromPos(globalPos);
 			}
 		}
 	}
@@ -276,7 +278,7 @@ void Chunk::UpdateDensities()
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
 				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
 
-				points[i].color = GetColorFromDensity(points[i].density);
+				points[i].color = GetColorFromPos(globalPos);
 			}
 		}
 	}
@@ -337,10 +339,17 @@ void Chunk::GetMeshVerticesForSection(CubeSection t_cubeSection, float t_surface
 	{
 		Triangle tri;
 
-		tri.a = vertlist[MarchingTables::TRIANGULATIONS[cubeindex][i]];
-		tri.b = vertlist[MarchingTables::TRIANGULATIONS[cubeindex][i + 1]];
-		tri.c = vertlist[MarchingTables::TRIANGULATIONS[cubeindex][i + 2]];
+		int edgeA = MarchingTables::TRIANGULATIONS[cubeindex][i];
+		int edgeB = MarchingTables::TRIANGULATIONS[cubeindex][i + 1];
+		int edgeC = MarchingTables::TRIANGULATIONS[cubeindex][i + 2];
 
+		tri.a = vertlist[edgeA];
+		tri.b = vertlist[edgeB];
+		tri.c = vertlist[edgeC];
+
+		tri.aColor = GetColorFromPos(tri.a);
+		tri.bColor = GetColorFromPos(tri.b);
+		tri.cColor = GetColorFromPos(tri.c);
 
 		// Check if tri connects back to 0, 0, 0. If it does dont add it
 		if (tri.a == Vector3Zero() || tri.b == Vector3Zero() || tri.c == Vector3Zero())
@@ -389,9 +398,19 @@ void Chunk::SetTriangleNormal(Triangle& tri)
 	tri.normal = Vector3Normalize(Vector3CrossProduct(a, b));
 }
 
-Color Chunk::GetColorFromDensity(float val)
+Color Chunk::GetColorFromPos(Vector3 t_pos)
 {
-	unsigned char grey = (unsigned char)roundf((val + 1.0f) * 127.5f);
-	return { grey, grey, grey, 255 };
+	Color color = RAYWHITE;
+
+	float d = noise->GetNoise(t_pos.x, t_pos.y, t_pos.z);
+
+	if (d <= -0.5f)
+		color = RED;
+	else if (d <= 0.0f)
+		color = PURPLE;
+	else if (d <= 0.5f)
+		color = GREEN;
+
+	return color;
 }
 

@@ -16,6 +16,7 @@ struct CubeSection
 {
 	Vector3 p[8];
 	float val[8];
+	Color colors[8];
 };
 
 struct MeshData
@@ -23,6 +24,8 @@ struct MeshData
 	int currentVertexCount = 0;
 	std::vector<Vector3> vertices;
 	std::vector<Vector3> normals;
+
+	std::vector<Color> colors;
 };
 
 struct WallFlags {
@@ -81,7 +84,7 @@ private:
 	Vector3 VertexInterp(Vector3 p1, Vector3 p2, float valp1, float valp2, float t_surfaceLevel);
 	static void SetTriangleNormal(Triangle& tri);
 
-	Color GetColorFromDensity(float val);
+	Color GetColorFromPos(Vector3 t_pos);
 
 	Vector3 GetLocalPos(Vector3 t_index) { return { t_index.x * pointSpacing, t_index.y * pointSpacing, t_index.z * pointSpacing }; }
 
@@ -107,8 +110,5 @@ private:
 
 	// Shaders
 	Shader* shader;
-
-	// Debug
-	bool showDebugPoints = false;
 };
 

@@ -69,7 +69,7 @@ void Player::Update()
     Movement();
 
     if (IsMouseButtonReleased(0))
-        ThrowBomb();
+        ShootRay();
     if (IsMouseButtonReleased(1))
     {
         breaking = !breaking;
