@@ -45,6 +45,11 @@ StructureExport StructurePaster::GetStructureFromFile(StructureTypes t_type, std
 
         p.density = jsonPoint["density"].get<float>();
 
+        p.color.r = jsonPoint["color"][0].get<float>();
+        p.color.g = jsonPoint["color"][1].get<float>();
+        p.color.b = jsonPoint["color"][2].get<float>();
+        p.color.a = jsonPoint["color"][3].get<float>();
+
         exportedStructure.points.push_back(p);
     }
 
@@ -74,6 +79,7 @@ void StructurePaster::PlaceStructure(World& t_world, const StructureExport& t_st
             if (chunk->TryGetPointAtPos(pointWorldPos, pointToChange))
             {
                 pointToChange->density = std::min(pointToChange->density, p.density);
+                pointToChange->color = p.color;
             }
         }
     }

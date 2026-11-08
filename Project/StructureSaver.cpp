@@ -30,8 +30,8 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name, Boundin
 
         jsonObj["points"].push_back({
             { "position", { correctedPointPos.x, correctedPointPos.y, correctedPointPos.z } },
-            { "density", p.density }
-            // Color can be added later
+            { "density", p.density },
+            { "color", { p.color.r, p.color.g, p.color.b, p.color.a } }
         });
     }
 

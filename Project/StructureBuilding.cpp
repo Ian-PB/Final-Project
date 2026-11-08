@@ -457,8 +457,13 @@ void StructureBuilding::Bake()
                 // Change densities
                 if (obj->ChangePointDensity(worldPointPos, point.density))
                 {
+                    if (point.color.r == RAYWHITE.r && point.color.g == RAYWHITE.g && point.color.b == RAYWHITE.b)
+                        point.color = obj->GetColor();
                     // Set point color (Don't override more valuable materials)
-                    point.color = obj->GetColor();
+                    else if (Materials::COLOR_TO_MATERIAL.at(obj->GetColor()) >= Materials::COLOR_TO_MATERIAL.at(point.color))
+                    {
+                        point.color = obj->GetColor();
+                    }
 
                     anyModificationsMade = true;
                 }
