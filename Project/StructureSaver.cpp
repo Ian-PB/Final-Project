@@ -46,7 +46,7 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name, Boundin
 
     if (file.is_open())
     {
-        file << jsonObj.dump(4);
+        file << jsonObj.dump();
     }
 }
 
