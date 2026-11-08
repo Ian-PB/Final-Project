@@ -6,13 +6,15 @@
 #include "World.h"
 #include "StructureSaver.h"
 #include "StructureData.h"
+#include "Materials.h"
 
 enum class UiModes
 {
 	Off = -1,
 	SpawnObj,
 	SelectedEditting,
-	SavingStructure
+	SavingStructure,
+	SetSelectedMaterial
 };
 
 class StructureBuilding
@@ -47,7 +49,12 @@ private:
 	char structureName[MAX_NAME_SIZE] = "Name";
 	bool nameEditMode = false;
 	StructureTypes selectedType = StructureTypes::None;
-	bool typeDropDownOpen = false;
+	bool typeDropdownOpen = false;
+
+	void DrawSelectMaterialPanel();
+	MaterialTypes materialSelected = MaterialTypes::Stone;
+	int materialInt = 0;
+	bool materialDropdownOpen = false;
 
 	void Bake();
 	void ResetBaking();

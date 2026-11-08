@@ -20,8 +20,8 @@ void BaseBuildingBlock::InitModel()
 
 void BaseBuildingBlock::Draw(EditTypes t_editType)
 {
-	DrawModel(model, { 0, 0, 0 }, 1.0f, WHITE);
-	DrawModelWires(model, { 0, 0, 0 }, 1.0f, DARKGRAY);
+	DrawModel(model, { 0, 0, 0 }, 1.0f, color);
+	DrawModelWires(model, { 0, 0, 0 }, 1.0f, BLACK);
 
 	if (!selected)
 		return;

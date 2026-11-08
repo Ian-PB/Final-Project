@@ -114,6 +114,9 @@
     <ClCompile Include="StructurePaster.cpp">
       <Filter>Source Files\StructureBuilding</Filter>
     </ClCompile>
+    <ClCompile Include="Materials.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -197,10 +200,13 @@
     <ClInclude Include="StructureSaver.h">
       <Filter>Header Files\StructureBuilding</Filter>
     </ClInclude>
-    <ClInclude Include="StructurePaster.h">
+    <ClInclude Include="StructureData.h">
+      <Filter>Header Files\StructureBuilding</Filter>
+    </ClInclude>
+    <ClInclude Include="Materials.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StructureData.h">
+    <ClInclude Include="StructurePaster.h">
       <Filter>Header Files\StructureBuilding</Filter>
     </ClInclude>
   </ItemGroup>

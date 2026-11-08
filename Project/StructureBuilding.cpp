@@ -3,11 +3,13 @@
 #include <raymath.h>
 #include <raygui.h>
 #include <iostream>
+
 #include "StructureData.h"
 #include "StructurePaster.h"
 
 #include "SphereBuildingBlock.h"
 #include "CylinderBuildingBlock.h"
+#include "Materials.h"
 
 StructureBuilding::StructureBuilding()
 {
@@ -78,7 +80,11 @@ void StructureBuilding::Draw()
             DrawText("B - Bake Objects into a mesh", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f, 25, RED);
             DrawText("T - Manually Edit Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 30, 25, RED);
             DrawText("N - Spawn New Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 60, 25, RED);
-            DrawText("DELETE - Remove Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 90, 25, RED);
+            if (selectedObject != nullptr)
+            {
+                DrawText("Q - Change Selected Objects Material", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 90, 25, RED);
+                DrawText("DELETE - Remove Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 120, 25, RED);
+            }
         }
         else
         {
@@ -137,6 +143,21 @@ void StructureBuilding::CheckKeybinds()
             EnableCursor();
         }
         else if (currentUiMode == UiModes::SpawnObj)
+        {
+            currentUiMode = UiModes::Off;
+            DisableCursor();
+        }
+    }
+
+    if (IsKeyPressed(KEY_Q) && selectedObject != nullptr)
+    {
+        if (currentUiMode == UiModes::Off)
+        {
+            materialInt = 0;
+            currentUiMode = UiModes::SetSelectedMaterial;
+            EnableCursor();
+        }
+        else if (currentUiMode == UiModes::SetSelectedMaterial)
         {
             currentUiMode = UiModes::Off;
             DisableCursor();
@@ -218,6 +239,9 @@ void StructureBuilding::DrawUI()
         break;
     case UiModes::SavingStructure:
         DrawSavingStructurePanel();
+        break;
+    case UiModes::SetSelectedMaterial:
+        DrawSelectMaterialPanel();
         break;
     }
 }
@@ -369,8 +393,8 @@ void StructureBuilding::DrawSavingStructurePanel()
     elementRect.y += elementRect.width * 0.2f;
 
     int selectedTypeInt = static_cast<int>(selectedType) + 1;
-    if (GuiDropdownBox(elementRect, "None;World;", &selectedTypeInt, typeDropDownOpen))
-        typeDropDownOpen = !typeDropDownOpen;
+    if (GuiDropdownBox(elementRect, "None;World;", &selectedTypeInt, typeDropdownOpen))
+        typeDropdownOpen = !typeDropdownOpen;
     selectedType = static_cast<StructureTypes>(selectedTypeInt - 1); // Convert back to enum
 
     // Spacing
@@ -380,6 +404,32 @@ void StructureBuilding::DrawSavingStructurePanel()
     if (GuiButton(elementRect, "Save To File"))
     {
         structureSaver->SaveFile(selectedType, structureName);
+    }
+}
+
+void StructureBuilding::DrawSelectMaterialPanel()
+{
+    const Rectangle PANEL_RECT = { GetScreenWidth() * 0.02f, GetScreenHeight() * 0.02f, GetScreenWidth() * 0.2f, GetScreenHeight() * 0.4f };
+    DrawRectangleRounded(PANEL_RECT, 0.2, 10, LIGHTGRAY);
+    DrawRectangleRoundedLines(PANEL_RECT, 0.2, 10, DARKGRAY);
+
+    // Element Setup
+    Rectangle elementRect;
+    elementRect.width = PANEL_RECT.width * 0.7f;
+    elementRect.height = PANEL_RECT.height * 0.07f;
+    const float ELEMENT_X_START = PANEL_RECT.x + PANEL_RECT.width * 0.15f;
+    elementRect.x = ELEMENT_X_START;
+    elementRect.y = PANEL_RECT.y + PANEL_RECT.height * 0.1f;
+
+    MaterialTypes oldMaterial = materialSelected;
+    if (GuiDropdownBox(elementRect, "Stone;Grass;Gold", &materialInt, materialDropdownOpen))
+        materialDropdownOpen = !materialDropdownOpen;
+    materialSelected = static_cast<MaterialTypes>(materialInt); // Convert back to enum
+
+    if (oldMaterial != materialSelected)
+    {
+        Color materialColor = Materials::MATERIAL_TO_COLOR.at(materialSelected);
+        selectedObject->SetColor(materialColor);
     }
 }
 

@@ -517,16 +517,16 @@ Color Chunk::GetColorFromPoint(Point t_p, Vector3 t_globalPos)
 		else if (t_p.density < minSurface)
 			color = PURPLE;
 		else if (t_p.density > maxSurface)
-			color = RED;
+			color = BLUE;
 	}
 	else
 	{
 		if (t_p.density >= minSurface && t_p.density <= maxSurface)
 			color = GREEN;
 		else if (t_p.density < minSurface)
-			color = RED;
+			color = BROWN;
 		else if (t_p.density > maxSurface)
-			color = BLUE;
+			color = RED;
 	}
 
 	return color;

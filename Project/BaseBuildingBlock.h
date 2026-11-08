@@ -49,6 +49,9 @@ public:
 
 	Axis GetHoveredAxis() const { return hoveredAxis; }
 
+	Color GetColor() const { return color; }
+	void SetColor(Color t_col) { color = t_col; }
+
 protected:
 	Vector3 GetHalfDimensions() const { return Vector3Scale(scale, 0.5f); }
 
@@ -100,4 +103,6 @@ private:
 	const float ROTATION_CIRCLE_RADIUS_MULT = 1.1f;
 
 	const Camera& CAMERA;
+
+	Color color;
 };

@@ -162,6 +162,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MarchingTables.cpp" />
+    <ClCompile Include="Materials.cpp" />
     <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleSpawner.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MarchingTables.h" />
+    <ClInclude Include="Materials.h" />
     <ClInclude Include="MeshCollider.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleSpawner.h" />
