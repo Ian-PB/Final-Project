@@ -6,7 +6,7 @@
 
 struct Point
 {
-	Color color = RED;
+	Color color = GRAY;
 
 	Vector3 position = { 0.0f, 0.0f, 0.0f };
 	float density = 1.0f; // -1 is solid while 1 is empty

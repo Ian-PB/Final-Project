@@ -451,13 +451,17 @@ void StructureBuilding::Bake()
             for (int i = 0; i < chunk->GetPointAmount(); i++)
             {
                 Point& point = chunk->GetPointAt(i);
-                point.color = obj->GetColor();
 
                 Vector3 worldPointPos = Vector3Add(point.position, chunk->GetPosition());
 
                 // Change densities
                 if (obj->ChangePointDensity(worldPointPos, point.density))
+                {
+                    // Set point color (Don't override more valuable materials)
+                    point.color = obj->GetColor();
+
                     anyModificationsMade = true;
+                }
             }
         }
     }
@@ -466,6 +470,14 @@ void StructureBuilding::Bake()
     if (anyModificationsMade)
     {
         isDragging = false;
+        selectedObject = nullptr;
+        for (std::shared_ptr<BaseBuildingBlock> obj : objects) // Reset all
+        {
+            obj->SetSelected(false);
+            obj->SetDragging(false);
+            obj->ResetHoveredAxis();
+        }
+
         displayObjs = false;
 
         structureBounds = FindStructureBounds();
@@ -609,7 +621,10 @@ void StructureBuilding::CheckObjectClicked()
 
     // Disable last one
     if (selectedObject != nullptr)
+    {
         selectedObject->SetSelected(false);
+        selectedObject = nullptr;
+    }
 
     // Not over any
     if (closestIndex == -1)

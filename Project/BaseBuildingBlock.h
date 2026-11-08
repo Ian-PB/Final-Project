@@ -28,6 +28,7 @@ public:
 
 	RayCollision CheckIfClicked(const Ray& ray);
 
+	void SetDragging(bool t_dragging) { isDragging = t_dragging; }
 	bool IsDragging() const { return isDragging; }
 
 	void SetSelected(bool s) { selected = s; }
@@ -47,6 +48,7 @@ public:
 	BoundingBox GetBounds() const { return bounds; }
 	float GetBoundingSkin() { return SIGNED_DIST_SKIN; }
 
+	void ResetHoveredAxis() { hoveredAxis = Axis::None; }
 	Axis GetHoveredAxis() const { return hoveredAxis; }
 
 	Color GetColor() const { return color; }
