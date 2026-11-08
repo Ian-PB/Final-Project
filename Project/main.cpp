@@ -17,7 +17,7 @@ enum class LaunchTypes
     StructureBuilding
 };
 
-static const LaunchTypes LAUNCH_TYPE = LaunchTypes::Game;
+static const LaunchTypes LAUNCH_TYPE = LaunchTypes::StructureBuilding;
 StructureBuilding structureBuilding;
 Game game;
 

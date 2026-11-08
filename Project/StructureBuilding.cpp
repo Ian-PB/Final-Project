@@ -9,6 +9,7 @@
 
 #include "SphereBuildingBlock.h"
 #include "CylinderBuildingBlock.h"
+#include "ConeBuildingBlock.h"
 #include "Materials.h"
 
 StructureBuilding::StructureBuilding()
@@ -248,12 +249,20 @@ void StructureBuilding::DrawUI()
 
 void StructureBuilding::DrawSpawnObjUI()
 {
+    const Rectangle PANEL_RECT = { GetScreenWidth() * 0.02f, GetScreenHeight() * 0.02f, GetScreenWidth() * 0.07f, GetScreenHeight() * 0.4f };
+    DrawRectangleRounded(PANEL_RECT, 0.2, 10, LIGHTGRAY);
+    DrawRectangleRoundedLines(PANEL_RECT, 0.2, 10, DARKGRAY);
+
     bool objSpawned = false;
     Rectangle bounds{};
     bounds.width = GetScreenWidth() * 0.05f;
     bounds.height = GetScreenHeight() * 0.05f;
 
-    bounds.x = GetScreenWidth() * 0.05f;
+    bounds.x = PANEL_RECT.x * 2.0f;
+    bounds.y = PANEL_RECT.y * 1.3f;
+    DrawText("Objects", bounds.x, bounds.y, 16, BLACK);
+
+    bounds.x = PANEL_RECT.x * 1.5f;
     bounds.y = GetScreenHeight() * 0.05f;
     if (GuiButton(bounds, "Cube"))
     {
@@ -261,17 +270,24 @@ void StructureBuilding::DrawSpawnObjUI()
         objSpawned = true;
     }
 
-    bounds.x += GetScreenWidth() * 0.1f;
+    bounds.y += bounds.height * 1.1f;
     if (GuiButton(bounds, "Sphere"))
     {
         SpawnSphere();
         objSpawned = true;
     }
 
-    bounds.x += GetScreenWidth() * 0.1f;
+    bounds.y += bounds.height * 1.1f;
     if (GuiButton(bounds, "Cylinder"))
     {
         SpawnCylinder();
+        objSpawned = true;
+    }
+
+    bounds.y += bounds.height * 1.1f;
+    if (GuiButton(bounds, "Cone"))
+    {
+        SpawnCone();
         objSpawned = true;
     }
 
@@ -591,6 +607,22 @@ void StructureBuilding::SpawnSphere()
 void StructureBuilding::SpawnCylinder()
 {
     std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<CylinderBuildingBlock>(camera);
+    Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
+    newObj->SetPos(pos);
+    newObj->InitModel();
+
+    // Select new object
+    if (selectedObject != nullptr)
+        selectedObject->SetSelected(false);
+    selectedObject = newObj;
+    selectedObject->SetSelected(true);
+
+    objects.push_back(newObj);
+}
+
+void StructureBuilding::SpawnCone()
+{
+    std::shared_ptr<BaseBuildingBlock> newObj = std::make_shared<ConeBuildingBlock>(camera);
     Vector3 pos = { worldCenter.x, 2.0f, worldCenter.x };
     newObj->SetPos(pos);
     newObj->InitModel();

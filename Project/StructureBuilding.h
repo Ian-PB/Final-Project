@@ -65,6 +65,7 @@ private:
 	void SpawnCube();
 	void SpawnSphere();
 	void SpawnCylinder();
+	void SpawnCone();
 	void CheckObjectClicked();
 
 	void GetEditModeInputs();
