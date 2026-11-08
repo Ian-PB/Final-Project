@@ -101,6 +101,9 @@ bool BaseBuildingBlock::ChangePointDensity(Vector3 t_point, float& t_density)
 
 	float newDensity = Clamp(signedDist, -1, 1);
 
+	if (newDensity == 1.0f)
+		return false;
+
 	// Building
 	t_density = std::min(t_density, newDensity);
 
