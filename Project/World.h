@@ -46,7 +46,7 @@ private:
 
 	// World Gen TEMP
 	void NoiseWorldGen();
-	void HollowBoxWorldGen();
+	void TestWorldGen();
 
 	// World Dimensions
 	int totalChunks = 0;

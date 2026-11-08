@@ -193,6 +193,8 @@ void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 				points[i].density = fmaxf(points[i].density, -newDensity); // Keep highest value since 1 = air
 			else
 				points[i].density = fminf(points[i].density, newDensity); // Keep lowest value since -1 = solid
+
+			points[i].color = RED;
 		}
 	}
 	int temp = 0;

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <raymath.h>
 #include "Lighting.h"
+#include "StructurePaster.h"
 
 World::World() : light(Lighting::CreateLight(RAYWHITE))
 {
@@ -357,7 +358,7 @@ void World::NoiseWorldGen()
     UpdateAllDensities();
 }
 
-void World::HollowBoxWorldGen()
+void World::TestWorldGen()
 {
     completeRebuild = true;
 
@@ -382,6 +383,14 @@ void World::HollowBoxWorldGen()
             }
         }
     }
+
+    Vector3 center = GetSizeDimensions();
+    center.x = center.x / 2.0f;
+    center.y = 1;
+    center.z = center.z / 2.0f;
+
+    StructureExport testLevel = StructurePaster::GetStructureFromFile(StructureTypes::World, "Test Level");
+    StructurePaster::PlaceStructure(*this, testLevel, center);
 }
 
 void World::EmptyWorldGen()
@@ -422,7 +431,7 @@ void World::KeyboardInputs()
     }
     else if (IsKeyReleased(KEY_C))
     {
-        HollowBoxWorldGen();
+        TestWorldGen();
     }
 }
 

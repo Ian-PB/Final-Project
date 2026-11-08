@@ -189,8 +189,8 @@ void StructureBuilding::CheckKeybinds()
         }
     }
 
-    // Bake objects into the a
-    if (IsKeyPressed(KEY_B))
+    // Bake objects into the a mesh
+    if (IsKeyPressed(KEY_B) && currentUiMode == UiModes::Off)
     {
         if (displayObjs)
             Bake();
