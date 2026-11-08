@@ -6,6 +6,7 @@
 using json = nlohmann::json;
 
 #include "StructureData.h"
+#include "Materials.h"
 
 StructureSaver::StructureSaver(World& t_world) : world(t_world)
 {
@@ -31,7 +32,7 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name, Boundin
         jsonObj["points"].push_back({
             { "position", { correctedPointPos.x, correctedPointPos.y, correctedPointPos.z } },
             { "density", p.density },
-            { "color", { p.color.r, p.color.g, p.color.b, p.color.a } }
+            { "material", static_cast<int>(Materials::COLOR_TO_MATERIAL.at(p.color)) }
         });
     }
 

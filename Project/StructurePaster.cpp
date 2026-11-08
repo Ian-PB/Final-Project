@@ -8,8 +8,8 @@
 using json = nlohmann::json;
 
 #include "StructureData.h"
-#include "StructureSaver.h"
 #include "World.h"
+#include "Materials.h"
 
 StructureExport StructurePaster::GetStructureFromFile(StructureTypes t_type, std::string t_name)
 {
@@ -45,10 +45,11 @@ StructureExport StructurePaster::GetStructureFromFile(StructureTypes t_type, std
 
         p.density = jsonPoint["density"].get<float>();
 
-        p.color.r = jsonPoint["color"][0].get<float>();
-        p.color.g = jsonPoint["color"][1].get<float>();
-        p.color.b = jsonPoint["color"][2].get<float>();
-        p.color.a = jsonPoint["color"][3].get<float>();
+        Color materialColor = Materials::MATERIAL_TO_COLOR.at(static_cast<MaterialTypes>(jsonPoint["material"].get<int>()));
+        p.color.r = materialColor.r;
+        p.color.g = materialColor.g;
+        p.color.b = materialColor.b;
+        p.color.a = materialColor.a;
 
         exportedStructure.points.push_back(p);
     }
