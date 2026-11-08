@@ -21,11 +21,10 @@ class StructureSaver
 public:
 	StructureSaver(World& t_world);
 
-	void SaveFile(StructureTypes t_type, std::string t_name);
+	void SaveFile(StructureTypes t_type, std::string t_name, BoundingBox t_structureBounds);
 
 private:
 
-	BoundingBox FindStructureBounds();
 	std::vector<Point> GetPointsToSave(BoundingBox t_bounds);
 
 	World& world;

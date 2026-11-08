@@ -41,7 +41,7 @@ void StructureBuilding::Draw()
 	BeginMode3D(camera);
 
         // Ground
-        DrawPlane({ worldCenter.x, 0.0f, worldCenter.z }, { worldSize.x, worldSize.z }, GRAY);
+        DrawPlane({ worldCenter.x, 0.0f, worldCenter.z }, { worldSize.x, worldSize.z }, RAYWHITE);
         // Corner pillar
         DrawCylinder({ 0.0f, 0.0f, 0.0f }, 0.2f, 0.2f, worldSize.y, 5, RED);
         DrawCylinder({ worldSize.x, 0.0f, 0.0f }, 0.2f, 0.2f, worldSize.y, 5, RED);
@@ -403,7 +403,7 @@ void StructureBuilding::DrawSavingStructurePanel()
 
     if (GuiButton(elementRect, "Save To File"))
     {
-        structureSaver->SaveFile(selectedType, structureName);
+        structureSaver->SaveFile(selectedType, structureName, structureBounds);
     }
 }
 
@@ -448,38 +448,93 @@ void StructureBuilding::Bake()
         // Loop through all intersecting chunks
         for (Chunk* chunk : chunks)
         {
-            bool modified = false;
-
             for (int i = 0; i < chunk->GetPointAmount(); i++)
             {
                 Point& point = chunk->GetPointAt(i);
+                point.color = obj->GetColor();
+
                 Vector3 worldPointPos = Vector3Add(point.position, chunk->GetPosition());
 
                 // Change densities
                 if (obj->ChangePointDensity(worldPointPos, point.density))
-                   modified = true;
-            }
-
-            if (modified)
-            {
-                if (!anyModificationsMade)
                     anyModificationsMade = true;
-
-                chunk->SetDirty();
-                world.QueueChunkChangeAtPos(chunk->GetPosition());
             }
         }
     }
 
     // Only stop the display of objects if there was a single edit made
     if (anyModificationsMade)
+    {
+        isDragging = false;
         displayObjs = false;
+
+        structureBounds = FindStructureBounds();
+
+        for (Chunk* chunk : world.GetChunksInBounds(structureBounds))
+        {
+            chunk->SetDirty();
+            world.QueueChunkChangeAtPos(chunk->GetPosition());
+        }
+    }
 }
 
 void StructureBuilding::ResetBaking()
 {
     world.EmptyWorldGen();
     displayObjs = true;
+}
+
+Index3D StructureBuilding::Get3DIndex(int i, int axisSize)
+{
+    Index3D index3D;
+    index3D.x = i / (axisSize * axisSize);
+    index3D.y = (i / axisSize) % axisSize;
+    index3D.z = i % axisSize;
+
+    return index3D;
+}
+
+BoundingBox StructureBuilding::FindStructureBounds()
+{
+    // Same across all chunks
+    int pointsPerAxis = world.GetChunk(0, 0, 0).GetPointsPerAxis();
+    BoundingBox bounds = {};
+    bool foundPoint = false;
+
+    for (Chunk* chunk : world.GetAllChunks())
+    {
+        // Loop through chunks points
+        for (int i = 0; i < chunk->GetPointAmount(); i++)
+        {
+            const Point& p = chunk->GetPointAt(i);
+
+            // Ignore empty points
+            if (p.density >= 1.0f)
+                continue;
+
+            Index3D i3D = Get3DIndex(i, pointsPerAxis);
+            Vector3 globalPos = chunk->GetGlobalPos({ (float)i3D.x, (float)i3D.y, (float)i3D.z });
+
+            if (!foundPoint)
+            {
+                bounds.min = globalPos;
+                bounds.max = globalPos;
+                foundPoint = true;
+                continue;
+            }
+
+            // Change each axis indepentantly
+            bounds.min.x = std::min(globalPos.x, bounds.min.x);
+            bounds.min.y = std::min(globalPos.y, bounds.min.y);
+            bounds.min.z = std::min(globalPos.z, bounds.min.z);
+
+            bounds.max.x = std::max(globalPos.x, bounds.max.x);
+            bounds.max.y = std::max(globalPos.y, bounds.max.y);
+            bounds.max.z = std::max(globalPos.z, bounds.max.z);
+        }
+    }
+
+    return bounds;
 }
 
 void StructureBuilding::SpawnCube()
@@ -492,6 +547,7 @@ void StructureBuilding::SpawnCube()
     // Select new object
     if (selectedObject != nullptr)
         selectedObject->SetSelected(false);
+
     selectedObject = newObj;
     selectedObject->SetSelected(true);
 

@@ -104,5 +104,5 @@ private:
 
 	const Camera& CAMERA;
 
-	Color color;
+	Color color = GRAY;
 };

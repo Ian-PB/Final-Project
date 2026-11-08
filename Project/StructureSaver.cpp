@@ -11,14 +11,14 @@ StructureSaver::StructureSaver(World& t_world) : world(t_world)
 {
 }
 
-void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name)
+void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name, BoundingBox t_structureBounds)
 {
     std::string path = StructureData::FILE_PATH + StructureData::typeToFilePath.at(t_type) + t_name + ".json";
     std::cout << "Saved to: " << path << std::endl;
 
     std::ofstream file(path);
 
-    BoundingBox bounds = FindStructureBounds();
+    BoundingBox bounds = t_structureBounds;
 
     // Create JSON Object
     json jsonObj;
@@ -47,49 +47,6 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name)
     {
         file << jsonObj.dump(4);
     }
-}
-
-BoundingBox StructureSaver::FindStructureBounds()
-{
-    // Same across all chunks
-    int pointsPerAxis = world.GetChunk(0, 0, 0).GetPointsPerAxis();
-    BoundingBox bounds = {};
-    bool foundPoint = false;
-
-    for (Chunk* chunk : world.GetAllChunks())
-    {
-        // Loop through chunks points
-        for (int i = 0; i < chunk->GetPointAmount(); i++)
-        {
-            const Point& p = chunk->GetPointAt(i);
-
-            // Ignore empty points
-            if (p.density >= 1.0f)
-                continue;
-
-            Index3D i3D = Get3DIndex(i, pointsPerAxis);
-            Vector3 globalPos = chunk->GetGlobalPos({ (float)i3D.x, (float)i3D.y, (float)i3D.z });
-
-            if (!foundPoint)
-            {
-                bounds.min = globalPos;
-                bounds.max = globalPos;
-                foundPoint = true;
-                continue;
-            }
-
-            // Change each axis indepentantly
-            bounds.min.x = std::min(globalPos.x, bounds.min.x);
-            bounds.min.y = std::min(globalPos.y, bounds.min.y);
-            bounds.min.z = std::min(globalPos.z, bounds.min.z);
-
-            bounds.max.x = std::max(globalPos.x, bounds.max.x);
-            bounds.max.y = std::max(globalPos.y, bounds.max.y);
-            bounds.max.z = std::max(globalPos.z, bounds.max.z);
-        }
-    }
-
-    return bounds;
 }
 
 std::vector<Point> StructureSaver::GetPointsToSave(BoundingBox t_bounds)

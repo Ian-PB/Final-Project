@@ -59,6 +59,9 @@ private:
 	void Bake();
 	void ResetBaking();
 
+	Index3D Get3DIndex(int i, int axisSize);
+	BoundingBox FindStructureBounds();
+
 	void SpawnCube();
 	void SpawnSphere();
 	void SpawnCylinder();
@@ -83,5 +86,6 @@ private:
 	World world;
 	Vector3 worldCenter;
 	Vector3 worldSize;
+	BoundingBox structureBounds;
 };
 
