@@ -255,6 +255,8 @@ void Player::GroundCheck(const Triangle& tri)
 bool Player::OnWalkableSlope() const
 {
     float slopeAngle = Vector3Angle(groundNormal, UP) * RAD2DEG;
+    std::cout << "Slope Angle: " << slopeAngle << std::endl;
+
     if (slopeAngle < MAX_SLOPE_ANGLE)
         return true;
 

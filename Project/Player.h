@@ -76,7 +76,7 @@ private:
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
-	/*static const*/ int MAX_SLOPE_ANGLE = 65;
+	/*static const*/ int MAX_SLOPE_ANGLE = 45;
 
 	Ray aboveCheckRay;
 
