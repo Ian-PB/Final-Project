@@ -13,6 +13,11 @@ void ConeBuildingBlock::InitModel()
 	UpdateTransformMatrix();
 }
 
+std::shared_ptr<BaseBuildingBlock> ConeBuildingBlock::CreateClone()
+{
+	return std::make_shared<ConeBuildingBlock>(*this);
+}
+
 void ConeBuildingBlock::UpdateBounds()
 {
 	Vector3 corners[8] =

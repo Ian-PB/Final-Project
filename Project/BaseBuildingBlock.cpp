@@ -1,6 +1,7 @@
 #include "BaseBuildingBlock.h"
 #include <raymath.h>
 #include <algorithm>
+#include <memory>
 
 const float BaseBuildingBlock::MIN_SCALE = 0.02f;
 const float BaseBuildingBlock::SIGNED_DIST_SKIN = 0.15f;
@@ -109,6 +110,11 @@ bool BaseBuildingBlock::ChangePointDensity(Vector3 t_point, float& t_density)
 
 	// If not the same as before return true
 	return startDensity != t_density;
+}
+
+std::shared_ptr<BaseBuildingBlock> BaseBuildingBlock::CreateClone()
+{
+	return std::make_shared<BaseBuildingBlock>(*this);
 }
 
 void BaseBuildingBlock::Move()

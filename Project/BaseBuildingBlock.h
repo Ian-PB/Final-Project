@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <raymath.h>
+#include <memory>
 
 enum class EditTypes
 {
@@ -53,6 +54,8 @@ public:
 
 	Color GetColor() const { return color; }
 	void SetColor(Color t_col) { color = t_col; }
+
+	virtual std::shared_ptr<BaseBuildingBlock> CreateClone();
 
 protected:
 	Vector3 GetHalfDimensions() const { return Vector3Scale(scale, 0.5f); }

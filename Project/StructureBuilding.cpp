@@ -83,6 +83,7 @@ void StructureBuilding::Draw()
             DrawText("N - Spawn New Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 60, 25, RED);
             if (selectedObject != nullptr)
             {
+                DrawText("Control + D - Duplicated Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 60, 25, RED);
                 DrawText("Q - Change Selected Objects Material", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 90, 25, RED);
                 DrawText("DELETE - Remove Selected Object", GetScreenWidth() * 0.01f, GetScreenHeight() * 0.01f + 120, 25, RED);
             }
@@ -163,6 +164,23 @@ void StructureBuilding::CheckKeybinds()
             currentUiMode = UiModes::Off;
             DisableCursor();
         }
+    }
+
+    bool duplicateObjInput = IsKeyPressed(KEY_D) && IsKeyDown(KEY_LEFT_CONTROL);
+    if (duplicateObjInput && currentUiMode == UiModes::Off && selectedObject != nullptr)
+    {
+        std::shared_ptr<BaseBuildingBlock> duplicatedObj = selectedObject->CreateClone();
+
+        // Unselect original object
+        selectedObject->SetSelected(false);
+
+        // Select new object
+        duplicatedObj->SetSelected(true);
+        duplicatedObj->SetDragging(false);
+        duplicatedObj->ResetHoveredAxis();
+
+        objects.push_back(duplicatedObj);
+        selectedObject = duplicatedObj;
     }
 
     // Swap open selected objects info

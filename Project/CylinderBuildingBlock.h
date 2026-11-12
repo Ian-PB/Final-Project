@@ -10,6 +10,7 @@ private:
 	virtual void UpdateBounds() override;
 	virtual float SignedDist(Vector3 t_pointPos) override;
 
+	virtual std::shared_ptr<BaseBuildingBlock> CreateClone() override;
 private:
 	float baseRadius = 0.6f;
 	float baseHeight = 1.2f;

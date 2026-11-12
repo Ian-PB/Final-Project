@@ -17,6 +17,11 @@ void SphereBuildingBlock::InitModel()
 	UpdateTransformMatrix();
 }
 
+std::shared_ptr<BaseBuildingBlock> SphereBuildingBlock::CreateClone()
+{
+	return std::make_shared<SphereBuildingBlock>(*this);
+}
+
 void SphereBuildingBlock::UpdateBounds()
 {
 	Vector3 corners[8] =

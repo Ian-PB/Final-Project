@@ -65,3 +65,8 @@ float CylinderBuildingBlock::SignedDist(Vector3 t_pointPos)
 
 	return s * sqrt(std::min(Vector2LengthSqr(ca), Vector2LengthSqr(cb)));
 }
+
+std::shared_ptr<BaseBuildingBlock> CylinderBuildingBlock::CreateClone() 
+{
+	return std::make_shared<CylinderBuildingBlock>(*this);
+}
