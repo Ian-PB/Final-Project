@@ -12,9 +12,9 @@ class World
 {
 // Needs to be before the getChunks function
 private:
-	static const int WIDTH = 5;
-	static const int HEIGHT = 5;
-	static const int DEPTH = 5;
+	static const int WIDTH = 8;
+	static const int HEIGHT = 8;
+	static const int DEPTH = 8;
 
 public:
 	World();

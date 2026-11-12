@@ -55,6 +55,7 @@ private:
 	MaterialTypes materialSelected = MaterialTypes::Stone;
 	int materialInt = 0;
 	bool materialDropdownOpen = false;
+	const int COLOR_THRESHOLD = 0.1f;
 
 	void Bake();
 	void ResetBaking();

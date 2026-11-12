@@ -469,17 +469,22 @@ void StructureBuilding::Bake()
                 Point& point = chunk->GetPointAt(i);
 
                 Vector3 worldPointPos = Vector3Add(point.position, chunk->GetPosition());
+                float oldDensity = point.density;
 
                 // Change densities
                 if (obj->ChangePointDensity(worldPointPos, point.density))
                 {
-                    // Check for errors
-                    if (point.color.r == RAYWHITE.r && point.color.g == RAYWHITE.g && point.color.b == RAYWHITE.b)
-                        point.color = obj->GetColor();
-                    // Set point color (Don't override more valuable materials)
-                    else if (Materials::COLOR_TO_MATERIAL.at(obj->GetColor()) >= Materials::COLOR_TO_MATERIAL.at(point.color))
+                    float densityChange = fabsf(point.density - oldDensity);
+                    if (densityChange > COLOR_THRESHOLD)
                     {
-                        point.color = obj->GetColor();
+                        // Check for errors
+                        if (point.color.r == RAYWHITE.r && point.color.g == RAYWHITE.g && point.color.b == RAYWHITE.b)
+                            point.color = obj->GetColor();
+                        // Set point color (Don't override more valuable materials)
+                        else if (Materials::COLOR_TO_MATERIAL.at(obj->GetColor()) >= Materials::COLOR_TO_MATERIAL.at(point.color))
+                        {
+                            point.color = obj->GetColor();
+                        }
                     }
 
                     anyModificationsMade = true;

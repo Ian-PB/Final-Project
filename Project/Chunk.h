@@ -103,7 +103,7 @@ private:
 	static const int SIZE = 20; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
-	float pointSpacing = 1.0f;
+	float pointSpacing = 0.75f;
 	const float EDIT_MARGIN = 1.5f;
 
 	// Collision
