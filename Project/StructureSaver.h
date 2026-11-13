@@ -24,7 +24,7 @@ public:
 	void SaveFile(StructureTypes t_type, std::string t_name, BoundingBox t_structureBounds);
 
 private:
-
+	bool IsPointInVector(const std::vector<Point> t_points, const Vector3& t_newPoint);
 	std::vector<Point> GetPointsToSave(BoundingBox t_bounds);
 
 	World& world;

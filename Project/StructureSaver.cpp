@@ -50,6 +50,17 @@ void StructureSaver::SaveFile(StructureTypes t_type, std::string t_name, Boundin
     }
 }
 
+bool StructureSaver::IsPointInVector(const std::vector<Point> t_points, const Vector3& t_newPos)
+{
+    for (const Point& p : t_points)
+    {
+        if (p.position.x == t_newPos.x && p.position.y == t_newPos.y && p.position.z == t_newPos.z)
+            return true;
+    }
+
+    return false;
+}
+
 std::vector<Point> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
 {
     // Same across all chunks
@@ -75,6 +86,9 @@ std::vector<Point> StructureSaver::GetPointsToSave(BoundingBox t_bounds)
                         continue;
     
                     Vector3 globalPos = chunk->GetGlobalPos({ (float)x, (float)y, (float)z });
+
+                    if (IsPointInVector(points, globalPos))
+                        continue;
 
                     // Check if outside of bounds
                     if (globalPos.x < t_bounds.min.x || globalPos.x > t_bounds.max.x ||
