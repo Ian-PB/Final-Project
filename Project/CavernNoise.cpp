@@ -10,7 +10,7 @@ CavernNoise::CavernNoise(Vector3 t_worldSize) : BaseNoise(t_worldSize)
 void CavernNoise::Init()
 {
     // Give new values for original noise
-    SetFrequency(0.05f);
+    SetFrequency(0.04f);
 
     // Setup Rough Noise for the details
     roughNoise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
@@ -21,7 +21,11 @@ void CavernNoise::Init()
 float CavernNoise::GetNoise(Vector3 t_pos)
 {
     float baseNoise = BaseNoise::GetNoise(t_pos);
-    float roughness = roughNoise.GetNoise(t_pos.x, t_pos.y, t_pos.z);
+    float roughNoiseVal = roughNoise.GetNoise(t_pos.x, t_pos.y, t_pos.z);
+
+    // Roughness
+    const float TERRAIN_ROUGHNESS = roughNoiseVal * 0.05f;
+    const float EDGE_ROUGHNESS = roughNoiseVal * 0.01;
 
     // Normalize position
     Vector3 normalizedCoords = { Clamp(t_pos.x / worldSize.x, 0.0f, 1.0f), Clamp(t_pos.y / worldSize.y, 0.0f, 1.0f), Clamp(t_pos.z / worldSize.z, 0.0f, 1.0f) };
@@ -32,12 +36,14 @@ float CavernNoise::GetNoise(Vector3 t_pos)
     float distZ = std::min(normalizedCoords.z, 1.0f - normalizedCoords.z);
     float edgeDist = std::min(distX, std::min(distY, distZ));
 
-    float edgeThickness = 0.1f + (roughness * 0.01f);
+    float edgeThickness = EDGE_MIN_THICKNESS + EDGE_ROUGHNESS;
     float edgeSignedDist = edgeDist - edgeThickness;
     float edgeDensity = edgeSignedDist * 10.0f;
 
+    float baseRoughened = baseNoise + TERRAIN_ROUGHNESS;
+
     // Combine base with edges
-    float result = std::min(baseNoise, edgeDensity);
+    float result = std::min(baseRoughened, edgeDensity);
 
     return result;
 }
