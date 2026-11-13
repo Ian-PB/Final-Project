@@ -21,6 +21,8 @@ World::World() : light(Lighting::CreateLight(RAYWHITE))
     float chunkSize = chunks[0][0][0].GetChunkSize();
     light.position = { WIDTH * chunkSize * 0.5f, HEIGHT * chunkSize * 0.5f, DEPTH * chunkSize * 0.5f };
     light.strength = 60.0f;
+
+    noise = std::make_shared<BaseNoise>();
 }
 
 World::~World()
@@ -48,14 +50,14 @@ void World::Init()
             {
                 Vector3 newPos = { chunks[x][y][z].GetChunkSize() * x, chunks[x][y][z].GetChunkSize() * y, chunks[x][y][z].GetChunkSize() * z };
                 chunks[x][y][z].SetPosition(newPos);
-                chunks[x][y][z].Init(&noise, &Lighting::lightingShader);
+                chunks[x][y][z].Init(noise, &Lighting::lightingShader);
             }
         }
     }
 
     // Make world
     noiseSeed = (int)(rand() % 9999);
-    noise.SetSeed(noiseSeed);
+    noise->SetSeed(noiseSeed);
     completeRebuild = true;
 
     // Reset densities
@@ -352,7 +354,7 @@ void World::UpdateAllChunks()
 void World::NoiseWorldGen()
 {
     noiseSeed = (int)(rand() % 9999);
-    noise.SetSeed(noiseSeed);
+    noise->SetSeed(noiseSeed);
     completeRebuild = true;
 
     UpdateAllDensities();
@@ -444,9 +446,7 @@ void World::SetupNoise()
 
 void World::UpdatedSeed()
 {
-    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    noise.SetFrequency(frequency);
-    noise.SetSeed(noiseSeed);
+    noise->SetSeed(noiseSeed);
 }
 
 void World::UpdateAllDensities()

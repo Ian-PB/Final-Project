@@ -7,14 +7,15 @@
 #include <condition_variable>
 #include <atomic>
 #include "Lighting.h"
+#include <memory>
 
 class World
 {
 // Needs to be before the getChunks function
 private:
-	static const int WIDTH = 8;
-	static const int HEIGHT = 8;
-	static const int DEPTH = 8;
+	static const int WIDTH = 5;
+	static const int HEIGHT = 5;
+	static const int DEPTH = 5;
 
 public:
 	World();
@@ -60,8 +61,7 @@ private:
 	void SetupNoise();
 	void UpdatedSeed();
 	void UpdateAllDensities();
-	FastNoiseLite noise;
-	float frequency = 0.1f;
+	std::shared_ptr<BaseNoise> noise;
 	int noiseSeed;
 
 	// Multi-threading

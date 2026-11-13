@@ -1,8 +1,9 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
-#include "FastNoiseLite.h"
+#include "BaseNoise.h"
 #include "MeshCollider.h"
+#include <memory>
 
 struct Point
 {
@@ -41,7 +42,7 @@ class Chunk
 {
 public:
 	Chunk();
-	void Init(FastNoiseLite* t_noise, Shader* t_shader);
+	void Init(std::shared_ptr<BaseNoise> t_noise, Shader* t_shader);
 	void InitCollider();
 	void Draw();
 	void Update();
@@ -103,14 +104,14 @@ private:
 	static const int SIZE = 20; // Amount of points in each direction
 	Point points[SIZE * SIZE * SIZE]; // Amount of points total in the cube
 
-	float pointSpacing = 0.75f;
+	float pointSpacing = 1.0f;
 	const float EDIT_MARGIN = 1.5f;
 
 	// Collision
 	MeshCollider collider;
 
 	// Noise
-	FastNoiseLite* noise;
+	std::shared_ptr<BaseNoise> noise;
 
 	// Shaders
 	Shader* shader;

@@ -8,8 +8,7 @@ Chunk::Chunk()
 {
 }
 
-// FastNoiseLite is a library I added
-void Chunk::Init(FastNoiseLite* t_noise, Shader* t_shader)
+void Chunk::Init(std::shared_ptr<BaseNoise> t_noise, Shader* t_shader)
 {
 	shader = t_shader;
 
@@ -186,14 +185,13 @@ void Chunk::EditSphere(Vector3 t_pos, float t_radius, bool destroy)
 
 		if (dist <= t_radius + EDIT_MARGIN)
 		{
-			float oldDensity = points[i].density;
 			// Signed distance: Neg = within radius, Pos = Outside radius
 			float newDensity = dist - t_radius;
 
 			if (destroy)
-				points[i].density = fmaxf(oldDensity, -newDensity); // Keep highest value since 1 = air
+				points[i].density = fmaxf(points[i].density, -newDensity); // Keep highest value since 1 = air
 			else
-				points[i].density = fminf(oldDensity, newDensity); // Keep lowest value since -1 = solid
+				points[i].density = fminf(points[i].density, newDensity); // Keep lowest value since -1 = solid
 		}
 	}
 	int temp = 0;
@@ -260,7 +258,7 @@ void Chunk::SetupPoints()
 				points[i].position = GetLocalPos({(float)x, (float)y, (float)z});
 
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
-				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
+				points[i].density = noise->GetNoise(globalPos);
 
 				points[i].color = GetColorFromPoint(points[i], globalPos);
 			}
@@ -279,7 +277,7 @@ void Chunk::UpdateDensities()
 				int i = IndexFrom3D(x, y, z);
 
 				Vector3 globalPos = GetGlobalPos({ (float)x, (float)y, (float)z });
-				points[i].density = noise->GetNoise(globalPos.x, globalPos.y, globalPos.z);
+				points[i].density = noise->GetNoise(globalPos);
 
 				points[i].color = GetColorFromPoint(points[i], globalPos);
 			}

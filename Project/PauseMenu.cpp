@@ -281,16 +281,6 @@ void PauseMenu::DrawWorldSettings()
 		world.completeRebuild = true;
 	}
 	IncrementElement();
-
-	// Frequency
-	float prevFreq = world.frequency;
-	GuiSliderBar(rect, "0", "5", &world.frequency, 0, 5);
-	if (prevFreq != world.frequency) // Changed
-	{
-		world.SetupNoise();
-		world.completeRebuild = true;
-	}
-	IncrementElement();
 }
 
 void PauseMenu::InitSemiConsts()

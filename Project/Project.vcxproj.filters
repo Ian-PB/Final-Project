@@ -31,6 +31,12 @@
     <Filter Include="Source Files\StructureBuilding">
       <UniqueIdentifier>{5f094fc9-0ca6-414f-b17b-960ccb1af0f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Noise">
+      <UniqueIdentifier>{daae7456-9959-4c56-9d61-696e4adc92ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Noise">
+      <UniqueIdentifier>{9d3b0468-d96f-4392-aa08-8207953cf4dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -120,15 +126,15 @@
     <ClCompile Include="ConeBuildingBlock.cpp">
       <Filter>Source Files\StructureBuilding</Filter>
     </ClCompile>
+    <ClCompile Include="BaseNoise.cpp">
+      <Filter>Source Files\Noise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Chunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FastNoiseLite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MarchingTables.h">
@@ -214,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="ConeBuildingBlock.h">
       <Filter>Header Files\StructureBuilding</Filter>
+    </ClInclude>
+    <ClInclude Include="FastNoiseLite.h">
+      <Filter>Header Files\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseNoise.h">
+      <Filter>Header Files\Noise</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
