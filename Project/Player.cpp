@@ -333,6 +333,7 @@ void Player::ShootRay()
     // Use screenCenter instead of the mouse pos because the mouse is locked
     shootRay = GetScreenToWorldRay(screenCenter, camera->GetCameraRef());
 
+    bool hitFound = false;
     shootRayCollision.hit = false;
     shootRayCollision.distance = 9999.0f;
     shootRayStart = camera->GetPos();
@@ -363,10 +364,15 @@ void Player::ShootRay()
                     shootRayCollision.hit = true;
                     // Add to hit positions
                     hitPositions.push_back(meshCollision.point);
+                    hitFound = true;
                 }
             }
         }
     }
+
+    // No hit was found
+    if (!hitFound)
+        return;
 
     // Find which point is the closest
     float closestHitDist = 9999.0f;

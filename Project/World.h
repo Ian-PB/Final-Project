@@ -6,8 +6,9 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
-#include "Lighting.h"
 #include <memory>
+
+#include "Lighting.h"
 
 class World
 {

@@ -33,6 +33,8 @@ public:
 
 	Vector3& GetPosRef() { return position; }
 	Camera& GetCameraRef() { return camera->GetCameraRef(); }
+
+	void SetPos(Vector3 t_pos) { position = t_pos; }
 private:
 	void UpdatePositions();
 

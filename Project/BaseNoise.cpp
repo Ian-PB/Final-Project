@@ -1,6 +1,9 @@
 #include "BaseNoise.h"
 
-BaseNoise::BaseNoise()
+const float BaseNoise::SOLID_VALUE = -1.0f;
+const float BaseNoise::EMPTY_VALUE = 1.0f;
+
+BaseNoise::BaseNoise(Vector3 t_worldDimensions) : worldSize(t_worldDimensions)
 {
     noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
     noise.SetFrequency(frequency);
@@ -15,7 +18,7 @@ void BaseNoise::SetSeed(int t_seed)
 
 void BaseNoise::SetFrequency(float t_frequency)
 {
-    frequency = 0.1f; 
+    frequency = t_frequency;
     noise.SetFrequency(frequency);
 }
 

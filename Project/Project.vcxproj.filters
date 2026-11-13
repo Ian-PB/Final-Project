@@ -129,6 +129,9 @@
     <ClCompile Include="BaseNoise.cpp">
       <Filter>Source Files\Noise</Filter>
     </ClCompile>
+    <ClCompile Include="CavernNoise.cpp">
+      <Filter>Source Files\Noise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -225,6 +228,9 @@
       <Filter>Header Files\Noise</Filter>
     </ClInclude>
     <ClInclude Include="BaseNoise.h">
+      <Filter>Header Files\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="CavernNoise.h">
       <Filter>Header Files\Noise</Filter>
     </ClInclude>
   </ItemGroup>

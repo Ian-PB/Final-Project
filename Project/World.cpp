@@ -5,6 +5,7 @@
 #include <raymath.h>
 #include "Lighting.h"
 #include "StructurePaster.h"
+#include "CavernNoise.h"
 
 World::World() : light(Lighting::CreateLight(RAYWHITE))
 {
@@ -22,7 +23,8 @@ World::World() : light(Lighting::CreateLight(RAYWHITE))
     light.position = { WIDTH * chunkSize * 0.5f, HEIGHT * chunkSize * 0.5f, DEPTH * chunkSize * 0.5f };
     light.strength = 60.0f;
 
-    noise = std::make_shared<BaseNoise>();
+    noise = std::make_shared<CavernNoise>(GetSizeDimensions());
+    noise->Init();
 }
 
 World::~World()
