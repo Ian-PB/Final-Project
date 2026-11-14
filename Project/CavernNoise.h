@@ -11,6 +11,7 @@ public:
 
 private:
 	FastNoiseLite roughNoise;
+	FastNoiseLite detailNoise;
 
 	const float EDGE_MIN_THICKNESS = 0.1f;
 };
