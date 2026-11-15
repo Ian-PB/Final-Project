@@ -54,6 +54,10 @@ private:
 	int totalChunks = 0;
 	Chunk chunks[WIDTH][HEIGHT][DEPTH];
 
+	// Surface Level
+	void RandomizeSurfaceLevel();
+	const float MIN_SURFACE_LEVEL = -0.5f;
+	const float MAX_SURFACE_LEVEL = 0.2f;
 	float surfaceLevel = 0.0f;
 
 	bool completeRebuild = false;

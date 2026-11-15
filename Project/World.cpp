@@ -335,6 +335,9 @@ void World::UpdateAllChunks()
     if (jobsRemaining > 0)
         return;
 
+    // Randomize the surfaceLevel
+    RandomizeSurfaceLevel();
+
     std::lock_guard<std::mutex> lock(jobMutex);
 
     for (int i = 0; i < totalChunks; i++)
@@ -395,6 +398,14 @@ void World::TestWorldGen()
 
     StructureExport testLevel = StructurePaster::GetStructureFromFile(StructureTypes::World, "Test Level");
     StructurePaster::PlaceStructure(*this, testLevel, center);
+}
+
+void World::RandomizeSurfaceLevel()
+{
+    float random = (float)rand() / (float)RAND_MAX;
+    float range = MAX_SURFACE_LEVEL - MIN_SURFACE_LEVEL;
+
+    surfaceLevel = (random * range) + MIN_SURFACE_LEVEL;
 }
 
 void World::EmptyWorldGen()

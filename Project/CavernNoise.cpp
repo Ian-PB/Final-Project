@@ -2,6 +2,7 @@
 #include <raymath.h>
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 CavernNoise::CavernNoise(Vector3 t_worldSize) : BaseNoise(t_worldSize)
 {
@@ -10,7 +11,7 @@ CavernNoise::CavernNoise(Vector3 t_worldSize) : BaseNoise(t_worldSize)
 void CavernNoise::Init()
 {
     // Give new values for original noise
-    SetFrequency(0.03f);
+    SetFrequency(0.025f);
 
     // Setup Rough Noise for the larger details
     roughNoise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
@@ -40,7 +41,7 @@ float CavernNoise::GetNoise(Vector3 t_pos)
 
     // Roughness
     float roughNoiseVal = roughNoise.GetNoise(t_pos.x, t_pos.y, t_pos.z);
-    const float TERRAIN_ROUGHNESS = roughNoiseVal * 0.03f;
+    const float TERRAIN_ROUGHNESS = roughNoiseVal * 0.02f;
     const float EDGE_ROUGHNESS = roughNoiseVal * 0.008f;
 
     // Details
@@ -69,7 +70,9 @@ float CavernNoise::GetNoise(Vector3 t_pos)
     float edgeSignedDist = edgeDist - edgeThickness;
     edgeDensity = edgeSignedDist * 10.0f;
 
-    float baseRoughened = baseNoise + TERRAIN_ROUGHNESS + DETAILS;
+    float centerBias = (distY * 2.0f) * 0.1f;
+
+    float baseRoughened = (baseNoise + TERRAIN_ROUGHNESS + DETAILS) - centerBias;
 
     // Combine base with edges
     float result = std::min(baseRoughened, edgeDensity);
