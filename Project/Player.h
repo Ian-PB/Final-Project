@@ -33,6 +33,8 @@ public:
 
 	Vector3& GetPosRef() { return position; }
 	Camera& GetCameraRef() { return camera->GetCameraRef(); }
+
+	void SetPos(Vector3 t_pos) { position = t_pos; }
 private:
 	void UpdatePositions();
 
@@ -76,7 +78,7 @@ private:
 
 	static const Vector3 UP;
 	static const Vector3 DOWN;
-	/*static const*/ int MAX_SLOPE_ANGLE = 65;
+	/*static const*/ int MAX_SLOPE_ANGLE = 45;
 
 	Ray aboveCheckRay;
 

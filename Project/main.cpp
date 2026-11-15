@@ -26,7 +26,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "Raylib StarterKit GPPI");
     ToggleFullscreen();
 
-    SetExitKey(KEY_L);
+    SetExitKey(KEY_F10);
 
     // Initialise
     switch (LAUNCH_TYPE)
@@ -80,7 +80,7 @@ void GameLoop(void)
         break;
     }
 
-    if (IsKeyPressed(KEY_F))
+    if (IsKeyPressed(KEY_F9))
     {
         ToggleFullscreen();
     }

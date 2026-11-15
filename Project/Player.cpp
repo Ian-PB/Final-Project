@@ -7,7 +7,7 @@
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
-Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(ORANGE)), randLight(Lighting::CreateLight(WHITE))
+Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
     shootRayCollision.distance = 9999.0f;
@@ -255,6 +255,8 @@ void Player::GroundCheck(const Triangle& tri)
 bool Player::OnWalkableSlope() const
 {
     float slopeAngle = Vector3Angle(groundNormal, UP) * RAD2DEG;
+    std::cout << "Slope Angle: " << slopeAngle << std::endl;
+
     if (slopeAngle < MAX_SLOPE_ANGLE)
         return true;
 
@@ -331,6 +333,7 @@ void Player::ShootRay()
     // Use screenCenter instead of the mouse pos because the mouse is locked
     shootRay = GetScreenToWorldRay(screenCenter, camera->GetCameraRef());
 
+    bool hitFound = false;
     shootRayCollision.hit = false;
     shootRayCollision.distance = 9999.0f;
     shootRayStart = camera->GetPos();
@@ -361,10 +364,15 @@ void Player::ShootRay()
                     shootRayCollision.hit = true;
                     // Add to hit positions
                     hitPositions.push_back(meshCollision.point);
+                    hitFound = true;
                 }
             }
         }
     }
+
+    // No hit was found
+    if (!hitFound)
+        return;
 
     // Find which point is the closest
     float closestHitDist = 9999.0f;
@@ -382,7 +390,13 @@ void Player::ShootRay()
     shootRayCollision.point = closestHit;
     SetRandLight(shootRayCollision.point);
 
-    testParticles->Spawn(shootRayCollision.point);
+    Point* p = nullptr;
+    Color particleColor = WHITE;
+    if (WORLD.GetChunkFromWorldPos(shootRayCollision.point).TryGetPointAtPos(shootRayCollision.point, p))
+    {
+        particleColor = p->color;
+    }
+    testParticles->Spawn(shootRayCollision.point, particleColor);
 
     // Destroy hitPos of mesh
     WORLD.EditSphere(closestHit, rayRadius, breaking);
@@ -434,27 +448,6 @@ void Player::CollisionDetection()
 void Player::SetRandLight(Vector3 pos)
 {
     randLight.position = pos;
-
-    int randColor = rand() % 5;
-
-    switch (randColor)
-    {
-    case 0:
-        randLight.color = RED;
-        break;
-    case 1:
-        randLight.color = GREEN;
-        break;
-    case 2:
-        randLight.color = BLUE;
-        break;
-    case 3:
-        randLight.color = PURPLE;
-        break;
-    case 4:
-        randLight.color = GOLD;
-        break;
-    }
 }
 
 bool Player::JumpInfo::CheckJump(Vector3& t_velocity)

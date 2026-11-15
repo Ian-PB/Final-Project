@@ -1,8 +1,14 @@
 #include "Particle.h"
+#include <iostream>
 
 Particle::Particle(Model* t_model) : model(t_model)
 {
 	active = false;
+}
+
+void Particle::SetModel(Model* t_model)
+{
+	model = t_model; 
 }
 
 void Particle::Draw()
@@ -12,7 +18,7 @@ void Particle::Draw()
 
 	if (model != nullptr)
 	{
-		DrawModelEx(*model, position, Vector3Ones, rotation, scale, WHITE);
+		DrawModelEx(*model, position, Vector3Ones, rotation, scale, color);
 	}
 	else
 		DrawSphere(position, scale.x, color);
@@ -25,6 +31,12 @@ void Particle::Update()
 
 	if (gravityOn)
 		velocity.y += gravityForce;
+
+	if (position.y < -5.0f)
+	{
+		active = false;
+		return;
+	}
 
 	scale = Vector3Scale(scale, 0.99f);
 	if (scale.x < MIN_SCALE)
@@ -46,6 +58,8 @@ void Particle::Spawn(Vector3 t_pos, Vector3 t_dir, float t_speed, float t_scale,
 	position = t_pos;
 	scale = { t_scale, t_scale, t_scale };
 	rotation = rand() % 360;
+
+	// Coloring
 	color = t_col;
 
 	velocity = Vector3Scale(t_dir, t_speed);

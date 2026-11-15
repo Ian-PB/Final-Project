@@ -1,10 +1,17 @@
 #include "BaseBuildingBlock.h"
 #include <raymath.h>
 #include <algorithm>
+#include <memory>
 
 const float BaseBuildingBlock::MIN_SCALE = 0.02f;
+const float BaseBuildingBlock::SIGNED_DIST_SKIN = 0.15f;
 
 BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
+{
+	
+}
+
+void BaseBuildingBlock::InitModel()
 {
 	model = LoadModelFromMesh(GenMeshCube(1, 1, 1));
 
@@ -14,11 +21,13 @@ BaseBuildingBlock::BaseBuildingBlock(const Camera& t_cam) : CAMERA(t_cam)
 
 void BaseBuildingBlock::Draw(EditTypes t_editType)
 {
-	DrawModel(model, { 0, 0, 0 }, 1.0f, WHITE);
-	DrawModelWires(model, { 0, 0, 0 }, 1.0f, DARKGRAY);
+	DrawModel(model, { 0, 0, 0 }, 1.0f, color);
+	DrawModelWires(model, { 0, 0, 0 }, 1.0f, BLACK);
 
 	if (!selected)
 		return;
+
+	DrawBoundingBox(bounds, PURPLE);
 
 	switch (t_editType)
 	{
@@ -84,6 +93,28 @@ RayCollision BaseBuildingBlock::CheckIfClicked(const Ray& ray)
 	RayCollision collision = GetRayCollisionMesh(ray, model.meshes[0], transform);
 
 	return collision;
+}
+
+bool BaseBuildingBlock::ChangePointDensity(Vector3 t_point, float& t_density)
+{
+	float signedDist = SignedDist(t_point);
+	float startDensity = t_density;
+
+	float newDensity = Clamp(signedDist, -1, 1);
+
+	if (newDensity == 1.0f)
+		return false;
+
+	// Building
+	t_density = std::min(t_density, newDensity);
+
+	// If not the same as before return true
+	return startDensity != t_density;
+}
+
+std::shared_ptr<BaseBuildingBlock> BaseBuildingBlock::CreateClone()
+{
+	return std::make_shared<BaseBuildingBlock>(*this);
 }
 
 void BaseBuildingBlock::Move()
@@ -334,6 +365,54 @@ void BaseBuildingBlock::ScaleDraw()
 	}
 }
 
+void BaseBuildingBlock::UpdateBounds()
+{
+	// 0.5 since base cube is 1 on each axis
+	Vector3 corners[8] =
+	{
+		{-0.5f, -0.5f, -0.5f}, // 0
+		{ 0.5f, -0.5f, -0.5f}, // 1
+		{-0.5f,  0.5f, -0.5f}, // 2
+		{ 0.5f,  0.5f, -0.5f}, // 3
+		{-0.5f, -0.5f,  0.5f}, // 4
+		{ 0.5f, -0.5f,  0.5f}, // 5
+		{-0.5f,  0.5f,  0.5f}, // 6
+		{ 0.5f,  0.5f,  0.5f}  // 7
+	};
+
+	// Apply the rotation, scale and position
+	Vector3 firstPoint = Vector3Transform(corners[0], transform);
+
+	bounds.min = firstPoint;
+	bounds.max = firstPoint;
+
+	for (int i = 1; i < 8; i++)
+	{
+		Vector3 point = Vector3Transform(corners[i], transform);
+
+		// If less than current
+		bounds.min = Vector3Min(bounds.min, point);
+		// If more than current
+		bounds.max = Vector3Max(bounds.max, point);
+	}
+}
+
+// https://iquilezles.org/articles/distfunctions/
+float BaseBuildingBlock::SignedDist(Vector3 t_pointPos)
+{
+	// Invert removes the position, scale and rotation
+	Matrix transformInv = MatrixInvert(transform);
+	Vector3 halfDimensions = { 0.5f + SIGNED_DIST_SKIN, 0.5f + SIGNED_DIST_SKIN, 0.5f + SIGNED_DIST_SKIN };
+
+	// Convert to local coords
+	Vector3 localPoint = Vector3Transform(t_pointPos, transformInv);
+
+	Vector3 absPointPos = { std::abs(localPoint.x), std::abs(localPoint.y), std::abs(localPoint.z) };
+	Vector3 q = Vector3Subtract(absPointPos, halfDimensions);
+
+	return Vector3Length(Vector3Max(q, Vector3Zero())) + std::min(std::max(q.x, std::max(q.y, q.z)), 0.0f);
+}
+
 void BaseBuildingBlock::UpdateTransformMatrix()
 {
 	Matrix scaleMatrix = MatrixScale(scale.x, scale.y, scale.z);
@@ -348,6 +427,7 @@ void BaseBuildingBlock::UpdateTransformMatrix()
 	);
 
 	model.transform = transform;
+	UpdateBounds();
 }
 
 Axis BaseBuildingBlock::CheckArrowSelectedOn()
@@ -430,11 +510,6 @@ Axis BaseBuildingBlock::CheckCircleSelectedOn()
 
 	// Return -1 if none pressed
 	return axis;
-}
-
-RayCollision BaseBuildingBlock::GetCircleCollision(const Ray& ray, float radius)
-{
-	return RayCollision();
 }
 
 void BaseBuildingBlock::UpdateArrowBounds()

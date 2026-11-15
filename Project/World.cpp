@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <raymath.h>
 #include "Lighting.h"
+#include "StructurePaster.h"
+#include "CavernNoise.h"
 
 World::World() : light(Lighting::CreateLight(RAYWHITE))
 {
@@ -20,6 +22,9 @@ World::World() : light(Lighting::CreateLight(RAYWHITE))
     float chunkSize = chunks[0][0][0].GetChunkSize();
     light.position = { WIDTH * chunkSize * 0.5f, HEIGHT * chunkSize * 0.5f, DEPTH * chunkSize * 0.5f };
     light.strength = 60.0f;
+
+    noise = std::make_shared<CavernNoise>(GetSizeDimensions());
+    noise->Init();
 }
 
 World::~World()
@@ -47,14 +52,14 @@ void World::Init()
             {
                 Vector3 newPos = { chunks[x][y][z].GetChunkSize() * x, chunks[x][y][z].GetChunkSize() * y, chunks[x][y][z].GetChunkSize() * z };
                 chunks[x][y][z].SetPosition(newPos);
-                chunks[x][y][z].Init(&noise, &Lighting::lightingShader);
+                chunks[x][y][z].Init(noise, &Lighting::lightingShader);
             }
         }
     }
 
     // Make world
     noiseSeed = (int)(rand() % 9999);
-    noise.SetSeed(noiseSeed);
+    noise->SetSeed(noiseSeed);
     completeRebuild = true;
 
     // Reset densities
@@ -183,6 +188,17 @@ void World::WorkerLoop()
     }
 }
 
+Vector3 World::GetSizeDimensions() const
+{
+    Vector3 dimensions = GetDimensions(); // Based on chunks
+    float chunkSize = chunks[0][0][0].GetChunkSize();
+    dimensions.x *= chunkSize;
+    dimensions.y *= chunkSize;
+    dimensions.z *= chunkSize;
+
+    return dimensions;
+}
+
 Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
 {
     float chunkSize = chunks[0][0][0].GetChunkSize();
@@ -198,6 +214,24 @@ Chunk& World::GetChunkFromWorldPos(Vector3 t_pos)
     z = std::clamp(z, 0, DEPTH - 1);
 
     return chunks[x][y][z];
+}
+
+std::vector<Chunk*> World::GetAllChunks()
+{
+    std::vector<Chunk*> allChunks;
+
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                allChunks.push_back(&chunks[x][y][z]);
+            }
+        }
+    }
+
+    return allChunks;
 }
 
 std::vector<Chunk*> World::GetChunksInBounds(BoundingBox t_bounds)
@@ -301,6 +335,9 @@ void World::UpdateAllChunks()
     if (jobsRemaining > 0)
         return;
 
+    // Randomize the surfaceLevel
+    RandomizeSurfaceLevel();
+
     std::lock_guard<std::mutex> lock(jobMutex);
 
     for (int i = 0; i < totalChunks; i++)
@@ -322,13 +359,13 @@ void World::UpdateAllChunks()
 void World::NoiseWorldGen()
 {
     noiseSeed = (int)(rand() % 9999);
-    noise.SetSeed(noiseSeed);
+    noise->SetSeed(noiseSeed);
     completeRebuild = true;
 
     UpdateAllDensities();
 }
 
-void World::HollowBoxWorldGen()
+void World::TestWorldGen()
 {
     completeRebuild = true;
 
@@ -353,6 +390,52 @@ void World::HollowBoxWorldGen()
             }
         }
     }
+
+    Vector3 center = GetSizeDimensions();
+    center.x = center.x / 2.0f;
+    center.y = 1;
+    center.z = center.z / 2.0f;
+
+    StructureExport testLevel = StructurePaster::GetStructureFromFile(StructureTypes::World, "Test Level");
+    StructurePaster::PlaceStructure(*this, testLevel, center);
+}
+
+void World::RandomizeSurfaceLevel()
+{
+    float random = (float)rand() / (float)RAND_MAX;
+    float range = MAX_SURFACE_LEVEL - MIN_SURFACE_LEVEL;
+
+    surfaceLevel = (random * range) + MIN_SURFACE_LEVEL;
+}
+
+void World::EmptyWorldGen()
+{
+    completeRebuild = true;
+
+    for (int x = 0; x < WIDTH; x++)
+    {
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            for (int z = 0; z < DEPTH; z++)
+            {
+                chunks[x][y][z].ClearChunk();
+            }
+        }
+    }
+}
+
+void World::QueueChunkChangeAtPos(Vector3 t_pos)
+{
+    int chunkIndex = GetChunkIndexFromWorldPos(t_pos);
+
+    {
+        std::lock_guard<std::mutex> lock(jobMutex);
+
+        chunksThatNeedWork.push(chunkIndex);
+        jobsRemaining++;
+    }
+
+    jobCondition.notify_one();
 }
 
 void World::KeyboardInputs()
@@ -363,27 +446,8 @@ void World::KeyboardInputs()
     }
     else if (IsKeyReleased(KEY_C))
     {
-        HollowBoxWorldGen();
+        TestWorldGen();
     }
-
-    //if (IsKeyDown(KEY_UP))
-    //{
-    //    surfaceLevel += 0.01f;
-
-    //    if (surfaceLevel > 1.0f)
-    //        surfaceLevel = 1.0f;
-
-    //    completeRebuild = true;
-    //}
-    //else if (IsKeyDown(KEY_DOWN))
-    //{
-    //    surfaceLevel -= 0.01f;
-
-    //    if (surfaceLevel < -1.0f)
-    //        surfaceLevel = -1.0f;
-
-    //    completeRebuild = true;
-    //}
 }
 
 // FastNoiseLite is a library I added
@@ -395,9 +459,7 @@ void World::SetupNoise()
 
 void World::UpdatedSeed()
 {
-    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    noise.SetFrequency(frequency);
-    noise.SetSeed(noiseSeed);
+    noise->SetSeed(noiseSeed);
 }
 
 void World::UpdateAllDensities()

@@ -6,15 +6,17 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <memory>
+
 #include "Lighting.h"
 
 class World
 {
 // Needs to be before the getChunks function
 private:
-	static const int WIDTH = 5;
-	static const int HEIGHT = 5;
-	static const int DEPTH = 5;
+	static const int WIDTH = 8;
+	static const int HEIGHT = 6;
+	static const int DEPTH = 8;
 
 public:
 	World();
@@ -26,8 +28,10 @@ public:
 	void Update();
 
 	Vector3 GetDimensions() const { return { WIDTH, HEIGHT, DEPTH }; }
+	Vector3 GetSizeDimensions() const;
 	const Chunk& GetChunk(int x, int y, int z) const { return chunks[x][y][z]; }
 	Chunk& GetChunkFromWorldPos(Vector3 t_pos);
+	std::vector<Chunk*> GetAllChunks();
 	std::vector<Chunk*> GetChunksInBounds(BoundingBox t_bounds);
 
 	int GetChunkIndexFromWorldPos(Vector3 t_pos);
@@ -35,18 +39,25 @@ public:
 
 	// World editting
 	void EditSphere(Vector3 t_pos, float t_radius, bool destroy = true);
+	void EmptyWorldGen();
+
+	void QueueChunkChangeAtPos(Vector3 t_pos);
 
 private:
 	void UpdateAllChunks();
 
 	// World Gen TEMP
 	void NoiseWorldGen();
-	void HollowBoxWorldGen();
+	void TestWorldGen();
 
 	// World Dimensions
 	int totalChunks = 0;
 	Chunk chunks[WIDTH][HEIGHT][DEPTH];
 
+	// Surface Level
+	void RandomizeSurfaceLevel();
+	const float MIN_SURFACE_LEVEL = -0.5f;
+	const float MAX_SURFACE_LEVEL = 0.2f;
 	float surfaceLevel = 0.0f;
 
 	bool completeRebuild = false;
@@ -55,8 +66,7 @@ private:
 	void SetupNoise();
 	void UpdatedSeed();
 	void UpdateAllDensities();
-	FastNoiseLite noise;
-	float frequency = 0.1f;
+	std::shared_ptr<BaseNoise> noise;
 	int noiseSeed;
 
 	// Multi-threading

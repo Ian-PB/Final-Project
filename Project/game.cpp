@@ -12,14 +12,15 @@ void Game::Init()
     world.InitColliders();
     MeshCollider::AddTrackedPos(player->GetPosRef());
 
+    Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
+    player->SetPos(worldCenter);
+
     pauseMenu = std::make_shared<PauseMenu>(*player, world);
 }
 
 void Game::Draw()
 {
     BeginMode3D(player->GetCameraRef());
-
-        DrawPlane({ 0.0f, 0.0f, 0.0f }, { 32.0f, 32.0f }, LIGHTGRAY); // Draw ground
 
         world.Draw();
         player->Draw();
