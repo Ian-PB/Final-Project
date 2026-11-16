@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Noise">
       <UniqueIdentifier>{9d3b0468-d96f-4392-aa08-8207953cf4dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Networking">
+      <UniqueIdentifier>{f4df2284-eca6-432d-b342-0ba196b41e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networking">
+      <UniqueIdentifier>{02df4386-8c04-4bfe-bc3a-939dce520d84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -131,6 +137,12 @@
     </ClCompile>
     <ClCompile Include="CavernNoise.cpp">
       <Filter>Source Files\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkObject.cpp">
+      <Filter>Source Files\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files\Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="CavernNoise.h">
       <Filter>Header Files\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkObject.h">
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Header Files\Networking</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
