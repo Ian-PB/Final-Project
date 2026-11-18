@@ -68,9 +68,9 @@ void Player::Update()
     camera->Update();
     Movement();
 
-    if (IsMouseButtonReleased(0))
+    if (IsMouseButtonPressed(0))
         ShootRay();
-    if (IsMouseButtonReleased(1))
+    if (IsMouseButtonPressed(1))
     {
         breaking = !breaking;
         bomb->SetBreaking(breaking);
@@ -154,6 +154,44 @@ void Player::Draw2D()
 
     // Crossair
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);
+}
+
+std::vector<char> Player::Serialise()
+{
+    std::vector<char> buffer;
+
+    auto write = [&](const void* data, size_t size) {
+        const char* bytes = reinterpret_cast<const char*>(data);
+        buffer.insert(buffer.end(), bytes, bytes + size);
+        };
+
+    uint32_t len = 0;
+
+    write(&len, sizeof(len));
+    write(&index, sizeof(index));
+
+    // Specific to class
+    write(&position, sizeof(position));
+
+    // Set true length of buffer
+    len = static_cast<uint32_t>(buffer.size());
+    memcpy(buffer.data(), &len, sizeof(len));
+
+    return buffer;
+}
+
+NetworkObject* Player::UpdateFromDeserialisation(const char* t_data)
+{
+    size_t offset = 0;
+
+    auto read = [&](void* out, size_t s) {
+        memcpy(out, t_data + offset, s);
+        offset += s;
+        };
+
+    read(&this->position, sizeof(this->position));
+
+    return this;
 }
 
 void Player::UpdatePositions()

@@ -37,8 +37,8 @@ public:
 
 	void SetPos(Vector3 t_pos) { position = t_pos; }
 
-	virtual std::vector<char> Serialise(const std::shared_ptr<NetworkObject> t_packet) override;
-	virtual void Deserialise(const char* t_data, size_t t_size) override;
+	virtual std::vector<char> Serialise() override;
+	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
 private:
 	void UpdatePositions();

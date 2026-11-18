@@ -1,7 +1,10 @@
 #include "Server.h"
 #include <WinSock2.h>
+#include <ws2def.h>
+#include <iostream>
 
 #include "NetworkObject.h"
+#include "NetworkManager.h"
 
 Server::~Server()
 {
@@ -11,6 +14,9 @@ Server::~Server()
 
 void Server::Init()
 {
+	struct sockaddr_in server;
+	WSADATA wsa;
+
 	slen = sizeof(si_other);
 
 	// Initialise winsock
@@ -29,6 +35,10 @@ void Server::Init()
 	}
 	printf("Socket created.\n");
 
+	// Set listening socket to NON-BLOCKING
+	u_long mode = 1;
+	ioctlsocket(s, FIONBIO, &mode);
+
 	// Prepare the sockaddr_in structure
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = INADDR_ANY;
@@ -41,31 +51,52 @@ void Server::Init()
 		exit(EXIT_FAILURE);
 	}
 	puts("Bind done");
+
+	SetServerIP();
 }
 
-void Server::ListenForData()
+void Server::Update()
 {
-	printf("Waiting for data...");
-	fflush(stdout);
+	char buf[BUFLEN];
+	struct sockaddr_in temp_si_other;
+	int temp_slen = sizeof(temp_si_other);
+	memset(buf, '\0', BUFLEN);
 
-	// Clear the buffer by filling null, it might have previously received data
-	memset(buffer, '\0', BUFLEN);
+	int recv_len = SOCKET_ERROR;
 
-	// Try to receive some data, this is a blocking call
-	if ((recv_len = recvfrom(s, buffer, BUFLEN, 0, (struct sockaddr*)&si_other, &slen)) == SOCKET_ERROR)
+	// Check for data
+	while (true)
 	{
-		printf("recvfrom() failed with error code : %d", WSAGetLastError());
-		exit(EXIT_FAILURE);
+		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr*)&temp_si_other, &slen);
+		if (recv_len == SOCKET_ERROR && WSAGetLastError() == WSAECONNRESET)
+			continue;
+
+		break;
 	}
 
-	// Print details of the client/peer and the data received
-	printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-	printf("Data: %s\n", buffer);
+	if (recv_len == SOCKET_ERROR)
+		return;
 
-	// Now reply the client with the same data
-	if (sendto(s, buffer, recv_len, 0, (struct sockaddr*)&si_other, slen) == SOCKET_ERROR)
+	// Deserialise
+	NetworkObject* obj = NetworkObject::DeserialiseBase(buf, recv_len);
+	if (obj == nullptr)
 	{
-		printf("sendto() failed with error code : %d", WSAGetLastError());
-		exit(EXIT_FAILURE);
+		std::cout << "Object == nullptr" << std::endl;
+		return;
 	}
+	else if (obj->GetIndex() < 0 || obj->GetIndex() >= NetworkManager::GetSize())
+	{
+		std::cout << "Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
+		return;
+	}
+}
+
+void Server::SetServerIP()
+{
+	char hostname[256];
+	gethostname(hostname, 256);
+	struct hostent* hostInfo = gethostbyname(hostname);
+	struct in_addr addr;
+	memcpy(&addr, hostInfo->h_addr_list[0], sizeof(struct in_addr));
+	serverIpAddress = inet_ntoa(addr);
 }

@@ -1,5 +1,14 @@
 #pragma once
 
+#ifndef NOGDI
+#define NOGDI
+#endif
+
+#ifndef NOUSER
+#define NOUSER
+#endif
+
+#define WIN32_LEAN_AND_MEAN
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #pragma comment(lib, "Ws2_32.lib")
 #include<winsock2.h>
@@ -7,6 +16,11 @@
 #include <vector>
 #include <memory>
 #include <ws2def.h>
+
+#undef PlaySound
+#undef CloseWindow
+#undef Rectangle
+#undef ShowCursor
 
 class NetworkObject;
 
@@ -19,7 +33,8 @@ public:
 	~Client();
 	void Init();
 
-	void SendObject(std::shared_ptr<NetworkObject> t_object);
+	void Update();
+	void SendObject(NetworkObject* t_object);
 
 	// Only 1 server ever
 	static void SetServerIP(std::string t_serverIP) { serverIP = t_serverIP; }
@@ -31,10 +46,10 @@ private:
 	// IP address of UDP server
 	static std::string serverIP;
 
-	static struct sockaddr_in si_other;
-	static int s;
-	static int slen;
-	static char buffer[BUFLEN];
+	struct sockaddr_in si_other;
+	int s;
+	int slen;
+	char buffer[BUFLEN];
 
 	WSADATA wsa;
 };

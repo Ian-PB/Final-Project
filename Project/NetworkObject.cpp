@@ -9,7 +9,7 @@ NetworkObject::NetworkObject()
 	index = NetworkManager::AddObject(this);
 }
 
-void NetworkObject::DeserialiseBase(const char* t_data, size_t t_size)
+NetworkObject* NetworkObject::DeserialiseBase(const char* t_data, size_t t_size)
 {
 	size_t offset = 0;
 
@@ -24,8 +24,15 @@ void NetworkObject::DeserialiseBase(const char* t_data, size_t t_size)
 	int objIndex;
 	read(&objIndex, sizeof(objIndex));
 
+	// Check if in range
+	if (objIndex < 0 || objIndex >= NetworkManager::GetSize())
+	{
+		std::cout << "Object not in NetworkObjects vector - " << objIndex << std::endl;
+		return nullptr;
+	}
+
 	// Get the object
 	NetworkObject* obj = NetworkManager::GetObjectAt(objIndex);
 	// Deserialize object
-	obj->Deserialise(t_data, t_size);
+	return obj->UpdateFromDeserialisation(t_data);
 }

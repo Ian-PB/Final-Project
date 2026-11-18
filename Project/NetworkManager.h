@@ -8,6 +8,7 @@ public:
 	static int AddObject(NetworkObject* t_newObj);
 	static NetworkObject* GetObjectAt(int t_i) { return networkObjects[t_i]; }
 
+	static int GetSize() { return networkObjects.size(); }
 private:
 	static std::vector<NetworkObject*> networkObjects;
 };
