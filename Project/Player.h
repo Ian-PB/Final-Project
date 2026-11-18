@@ -40,7 +40,10 @@ public:
 	virtual std::vector<char> Serialise() override;
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
+	void SetOwner(bool t_b) { isOwner = t_b; }
 private:
+	bool isOwner = false;
+
 	void UpdatePositions();
 
 	void Movement();

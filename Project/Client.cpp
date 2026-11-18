@@ -40,14 +40,35 @@ void Client::Init()
 	// Set listening socket to NON-BLOCKING
 	u_long mode = 1;
 	ioctlsocket(s, FIONBIO, &mode);
+
+	SendJoinMsg();
+}
+
+void Client::SendJoinMsg()
+{
+	uint8_t packet = static_cast<uint8_t>(PacketType::JoinRequest);
+
+	// Send the packet
+	if (sendto(s, reinterpret_cast<const char*>(&packet), sizeof(packet), 0, (struct sockaddr*)&si_other, slen) == SOCKET_ERROR)
+	{
+		printf("sendto() failed with error code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+
+	std::cout << "JOIN sent to server" << std::endl;
 }
 
 void Client::Update()
 {
-	// Send all objects to server
-	for (int i = 0; i < NetworkManager::GetSize(); i++)
+	// Only send objects when joined
+	if (joined)
 	{
-		SendObject(NetworkManager::GetObjectAt(i));
+		int playerIndex = clientID + 1;
+
+		if (playerIndex >= 0 && playerIndex < NetworkManager::GetSize())
+		{
+			SendObject(NetworkManager::GetObjectAt(playerIndex));
+		}
 	}
 
 	char buf[BUFLEN];
@@ -59,18 +80,45 @@ void Client::Update()
 	if (recv_len == SOCKET_ERROR)
 		return;
 
-	NetworkObject* obj = NetworkObject::Deserialise(buf, recv_len);
-	if (obj == nullptr)
+	PacketType type = static_cast<PacketType>(static_cast<uint8_t>(buf[0]));
+
+	if (type == PacketType::JoinAccepted)
 	{
-		std::cout << "Object == nullptr" << std::endl;
-		return;
+		uint32_t networkID;
+		memcpy(&networkID, buf + 1, sizeof(networkID));
+
+		clientID = static_cast<int>(ntohl(networkID));
+		joined = true;
+
+		std::cout << "Joined server - Client ID: " << clientID << std::endl;
+	}
+	else if (type == PacketType::NetworkObjectUpdate)
+	{
+		NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
+		if (obj == nullptr)
+		{
+			std::cout << "Object == nullptr" << std::endl;
+			return;
+		}
 	}
 }
 
 void Client::SendObject(NetworkObject* t_object)
 {
+	auto data = t_object->Serialise();
+
+	// Check that adding the packet type wont go over the limit
+	if (data.size() + 1 > BUFLEN)
+		return;
+
 	// Serialise
-	auto packet = t_object->Serialise();
+	std::vector<char> packet;
+	packet.reserve(data.size() + 1);
+	packet.push_back(static_cast<char>(PacketType::NetworkObjectUpdate));
+
+	// Inset the packet data after the type
+	packet.insert(packet.end(), data.begin(), data.end());
+
 	uint32_t packetSize = (uint32_t)packet.size();
 
 	// Send the packet

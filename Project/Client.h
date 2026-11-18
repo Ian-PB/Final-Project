@@ -32,6 +32,7 @@ class Client
 public:
 	~Client();
 	void Init();
+	void SendJoinMsg();
 
 	void Update();
 	void SendObject(NetworkObject* t_object);
@@ -40,12 +41,16 @@ public:
 	static void SetServerIP(std::string t_serverIP) { serverIP = t_serverIP; }
 	static std::string GetServerIP() { return serverIP; }
 
+	int GetClientID() const { return clientID; }
+
 private:
-	addrinfo hints;
+	int clientID = -1;
+	bool joined = false;
 
 	// IP address of UDP server
 	static std::string serverIP;
 
+	addrinfo hints;
 	struct sockaddr_in si_other;
 	int s;
 	int slen;

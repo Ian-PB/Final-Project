@@ -5,16 +5,20 @@ void Game::Init()
     Lighting::Init();
     world.Init();
 
-    player = std::make_shared<Player>(world);
-    player->Init();
+    players.push_back(std::make_shared<Player>(world)); // P1
+    players.push_back(std::make_shared<Player>(world)); // P2
 
     world.InitColliders();
-    MeshCollider::AddTrackedPos(player->GetPosRef());
-
     Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
-    player->SetPos(worldCenter);
 
-    pauseMenu = std::make_shared<PauseMenu>(*player, world);
+    for (const std::shared_ptr<Player> player : players)
+    {
+        player->Init();
+        MeshCollider::AddTrackedPos(player->GetPosRef());
+        player->SetPos(worldCenter);
+    }
+
+    pauseMenu = std::make_shared<PauseMenu>(*players[0], world);
 
     EnableCursor();
 }
@@ -73,14 +77,25 @@ void Game::DrawJoinGame()
 
 void Game::DrawGame()
 {
-    BeginMode3D(player->GetCameraRef());
+    if (networkType == NetworkingTypes::Client)
+        BeginMode3D(players[client.GetClientID() + 1]->GetCameraRef());
+    else if (networkType == NetworkingTypes::Host)
+        BeginMode3D(players[0]->GetCameraRef());
 
         world.Draw();
-        player->Draw();
+
+        for (const std::shared_ptr<Player> player : players)
+        {
+            player->Draw();
+        }
 
     EndMode3D();
 
-    player->Draw2D();
+    if (networkType == NetworkingTypes::Client)
+        players[client.GetClientID() + 1]->Draw2D();
+    else if (networkType == NetworkingTypes::Host)
+        players[0]->Draw2D();
+    
     DrawFPS(0, 0);
 
     pauseMenu->Draw();
@@ -98,10 +113,14 @@ void Game::Update()
     {
     case NetworkingTypes::Host:
         server.Update();
+        players[0]->SetOwner(true); // TEMP
         break;
+
     case NetworkingTypes::Client:
+        players[1]->SetOwner(true); // TEMP
         client.Update();
         break;
+
     default:
         break;
     }
@@ -115,5 +134,8 @@ void Game::Update()
 
     world.Update();
 
-    player->Update();
+    if (networkType == NetworkingTypes::Client)
+        players[client.GetClientID() + 1]->Update();
+    else if (networkType == NetworkingTypes::Host)
+        players[0]->Update();
 }

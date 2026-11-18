@@ -1,6 +1,14 @@
 #pragma once
 #include "NetworkObject.h"
 #include <vector>
+#include <cstdint>
+
+enum class PacketType : uint8_t
+{
+	JoinRequest = 1,
+	JoinAccepted = 2,
+	NetworkObjectUpdate = 3
+};
 
 class NetworkManager
 {

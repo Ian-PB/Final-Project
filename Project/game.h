@@ -39,7 +39,7 @@ private:
 
     GameStates gameState = GameStates::ChooseNetworkType;
 
-    std::shared_ptr<Player> player;
+    std::vector<std::shared_ptr<Player>> players;
 
     World world;
 

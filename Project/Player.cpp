@@ -116,6 +116,14 @@ void Player::Draw()
 
     bomb->Draw();
 
+    if (!isOwner)
+    {
+        Vector3 end = position;
+        end.y += std::max(radius, height - radius);
+        DrawCapsule(position, end, radius, 10, 10, WHITE);
+        DrawCapsuleWires(position, end, radius, 10, 10, BLACK);
+    }
+
     collider.Draw();
 
     testParticles->Draw();
