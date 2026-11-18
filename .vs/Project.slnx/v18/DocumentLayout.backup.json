@@ -3,20 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkObject.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\NetworkObject.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkObject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\NetworkObject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\NetworkManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,17 +38,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Server.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp",
               "RelativeDocumentMoniker": "Project\\Server.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp",
               "RelativeToolTip": "Project\\Server.cpp",
-              "ViewState": "AgIAADEAAAAAAAAAAAAUwD8AAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAEAAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-16T21:30:23.658Z",
               "IsPinned": true,
@@ -44,7 +56,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "Server.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.h",
               "RelativeDocumentMoniker": "Project\\Server.h",
@@ -53,18 +65,17 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-16T21:23:18.611Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "NetworkObject.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkObject.cpp",
               "RelativeDocumentMoniker": "Project\\NetworkObject.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkObject.cpp",
               "RelativeToolTip": "Project\\NetworkObject.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-16T00:21:11.254Z",
               "IsPinned": true,
@@ -72,16 +83,56 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "NetworkObject.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkObject.h",
               "RelativeDocumentMoniker": "Project\\NetworkObject.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkObject.h",
               "RelativeToolTip": "Project\\NetworkObject.h",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-16T00:16:27.096Z",
               "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Client.cpp",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Client.cpp",
+              "RelativeDocumentMoniker": "Project\\Client.cpp",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Client.cpp",
+              "RelativeToolTip": "Project\\Client.cpp",
+              "ViewState": "AgIAAA0AAAAAAAAAAABBwCgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-17T22:25:00.211Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Client.h",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Client.h",
+              "RelativeDocumentMoniker": "Project\\Client.h",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Client.h",
+              "RelativeToolTip": "Project\\Client.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-17T22:23:30.857Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NetworkManager.cpp",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkManager.cpp",
+              "RelativeDocumentMoniker": "Project\\NetworkManager.cpp",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\NetworkManager.cpp",
+              "RelativeToolTip": "Project\\NetworkManager.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-18T00:21:52.965Z",
               "EditorCaption": ""
             }
           ]

@@ -1,6 +1,8 @@
 #include "Server.h"
 #include <WinSock2.h>
 
+#include "NetworkObject.h"
+
 Server::~Server()
 {
 	closesocket(s);

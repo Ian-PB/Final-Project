@@ -8,6 +8,7 @@
 #include "Chunk.h"
 #include "ParticleSpawner.h"
 #include "Bomb.h"
+#include "NetworkObject.h"
 
 
 // Reading on Character Controllers
@@ -21,7 +22,7 @@ class AerialState;
 class SlidingState;
 class CrouchingState;
 
-class Player
+class Player : public NetworkObject
 {
 public:
 	Player(World& t_world);
@@ -35,6 +36,10 @@ public:
 	Camera& GetCameraRef() { return camera->GetCameraRef(); }
 
 	void SetPos(Vector3 t_pos) { position = t_pos; }
+
+	virtual std::vector<char> Serialise(const std::shared_ptr<NetworkObject> t_packet) override;
+	virtual void Deserialise(const char* t_data, size_t t_size) override;
+
 private:
 	void UpdatePositions();
 

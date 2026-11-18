@@ -7,7 +7,7 @@
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
-Player::Player(World& t_world) : WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
+Player::Player(World& t_world) : NetworkObject(), WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
     shootRayCollision.distance = 9999.0f;

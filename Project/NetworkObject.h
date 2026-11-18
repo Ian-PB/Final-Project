@@ -7,12 +7,14 @@
 class NetworkObject
 {
 public:
-	NetworkObject(int t_id);
+	NetworkObject();
 
-	virtual std::vector<char> Serialise(const std::shared_ptr<NetworkObject> t_packet) = 0;
-	virtual std::shared_ptr<NetworkObject> Deserialise(const char* t_data, size_t t_size) = 0;
+	static void DeserialiseBase(const char* t_data, size_t t_size);
+
+	virtual std::vector<char> Serialise(const std::shared_ptr<NetworkObject> t_packet) {}
+	virtual void Deserialise(const char* t_data, size_t t_size) {}
 
 protected:
-	int id = -1; // Index for vector
+	int index = -1;
 };
 
