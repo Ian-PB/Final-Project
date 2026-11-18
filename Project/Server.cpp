@@ -78,7 +78,7 @@ void Server::Update()
 		return;
 
 	// Deserialise
-	NetworkObject* obj = NetworkObject::DeserialiseBase(buf, recv_len);
+	NetworkObject* obj = NetworkObject::Deserialise(buf, recv_len);
 	if (obj == nullptr)
 	{
 		std::cout << "Object == nullptr" << std::endl;

@@ -9,7 +9,7 @@ NetworkObject::NetworkObject()
 	index = NetworkManager::AddObject(this);
 }
 
-NetworkObject* NetworkObject::DeserialiseBase(const char* t_data, size_t t_size)
+NetworkObject* NetworkObject::Deserialise(const char* t_data, size_t t_size)
 {
 	size_t offset = 0;
 
@@ -34,5 +34,5 @@ NetworkObject* NetworkObject::DeserialiseBase(const char* t_data, size_t t_size)
 	// Get the object
 	NetworkObject* obj = NetworkManager::GetObjectAt(objIndex);
 	// Deserialize object
-	return obj->UpdateFromDeserialisation(t_data);
+	return obj->UpdateFromDeserialisation(t_data + offset);
 }

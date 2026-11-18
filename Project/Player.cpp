@@ -190,6 +190,7 @@ NetworkObject* Player::UpdateFromDeserialisation(const char* t_data)
         };
 
     read(&this->position, sizeof(this->position));
+    UpdatePositions();
 
     return this;
 }
