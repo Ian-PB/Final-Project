@@ -7,7 +7,8 @@ enum class PacketType : uint8_t
 {
 	JoinRequest = 1,
 	JoinAccepted = 2,
-	NetworkObjectUpdate = 3
+	UpdateNetworkObject = 3,
+	SpawnNetworkObject = 4
 };
 
 class NetworkManager

@@ -17,5 +17,7 @@ public:
 	int GetIndex() const { return index; }
 protected:
 	int index = -1;
+
+	int owner = -1; // 0 = Host, Anything above is a client
 };
 

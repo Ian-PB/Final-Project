@@ -78,7 +78,7 @@ void Game::DrawJoinGame()
 void Game::DrawGame()
 {
     if (networkType == NetworkingTypes::Client)
-        BeginMode3D(players[client.GetClientID() + 1]->GetCameraRef());
+        BeginMode3D(players[client.GetClientID()]->GetCameraRef());
     else if (networkType == NetworkingTypes::Host)
         BeginMode3D(players[0]->GetCameraRef());
 
@@ -92,7 +92,7 @@ void Game::DrawGame()
     EndMode3D();
 
     if (networkType == NetworkingTypes::Client)
-        players[client.GetClientID() + 1]->Draw2D();
+        players[client.GetClientID()]->Draw2D();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Draw2D();
     
@@ -135,7 +135,7 @@ void Game::Update()
     world.Update();
 
     if (networkType == NetworkingTypes::Client)
-        players[client.GetClientID() + 1]->Update();
+        players[client.GetClientID()]->Update();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Update();
 }

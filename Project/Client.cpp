@@ -92,7 +92,7 @@ void Client::Update()
 
 		std::cout << "Joined server - Client ID: " << clientID << std::endl;
 	}
-	else if (type == PacketType::NetworkObjectUpdate)
+	else if (type == PacketType::UpdateNetworkObject)
 	{
 		NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
 		if (obj == nullptr)
@@ -100,6 +100,13 @@ void Client::Update()
 			std::cout << "Object == nullptr" << std::endl;
 			return;
 		}
+	}
+	// When an object needs to be spawned this is recieved
+	else if (type == PacketType::SpawnNetworkObject)
+	{
+		// Add object to networkObjects
+
+		// Send to Server
 	}
 }
 
@@ -114,7 +121,7 @@ void Client::SendObject(NetworkObject* t_object)
 	// Serialise
 	std::vector<char> packet;
 	packet.reserve(data.size() + 1);
-	packet.push_back(static_cast<char>(PacketType::NetworkObjectUpdate));
+	packet.push_back(static_cast<char>(PacketType::UpdateNetworkObject));
 
 	// Inset the packet data after the type
 	packet.insert(packet.end(), data.begin(), data.end());

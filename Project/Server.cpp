@@ -100,7 +100,7 @@ void Server::Update()
 
 		SendJoinAccepted(sender, id);
 	}
-	else if (type == PacketType::NetworkObjectUpdate)
+	else if (type == PacketType::UpdateNetworkObject)
 	{
 		// Deserialise
 		NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
@@ -114,6 +114,13 @@ void Server::Update()
 			std::cout << "Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
 			return;
 		}
+	}
+	// When an object needs to be spawned this is recieved
+	else if (type == PacketType::SpawnNetworkObject)
+	{
+		// Add object to networkObjects
+		
+		// Send to all clients besides owner
 	}
 }
 
@@ -161,7 +168,7 @@ void Server::CreateNewClient(struct sockaddr_in t_sender, int& t_index)
 
 	clients.push_back(newClient);
 
-	t_index = static_cast<int>(clients.size()) - 1;
+	t_index = static_cast<int>(clients.size());
 
 	std::cout << "New client joined - ID: " << newClient.id << std::endl;
 }
@@ -179,7 +186,7 @@ void Server::SendObjectToClients(NetworkObject* t_object)
 	// Serialise
 	std::vector<char> packet;
 	packet.reserve(data.size() + 1);
-	packet.push_back(static_cast<char>(PacketType::NetworkObjectUpdate));
+	packet.push_back(static_cast<char>(PacketType::UpdateNetworkObject));
 
 	// Inset the packet data after the type
 	packet.insert(packet.end(), data.begin(), data.end());
