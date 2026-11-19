@@ -168,7 +168,7 @@ void Server::CreateNewClient(struct sockaddr_in t_sender, int& t_index)
 
 	clients.push_back(newClient);
 
-	t_index = static_cast<int>(clients.size());
+	t_index = static_cast<int>(clients.size()) - 1;
 
 	std::cout << "New client joined - ID: " << newClient.id << std::endl;
 }

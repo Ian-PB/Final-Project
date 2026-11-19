@@ -54,6 +54,7 @@ void Game::DrawPreGame()
         networkType = NetworkingTypes::Host;
         server.Init();
         optionPicked = true;
+        players[0]->SetOwner(true); // TEMP
     }
 
     rect.y += GetScreenHeight() / 2.0f;
@@ -62,6 +63,7 @@ void Game::DrawPreGame()
         networkType = NetworkingTypes::Client;
         client.Init();
         optionPicked = true;
+        players[1]->SetOwner(true); // TEMP
     }
 
     if (optionPicked)
@@ -77,8 +79,8 @@ void Game::DrawJoinGame()
 
 void Game::DrawGame()
 {
-    if (networkType == NetworkingTypes::Client)
-        BeginMode3D(players[client.GetClientID()]->GetCameraRef());
+    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
+        BeginMode3D(players[client.GetClientsPlayer()]->GetCameraRef());
     else if (networkType == NetworkingTypes::Host)
         BeginMode3D(players[0]->GetCameraRef());
 
@@ -91,8 +93,8 @@ void Game::DrawGame()
 
     EndMode3D();
 
-    if (networkType == NetworkingTypes::Client)
-        players[client.GetClientID()]->Draw2D();
+    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
+        players[client.GetClientsPlayer()]->Draw2D();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Draw2D();
     
@@ -113,11 +115,9 @@ void Game::Update()
     {
     case NetworkingTypes::Host:
         server.Update();
-        players[0]->SetOwner(true); // TEMP
         break;
 
     case NetworkingTypes::Client:
-        players[1]->SetOwner(true); // TEMP
         client.Update();
         break;
 
@@ -134,8 +134,8 @@ void Game::Update()
 
     world.Update();
 
-    if (networkType == NetworkingTypes::Client)
-        players[client.GetClientID()]->Update();
+    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
+        players[client.GetClientsPlayer()]->Update();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Update();
 }
