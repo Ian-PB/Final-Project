@@ -63,11 +63,12 @@ void Client::Update()
 	// Only send objects when joined
 	if (joined)
 	{
-		int playerIndex = clientID + 1;
+		// Send all owned objects
+		int clientObjs = GetClientsObjs();
 
-		if (playerIndex >= 0 && playerIndex < NetworkManager::GetSize())
+		for (int i = 0; i < NetworkManager::GetSize(clientObjs); i++)
 		{
-			SendObject(NetworkManager::GetObjectAt(playerIndex));
+			SendObject(NetworkManager::GetObjectAt(clientObjs, i));
 		}
 	}
 
@@ -95,6 +96,7 @@ void Client::Update()
 	else if (type == PacketType::UpdateNetworkObject)
 	{
 		NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
+
 		if (obj == nullptr)
 		{
 			std::cout << "Object == nullptr" << std::endl;

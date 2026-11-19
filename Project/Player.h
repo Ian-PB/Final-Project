@@ -25,7 +25,7 @@ class CrouchingState;
 class Player : public NetworkObject
 {
 public:
-	Player(World& t_world);
+	Player(int t_owner, World& t_world);
 	void Init();
 
 	void Update();

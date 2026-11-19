@@ -41,7 +41,7 @@ public:
 	static void SetServerIP(std::string t_serverIP) { serverIP = t_serverIP; }
 	static std::string GetServerIP() { return serverIP; }
 
-	int GetClientsPlayer() const { return clientID + 1; }
+	int GetClientsObjs() const { return clientID + 1; }
 	int GetClientID() const { return clientID; }
 
 private:

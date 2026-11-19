@@ -7,7 +7,7 @@
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
-Player::Player(World& t_world) : NetworkObject(), WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
+Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
     shootRayCollision.distance = 9999.0f;
@@ -176,6 +176,7 @@ std::vector<char> Player::Serialise()
     uint32_t len = 0;
 
     write(&len, sizeof(len));
+    write(&owner, sizeof(owner));
     write(&index, sizeof(index));
 
     // Specific to class

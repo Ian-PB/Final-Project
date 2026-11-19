@@ -58,8 +58,11 @@ void Server::Init()
 void Server::Update()
 {
 	// Only send host player
-	NetworkObject* obj = NetworkManager::GetObjectAt(0);
-	SendObjectToClients(obj);
+	for (int i = 0; i < NetworkManager::GetSize(0); i++)
+	{
+		NetworkObject* obj = NetworkManager::GetObjectAt(0, i);
+		SendObjectToClients(obj);
+	}
 
 	char buf[BUFLEN];
 
@@ -109,7 +112,7 @@ void Server::Update()
 			std::cout << "Object == nullptr" << std::endl;
 			return;
 		}
-		else if (obj->GetIndex() < 0 || obj->GetIndex() >= NetworkManager::GetSize())
+		else if (obj->GetIndex() < 0 || obj->GetIndex() >= NetworkManager::GetSize(0))
 		{
 			std::cout << "Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
 			return;

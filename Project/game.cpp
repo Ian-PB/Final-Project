@@ -5,8 +5,8 @@ void Game::Init()
     Lighting::Init();
     world.Init();
 
-    players.push_back(std::make_shared<Player>(world)); // P1
-    players.push_back(std::make_shared<Player>(world)); // P2
+    players.push_back(std::make_shared<Player>(0, world)); // P1
+    players.push_back(std::make_shared<Player>(1, world)); // P2
 
     world.InitColliders();
     Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
@@ -80,7 +80,7 @@ void Game::DrawJoinGame()
 void Game::DrawGame()
 {
     if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
-        BeginMode3D(players[client.GetClientsPlayer()]->GetCameraRef());
+        BeginMode3D(players[client.GetClientsObjs()]->GetCameraRef());
     else if (networkType == NetworkingTypes::Host)
         BeginMode3D(players[0]->GetCameraRef());
 
@@ -94,7 +94,7 @@ void Game::DrawGame()
     EndMode3D();
 
     if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
-        players[client.GetClientsPlayer()]->Draw2D();
+        players[client.GetClientsObjs()]->Draw2D();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Draw2D();
     
@@ -135,7 +135,7 @@ void Game::Update()
     world.Update();
 
     if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
-        players[client.GetClientsPlayer()]->Update();
+        players[client.GetClientsObjs()]->Update();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Update();
 }

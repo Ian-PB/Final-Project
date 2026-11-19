@@ -7,7 +7,7 @@
 class NetworkObject
 {
 public:
-	NetworkObject();
+	NetworkObject(int t_owner);
 
 	static NetworkObject* Deserialise(const char* t_data, size_t t_size);
 

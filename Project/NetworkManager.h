@@ -2,6 +2,12 @@
 #include "NetworkObject.h"
 #include <vector>
 #include <cstdint>
+#include <map>
+
+enum class ObjectType : uint8_t
+{
+	Player = 1
+};
 
 enum class PacketType : uint8_t
 {
@@ -14,11 +20,12 @@ enum class PacketType : uint8_t
 class NetworkManager
 {
 public:
-	static int AddObject(NetworkObject* t_newObj);
-	static NetworkObject* GetObjectAt(int t_i) { return networkObjects[t_i]; }
+	static int AddObject(int t_owner, NetworkObject* t_newObj);
+	static NetworkObject* GetObjectAt(int t_owner, int t_i);
 
-	static int GetSize() { return networkObjects.size(); }
+	static int GetSize(int t_array) { return networkObjects[t_array].size(); }
 private:
-	static std::vector<NetworkObject*> networkObjects;
+	// 0 is objects owned by the host
+	static std::map<int, std::vector<NetworkObject*>> networkObjects;
 };
 
