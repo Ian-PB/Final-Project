@@ -14,7 +14,8 @@ enum class PacketType : uint8_t
 	JoinRequest = 1,
 	JoinAccepted = 2,
 	UpdateNetworkObject = 3,
-	SpawnNetworkObject = 4
+	SpawnNetworkObject = 4,
+	AddNewClient = 5
 };
 
 class NetworkManager
@@ -24,6 +25,7 @@ public:
 	static NetworkObject* GetObjectAt(int t_owner, int t_i);
 
 	static int GetSize(int t_array) { return networkObjects[t_array].size(); }
+	static int AddNewVector();
 private:
 	// 0 is objects owned by the host
 	static std::map<int, std::vector<NetworkObject*>> networkObjects;

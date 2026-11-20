@@ -57,13 +57,31 @@ void Server::Init()
 
 void Server::Update()
 {
-	// Only send host player
-	for (int i = 0; i < NetworkManager::GetSize(0); i++)
+	RecievingUpdate();
+
+	SendingUpdate();
+}
+
+void Server::SendAddPlayer(const sockaddr_in& t_address, int t_clientID)
+{
+	// Send new client request
+	char packet[5];
+	packet[0] = static_cast<char>(PacketType::AddNewClient);
+
+	uint32_t networkID = htonl(static_cast<uint32_t>(t_clientID));
+	memcpy(packet + 1, &networkID, sizeof(networkID));
+
+	if (sendto(s, packet, sizeof(packet), 0, (struct sockaddr*)&t_address, sizeof(t_address)) == SOCKET_ERROR)
 	{
-		NetworkObject* obj = NetworkManager::GetObjectAt(0, i);
-		SendObjectToClients(obj);
+		printf("sendto() failed with error code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
 	}
 
+	std::cout << "Sent new client request to: " << t_clientID << std::endl;
+}
+
+void Server::RecievingUpdate()
+{
 	char buf[BUFLEN];
 
 	struct sockaddr_in sender;
@@ -114,7 +132,7 @@ void Server::Update()
 		}
 		else if (obj->GetIndex() < 0 || obj->GetIndex() >= NetworkManager::GetSize(0))
 		{
-			std::cout << "Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
+			std::cout << "SERVER -- Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
 			return;
 		}
 	}
@@ -122,8 +140,18 @@ void Server::Update()
 	else if (type == PacketType::SpawnNetworkObject)
 	{
 		// Add object to networkObjects
-		
+
 		// Send to all clients besides owner
+	}
+}
+
+void Server::SendingUpdate()
+{
+	// Send host's objects
+	for (int i = 0; i < NetworkManager::GetSize(0); i++)
+	{
+		NetworkObject* obj = NetworkManager::GetObjectAt(0, i);
+		SendObjectToClients(obj);
 	}
 }
 
@@ -174,6 +202,24 @@ void Server::CreateNewClient(struct sockaddr_in t_sender, int& t_index)
 	t_index = static_cast<int>(clients.size()) - 1;
 
 	std::cout << "New client joined - ID: " << newClient.id << std::endl;
+
+	int owner = newClient.id + 1;
+	newPlayers.push_back(owner);
+
+	// Tell the new client about all existing clients (including itself)
+	for (const ConnectedClient& client : clients)
+	{
+		SendAddPlayer(t_sender, client.id + 1);
+	}
+
+	// Tell all other clients about the new player.
+	for (const ConnectedClient& client : clients)
+	{
+		if (client.id == newClient.id)
+			continue;
+
+		SendAddPlayer(client.address, owner);
+	}
 }
 
 void Server::SendObjectToClients(NetworkObject* t_object)

@@ -39,7 +39,17 @@ public:
 	void Update();
 	std::string GetServerIp() { return serverIpAddress; }
 
+	int GetNewPlayersSize() { return newPlayers.size(); }
+	std::vector<int> GetNewPlayers() { return newPlayers; }
+	void ClearNewPlayers() { newPlayers.clear(); }
+
 private:
+	void SendAddPlayer(const sockaddr_in& t_address, int t_clientID);
+	std::vector<int> newPlayers;
+
+	void RecievingUpdate();
+	void SendingUpdate();
+
 	void SendJoinAccepted(const sockaddr_in& t_address, int t_clientID);
 	int FindClient(const sockaddr_in& t_address);
 	void CreateNewClient(struct sockaddr_in t_sender, int& t_index);

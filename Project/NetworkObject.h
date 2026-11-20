@@ -16,8 +16,9 @@ public:
 
 	int GetIndex() const { return index; }
 protected:
-	int index = -1;
+	void SerialiseBase(std::vector<char>& t_buffer);
 
+	int index = -1;
 	int owner = -1; // 0 = Host, Anything above is a client
 };
 

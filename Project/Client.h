@@ -44,7 +44,13 @@ public:
 	int GetClientsObjs() const { return clientID + 1; }
 	int GetClientID() const { return clientID; }
 
+	int GetNewPlayersSize() { return newPlayers.size(); }
+	std::vector<int> GetNewPlayers() { return newPlayers; }
+	void ClearNewPlayers() { newPlayers.clear(); }
+
 private:
+	std::vector<int> newPlayers;
+
 	int clientID = -1;
 	bool joined = false;
 

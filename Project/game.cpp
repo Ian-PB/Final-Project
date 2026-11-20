@@ -5,20 +5,13 @@ void Game::Init()
     Lighting::Init();
     world.Init();
 
-    players.push_back(std::make_shared<Player>(0, world)); // P1
-    players.push_back(std::make_shared<Player>(1, world)); // P2
 
     world.InitColliders();
     Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
 
-    for (const std::shared_ptr<Player> player : players)
-    {
-        player->Init();
-        MeshCollider::AddTrackedPos(player->GetPosRef());
-        player->SetPos(worldCenter);
-    }
+    AddPlayer(0);
 
-    pauseMenu = std::make_shared<PauseMenu>(*players[0], world);
+    pauseMenu = std::make_shared<PauseMenu>(*players[0], world); // player[0] is wrong currently
 
     EnableCursor();
 }
@@ -63,7 +56,6 @@ void Game::DrawPreGame()
         networkType = NetworkingTypes::Client;
         client.Init();
         optionPicked = true;
-        players[1]->SetOwner(true); // TEMP
     }
 
     if (optionPicked)
@@ -115,10 +107,31 @@ void Game::Update()
     {
     case NetworkingTypes::Host:
         server.Update();
+
+        if (server.GetNewPlayersSize() > 0)
+        {
+            for (int owner : server.GetNewPlayers())
+            {
+                AddPlayer(owner);
+            }
+
+            server.ClearNewPlayers();
+        }
+
         break;
 
     case NetworkingTypes::Client:
         client.Update();
+
+        if (client.GetNewPlayersSize() > 0)
+        {
+            for (int owner : client.GetNewPlayers())
+            {
+                AddPlayer(owner);
+            }
+
+            client.ClearNewPlayers();
+        }
         break;
 
     default:
@@ -138,4 +151,24 @@ void Game::Update()
         players[client.GetClientsObjs()]->Update();
     else if (networkType == NetworkingTypes::Host)
         players[0]->Update();
+}
+
+void Game::AddPlayer(int t_owner)
+{
+    // Create the player
+    auto player = std::make_shared<Player>(t_owner, world);
+    player->Init();
+
+    // Set spawn position
+    Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
+    player->SetPos(worldCenter);
+
+    // Allow mesh tracking
+    MeshCollider::AddTrackedPos(player->GetPosRef());
+
+    // Set as owner if needed
+    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1 && t_owner == client.GetClientsObjs())
+        player->SetOwner(true);
+
+    players.push_back(player);
 }

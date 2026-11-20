@@ -120,8 +120,10 @@ void Player::Draw()
     {
         Vector3 end = position;
         end.y += std::max(radius, height - radius);
-        DrawCapsule(position, end, radius, 10, 10, WHITE);
-        DrawCapsuleWires(position, end, radius, 10, 10, BLACK);
+        Vector3 start = position;
+        start.y += radius;
+        DrawCapsule(start, end, radius, 10, 10, WHITE);
+        DrawCapsuleWires(start, end, radius, 10, 10, BLACK);
     }
 
     collider.Draw();
@@ -173,14 +175,13 @@ std::vector<char> Player::Serialise()
         buffer.insert(buffer.end(), bytes, bytes + size);
         };
 
-    uint32_t len = 0;
+    SerialiseBase(buffer);
 
-    write(&len, sizeof(len));
-    write(&owner, sizeof(owner));
-    write(&index, sizeof(index));
+    uint32_t len = 0;
 
     // Specific to class
     write(&position, sizeof(position));
+    write(&height, sizeof(height));
 
     // Set true length of buffer
     len = static_cast<uint32_t>(buffer.size());
@@ -198,7 +199,8 @@ NetworkObject* Player::UpdateFromDeserialisation(const char* t_data)
         offset += s;
         };
 
-    read(&this->position, sizeof(this->position));
+    read(&position, sizeof(position));
+    read(&height, sizeof(height));
     UpdatePositions();
 
     return this;
@@ -303,7 +305,6 @@ void Player::GroundCheck(const Triangle& tri)
 bool Player::OnWalkableSlope() const
 {
     float slopeAngle = Vector3Angle(groundNormal, UP) * RAD2DEG;
-    std::cout << "Slope Angle: " << slopeAngle << std::endl;
 
     if (slopeAngle < MAX_SLOPE_ANGLE)
         return true;

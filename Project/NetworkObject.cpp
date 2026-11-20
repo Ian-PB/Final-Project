@@ -28,15 +28,10 @@ NetworkObject* NetworkObject::Deserialise(const char* t_data, size_t t_size)
 	int objIndex;
 	read(&objIndex, sizeof(objIndex));
 
-	std::cout << "Received Owner: " << objOwner
-		<< " Index: " << objIndex
-		<< " Vector size: " << NetworkManager::GetSize(objOwner)
-		<< std::endl;
-
 	// Check if in range
 	if (objIndex < 0 || objIndex >= NetworkManager::GetSize(objOwner))
 	{
-		std::cout << "Object not in NetworkObjects vector - " << objIndex << std::endl;
+		std::cout << "OBJ -- Object not in NetworkObjects vector - " << objIndex << std::endl;
 		return nullptr;
 	}
 
@@ -44,4 +39,18 @@ NetworkObject* NetworkObject::Deserialise(const char* t_data, size_t t_size)
 	NetworkObject* obj = NetworkManager::GetObjectAt(objOwner, objIndex);
 	// Deserialize object
 	return obj->UpdateFromDeserialisation(t_data + offset);
+}
+
+void NetworkObject::SerialiseBase(std::vector<char>& t_buffer)
+{
+	auto write = [&](const void* data, size_t size) {
+		const char* bytes = reinterpret_cast<const char*>(data);
+		t_buffer.insert(t_buffer.end(), bytes, bytes + size);
+		};
+
+	uint32_t len = 0;
+	write(&len, sizeof(len));
+
+	write(&owner, sizeof(owner));
+	write(&index, sizeof(index));
 }

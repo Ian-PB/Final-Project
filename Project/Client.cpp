@@ -77,6 +77,9 @@ void Client::Update()
 
 	int recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr*)&si_other, &slen);
 
+	if (recv_len <= 0)
+		return;
+
 	// Got error
 	if (recv_len == SOCKET_ERROR)
 		return;
@@ -85,6 +88,9 @@ void Client::Update()
 
 	if (type == PacketType::JoinAccepted)
 	{
+		if (recv_len < 5)
+			return;
+
 		uint32_t networkID;
 		memcpy(&networkID, buf + 1, sizeof(networkID));
 
@@ -92,6 +98,19 @@ void Client::Update()
 		joined = true;
 
 		std::cout << "Joined server - Client ID: " << clientID << std::endl;
+	}
+	else if (type == PacketType::AddNewClient)
+	{
+		if (recv_len < 5)
+			return;
+
+		uint32_t networkID;
+		memcpy(&networkID, buf + 1, sizeof(networkID));
+
+		int ownerID = static_cast<int>(ntohl(networkID));
+
+		newPlayers.push_back(ownerID);
+		std::cout << "New client vector added" << std::endl;
 	}
 	else if (type == PacketType::UpdateNetworkObject)
 	{

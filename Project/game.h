@@ -32,6 +32,8 @@ public:
     void Update();
 
 private:
+    void AddPlayer(int t_owner);
+
     // Networking
     NetworkingTypes networkType;
     Server server;

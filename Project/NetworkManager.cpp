@@ -3,7 +3,6 @@
 std::map<int, std::vector<NetworkObject*>> NetworkManager::networkObjects{
 
 	{0, std::vector<NetworkObject*>()}, // Default Server
-	{1, std::vector<NetworkObject*>()} // Temp Client
 };
 
 int NetworkManager::AddObject(int t_owner, NetworkObject* t_newObj)
@@ -25,4 +24,13 @@ NetworkObject* NetworkManager::GetObjectAt(int t_owner, int t_i)
 		return nullptr;
 
 	return it->second[t_i];
+}
+
+int NetworkManager::AddNewVector()
+{
+	int next = NetworkManager::networkObjects.rbegin()->first + 1;
+	NetworkManager::networkObjects[next] = std::vector<NetworkObject*>();
+
+	// Return the new vectors key
+	return next;
 }
