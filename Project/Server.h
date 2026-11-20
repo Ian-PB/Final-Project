@@ -48,7 +48,7 @@ private:
 	std::vector<int> newPlayers;
 
 	void RecievingUpdate();
-	void SendingUpdate();
+	void ServerSending();
 
 	void SendJoinAccepted(const sockaddr_in& t_address, int t_clientID);
 	int FindClient(const sockaddr_in& t_address);

@@ -15,6 +15,7 @@ public:
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) { return nullptr; }
 
 	int GetIndex() const { return index; }
+	int GetOwner() const { return owner; }
 protected:
 	void SerialiseBase(std::vector<char>& t_buffer);
 

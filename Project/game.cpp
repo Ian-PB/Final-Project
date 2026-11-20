@@ -72,7 +72,10 @@ void Game::DrawJoinGame()
 void Game::DrawGame()
 {
     if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
-        BeginMode3D(players[client.GetClientsObjs()]->GetCameraRef());
+    {
+        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client.GetClientsObjs());
+        BeginMode3D(localPlayer->GetCameraRef());
+    }
     else if (networkType == NetworkingTypes::Host)
         BeginMode3D(players[0]->GetCameraRef());
 
@@ -86,7 +89,12 @@ void Game::DrawGame()
     EndMode3D();
 
     if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
-        players[client.GetClientsObjs()]->Draw2D();
+    {
+        {
+            std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client.GetClientsObjs());
+            localPlayer->Draw2D();
+        }
+    }
     else if (networkType == NetworkingTypes::Host)
         players[0]->Draw2D();
     
@@ -148,9 +156,23 @@ void Game::Update()
     world.Update();
 
     if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
-        players[client.GetClientsObjs()]->Update();
+    {
+        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client.GetClientsObjs());
+        localPlayer->Update();
+    }
     else if (networkType == NetworkingTypes::Host)
         players[0]->Update();
+}
+
+std::shared_ptr<Player> Game::GetPlayerByOwner(int t_owner)
+{
+    for (const std::shared_ptr<Player>& player : players)
+    {
+        if (player->GetOwner() == t_owner)
+            return player;
+    }
+
+    return nullptr;
 }
 
 void Game::AddPlayer(int t_owner)

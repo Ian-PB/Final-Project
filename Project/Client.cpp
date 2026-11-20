@@ -75,59 +75,72 @@ void Client::Update()
 	char buf[BUFLEN];
 	memset(buf, '\0', BUFLEN);
 
-	int recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr*)&si_other, &slen);
-
-	if (recv_len <= 0)
-		return;
-
-	// Got error
-	if (recv_len == SOCKET_ERROR)
-		return;
-
-	PacketType type = static_cast<PacketType>(static_cast<uint8_t>(buf[0]));
-
-	if (type == PacketType::JoinAccepted)
+	while (true)
 	{
-		if (recv_len < 5)
-			return;
+		int recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr*)&si_other, &slen);
 
-		uint32_t networkID;
-		memcpy(&networkID, buf + 1, sizeof(networkID));
-
-		clientID = static_cast<int>(ntohl(networkID));
-		joined = true;
-
-		std::cout << "Joined server - Client ID: " << clientID << std::endl;
-	}
-	else if (type == PacketType::AddNewClient)
-	{
-		if (recv_len < 5)
-			return;
-
-		uint32_t networkID;
-		memcpy(&networkID, buf + 1, sizeof(networkID));
-
-		int ownerID = static_cast<int>(ntohl(networkID));
-
-		newPlayers.push_back(ownerID);
-		std::cout << "New client vector added" << std::endl;
-	}
-	else if (type == PacketType::UpdateNetworkObject)
-	{
-		NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
-
-		if (obj == nullptr)
+		if (recv_len == SOCKET_ERROR)
 		{
-			std::cout << "Object == nullptr" << std::endl;
-			return;
-		}
-	}
-	// When an object needs to be spawned this is recieved
-	else if (type == PacketType::SpawnNetworkObject)
-	{
-		// Add object to networkObjects
+			int error = WSAGetLastError();
 
-		// Send to Server
+			// No more packets to process
+			if (error == WSAEWOULDBLOCK)
+				break;
+
+			if (error == WSAECONNRESET)
+				continue;
+
+			break;
+		}
+
+		if (recv_len < 1)
+			continue;
+
+		PacketType type = static_cast<PacketType>(static_cast<uint8_t>(buf[0]));
+
+		if (type == PacketType::JoinAccepted)
+		{
+			if (recv_len < 5)
+				continue;
+
+			uint32_t networkID;
+			memcpy(&networkID, buf + 1, sizeof(networkID));
+
+			clientID = static_cast<int>(ntohl(networkID));
+			joined = true;
+
+			std::cout << "Joined server - Client ID: " << clientID << std::endl;
+		}
+		else if (type == PacketType::AddNewClient)
+		{
+			if (recv_len < 5)
+				continue;
+
+			uint32_t networkID;
+			memcpy(&networkID, buf + 1, sizeof(networkID));
+
+			int ownerID = static_cast<int>(ntohl(networkID));
+
+			newPlayers.push_back(ownerID);
+			std::cout << "New client vector added" << std::endl;
+		}
+		else if (type == PacketType::UpdateNetworkObject)
+		{
+			NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
+
+			if (obj == nullptr)
+			{
+				std::cout << "Object == nullptr" << std::endl;
+				continue;
+			}
+		}
+		// When an object needs to be spawned this is recieved
+		else if (type == PacketType::SpawnNetworkObject)
+		{
+			// Add object to networkObjects
+
+			// Send to Server
+		}
 	}
 }
 

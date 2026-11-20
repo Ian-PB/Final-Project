@@ -59,7 +59,7 @@ void Server::Update()
 {
 	RecievingUpdate();
 
-	SendingUpdate();
+	ServerSending();
 }
 
 void Server::SendAddPlayer(const sockaddr_in& t_address, int t_clientID)
@@ -85,7 +85,6 @@ void Server::RecievingUpdate()
 	char buf[BUFLEN];
 
 	struct sockaddr_in sender;
-	int temp_slen = sizeof(sender);
 	memset(buf, '\0', BUFLEN);
 
 	int recv_len = SOCKET_ERROR;
@@ -93,59 +92,70 @@ void Server::RecievingUpdate()
 	// Check for data
 	while (true)
 	{
+		int temp_slen = sizeof(sender);
 		recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr*)&sender, &temp_slen);
-		if (recv_len == SOCKET_ERROR && WSAGetLastError() == WSAECONNRESET)
+
+		if (recv_len == SOCKET_ERROR)
+		{
+			int error = WSAGetLastError();
+
+			// No more packets to process
+			if (error == WSAEWOULDBLOCK)
+				break;
+
+			if (error == WSAECONNRESET)
+				continue;
+
+			break;
+		}
+
+		if (recv_len < 1)
 			continue;
 
-		break;
-	}
+		PacketType type = static_cast<PacketType>(static_cast<uint8_t>(buf[0]));
 
-	if (recv_len == SOCKET_ERROR)
-		return;
-
-	if (recv_len < 1)
-		return;
-
-	PacketType type = static_cast<PacketType>(static_cast<uint8_t>(buf[0]));
-
-	if (type == PacketType::JoinRequest)
-	{
-		int clientIndex = FindClient(sender);
-
-		if (clientIndex == -1)
+		if (type == PacketType::JoinRequest)
 		{
-			CreateNewClient(sender, clientIndex);
+			int clientIndex = FindClient(sender);
+
+			if (clientIndex == -1)
+			{
+				CreateNewClient(sender, clientIndex);
+			}
+
+			int id = clients[clientIndex].id;
+
+			SendJoinAccepted(sender, id);
 		}
-
-		int id = clients[clientIndex].id;
-
-		SendJoinAccepted(sender, id);
-	}
-	else if (type == PacketType::UpdateNetworkObject)
-	{
-		// Deserialise
-		NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
-		if (obj == nullptr)
+		else if (type == PacketType::UpdateNetworkObject)
 		{
-			std::cout << "Object == nullptr" << std::endl;
-			return;
-		}
-		else if (obj->GetIndex() < 0 || obj->GetIndex() >= NetworkManager::GetSize(0))
-		{
-			std::cout << "SERVER -- Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
-			return;
-		}
-	}
-	// When an object needs to be spawned this is recieved
-	else if (type == PacketType::SpawnNetworkObject)
-	{
-		// Add object to networkObjects
+			// Deserialise
+			NetworkObject* obj = NetworkObject::Deserialise(buf + 1, recv_len - 1);
+			if (obj == nullptr)
+			{
+				std::cout << "Object == nullptr" << std::endl;
+				continue;
+			}
+			else if (obj->GetIndex() < 0 || obj->GetIndex() >= NetworkManager::GetSize(obj->GetOwner()))
+			{
+				std::cout << "SERVER -- Object not in NetworkObjects vector - " << obj->GetIndex() << std::endl;
+				continue;
+			}
 
-		// Send to all clients besides owner
+			// Send object directly after deserializing
+			SendObjectToClients(obj);
+		}
+		// When an object needs to be spawned this is recieved
+		else if (type == PacketType::SpawnNetworkObject)
+		{
+			// Add object to networkObjects
+
+			// Send to all clients besides owner
+		}
 	}
 }
 
-void Server::SendingUpdate()
+void Server::ServerSending()
 {
 	// Send host's objects
 	for (int i = 0; i < NetworkManager::GetSize(0); i++)
@@ -244,6 +254,12 @@ void Server::SendObjectToClients(NetworkObject* t_object)
 
 	for (const ConnectedClient& client : clients)
 	{
+		int clientOwner = client.id + 1;
+
+		// Dont send an object back to its owner.
+		if (t_object->GetOwner() == clientOwner)
+			continue;
+
 		// Send the packet
 		if (sendto(s, packet.data(), packetSize, 0, (struct sockaddr*)&client.address, sizeof(client.address)) == SOCKET_ERROR)
 		{

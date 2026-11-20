@@ -32,6 +32,7 @@ public:
     void Update();
 
 private:
+    std::shared_ptr<Player> GetPlayerByOwner(int t_owner);
     void AddPlayer(int t_owner);
 
     // Networking
