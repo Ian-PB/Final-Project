@@ -115,9 +115,11 @@ private:
 
 	// Ray from camera
 	void ShootRay();
+	void EditAtPos(Vector3 t_pos);
 	Ray shootRay;
 	Vector3 shootRayStart;
 	RayCollision shootRayCollision;
+	bool hasShot = false;
 	bool breaking = true;
 	float rayRadius = 2.0f;
 	float radiusChange = 0.5f;

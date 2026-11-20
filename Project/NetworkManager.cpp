@@ -26,11 +26,22 @@ NetworkObject* NetworkManager::GetObjectAt(int t_owner, int t_i)
 	return it->second[t_i];
 }
 
-int NetworkManager::AddNewVector()
+int NetworkManager::GetSize(int t_owner)
 {
-	int next = NetworkManager::networkObjects.rbegin()->first + 1;
-	NetworkManager::networkObjects[next] = std::vector<NetworkObject*>();
+	auto it = networkObjects.find(t_owner);
 
-	// Return the new vectors key
-	return next;
+	// Make sure no new ones created from this function
+	if (it == networkObjects.end())
+		return 0;
+
+	return static_cast<int>(it->second.size());
 }
+
+//int NetworkManager::AddNewVector()
+//{
+//	int next = NetworkManager::networkObjects.rbegin()->first + 1;
+//	NetworkManager::networkObjects[next] = std::vector<NetworkObject*>();
+//
+//	// Return the new vectors key
+//	return next;
+//}

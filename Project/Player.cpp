@@ -58,6 +58,13 @@ void Player::Init()
 
 void Player::Update()
 {
+    // Reset shot fired
+    hasShot = false;
+
+    // No need to update if not the owner
+    if (!isOwner)
+        return;
+
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
         displayDebugElements = !displayDebugElements;
@@ -179,9 +186,18 @@ std::vector<char> Player::Serialise()
 
     uint32_t len = 0;
 
-    // Specific to class
+    // Transform
     write(&position, sizeof(position));
     write(&height, sizeof(height));
+
+    // Shooting
+    write(&hasShot, sizeof(hasShot));
+    if (hasShot) // Only send info if needed
+    {
+        write(&shootRayCollision.point, sizeof(shootRayCollision.point));
+        write(&rayRadius, sizeof(rayRadius));
+        write(&breaking, sizeof(breaking));
+    }
 
     // Set true length of buffer
     len = static_cast<uint32_t>(buffer.size());
@@ -199,9 +215,21 @@ NetworkObject* Player::UpdateFromDeserialisation(const char* t_data)
         offset += s;
         };
 
+    // Transform
     read(&position, sizeof(position));
     read(&height, sizeof(height));
     UpdatePositions();
+
+    // Shooting
+    read(&hasShot, sizeof(hasShot));
+    if (hasShot) // Only read if it was sent basicly
+    {
+        read(&shootRayCollision.point, sizeof(shootRayCollision.point));
+        read(&rayRadius, sizeof(rayRadius));
+        read(&breaking, sizeof(breaking));
+        // Edit at pos
+        EditAtPos(shootRayCollision.point);
+    }
 
     return this;
 }
@@ -225,7 +253,6 @@ void Player::UpdatePositions()
 
 void Player::Movement()
 {
-
     if (freeFly)
         FreeFly();
     else
@@ -423,6 +450,8 @@ void Player::ShootRay()
     if (!hitFound)
         return;
 
+    hasShot = true;
+
     // Find which point is the closest
     float closestHitDist = 9999.0f;
     Vector3 closestHit = shootRayStart; // Set to the same point until changed
@@ -447,8 +476,12 @@ void Player::ShootRay()
     }
     testParticles->Spawn(shootRayCollision.point, particleColor);
 
-    // Destroy hitPos of mesh
-    WORLD.EditSphere(closestHit, rayRadius, breaking);
+    EditAtPos(shootRayCollision.point);
+}
+
+void Player::EditAtPos(Vector3 t_pos)
+{
+    WORLD.EditSphere(t_pos, rayRadius, breaking);
 }
 
 void Player::ThrowBomb()
