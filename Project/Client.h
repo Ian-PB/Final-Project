@@ -23,6 +23,7 @@
 #undef ShowCursor
 
 class NetworkObject;
+class World;
 
 #define BUFLEN 512	// Max length of buffer
 #define PORT 8888	// The port on which to listen for incoming data
@@ -30,6 +31,7 @@ class NetworkObject;
 class Client
 {
 public:
+	Client(World& t_world);
 	~Client();
 	void JoinServer(std::string t_serverIP);
 	void SendJoinMsg();
@@ -49,6 +51,9 @@ public:
 	void ClearNewPlayers() { newPlayers.clear(); }
 
 private:
+	void AcceptedJoin(int recv_len, char buf[]);
+	World& world;
+
 	std::vector<int> newPlayers;
 
 	int clientID = -1;
@@ -67,3 +72,4 @@ private:
 };
 
 #include "NetworkObject.h"
+#include "World.h"

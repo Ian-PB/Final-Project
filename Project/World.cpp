@@ -7,6 +7,8 @@
 #include "StructurePaster.h"
 #include "CavernNoise.h"
 
+int World::seed = 0;
+
 World::World() : light(Lighting::CreateLight(RAYWHITE))
 {
     unsigned int hardwareThreads = std::thread::hardware_concurrency();

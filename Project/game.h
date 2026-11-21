@@ -39,7 +39,7 @@ private:
     // Networking
     NetworkingTypes networkType;
     Server server;
-    Client client;
+    std::shared_ptr<Client> client;
 
     GameStates gameState = GameStates::ChooseNetworkType;
 

@@ -12,6 +12,7 @@ void Game::Init()
 
     pauseMenu = std::make_shared<PauseMenu>(*players[0], world); // player[0] is wrong currently
 
+    client = std::make_shared<Client>(world);
     EnableCursor();
 }
 
@@ -49,6 +50,7 @@ void Game::DrawPreGame()
         DisableCursor();
 
         players[0]->SetOwner(true);
+
         return;
     }
 
@@ -57,6 +59,8 @@ void Game::DrawPreGame()
     {
         networkType = NetworkingTypes::Client;
         gameState = GameStates::JoinGame;
+
+        return;
     }
 }
 
@@ -72,7 +76,7 @@ void Game::DrawJoinGame()
 
     if (activeButton == 1) // Join Pressed
     {
-        client.JoinServer(serverIpInput);
+        client->JoinServer(serverIpInput);
         gameState = GameStates::Game;
         DisableCursor();
     }
@@ -84,9 +88,9 @@ void Game::DrawJoinGame()
 
 void Game::DrawGame()
 {
-    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
+    if (networkType == NetworkingTypes::Client && client->GetClientID() != -1)
     {
-        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client.GetClientsObjs());
+        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client->GetClientsObjs());
         BeginMode3D(localPlayer->GetCameraRef());
     }
     else if (networkType == NetworkingTypes::Host)
@@ -101,10 +105,10 @@ void Game::DrawGame()
 
     EndMode3D();
 
-    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
+    if (networkType == NetworkingTypes::Client && client->GetClientID() != -1)
     {
         {
-            std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client.GetClientsObjs());
+            std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client->GetClientsObjs());
             localPlayer->Draw2D();
         }
     }
@@ -142,16 +146,16 @@ void Game::Update()
         break;
 
     case NetworkingTypes::Client:
-        client.Update();
+        client->Update();
 
-        if (client.GetNewPlayersSize() > 0)
+        if (client->GetNewPlayersSize() > 0)
         {
-            for (int owner : client.GetNewPlayers())
+            for (int owner : client->GetNewPlayers())
             {
                 AddPlayer(owner);
             }
 
-            client.ClearNewPlayers();
+            client->ClearNewPlayers();
         }
         break;
 
@@ -168,9 +172,9 @@ void Game::Update()
 
     world.Update();
 
-    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1)
+    if (networkType == NetworkingTypes::Client && client->GetClientID() != -1)
     {
-        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client.GetClientsObjs());
+        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client->GetClientsObjs());
         localPlayer->Update();
     }
     else if (networkType == NetworkingTypes::Host)
@@ -202,7 +206,7 @@ void Game::AddPlayer(int t_owner)
     MeshCollider::AddTrackedPos(player->GetPosRef());
 
     // Set as owner if needed
-    if (networkType == NetworkingTypes::Client && client.GetClientID() != -1 && t_owner == client.GetClientsObjs())
+    if (networkType == NetworkingTypes::Client && client->GetClientID() != -1 && t_owner == client->GetClientsObjs())
         player->SetOwner(true);
 
     players.push_back(player);

@@ -44,6 +44,7 @@ public:
 	void QueueChunkChangeAtPos(Vector3 t_pos);
 
 	void SetSeed(int t_seed);
+	static int GetSeed() { return seed; }
 private:
 	void UpdateAllChunks();
 
@@ -66,7 +67,7 @@ private:
 	// Noise (FastNoiseLite is a library I added)
 	void UpdateAllDensities();
 	std::shared_ptr<BaseNoise> noise;
-	int seed;
+	static int seed;
 
 	// Multi-threading
 	void WorkerLoop();

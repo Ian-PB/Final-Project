@@ -5,6 +5,7 @@
 
 #include "NetworkObject.h"
 #include "NetworkManager.h"
+#include "World.h"
 
 Server::~Server()
 {
@@ -172,8 +173,10 @@ void Server::SendJoinAccepted(const sockaddr_in& t_address, int t_clientID)
 	packet[0] = static_cast<char>(PacketType::JoinAccepted);
 
 	uint32_t networkID = htonl(static_cast<uint32_t>(t_clientID));
-
 	memcpy(packet + 1, &networkID, sizeof(networkID));
+
+	uint32_t networkSeed = htonl(static_cast<uint32_t>(World::GetSeed()));
+	memcpy(packet + 5, &networkSeed, sizeof(networkSeed));
 
 	if (sendto(s, packet, sizeof(packet), 0, (struct sockaddr*)&t_address, sizeof(t_address)) == SOCKET_ERROR)
 	{

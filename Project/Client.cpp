@@ -4,6 +4,10 @@
 
 std::string Client::serverIP = "192.168.0.100";
 
+Client::Client(World& t_world) : world(t_world)
+{
+}
+
 Client::~Client()
 {
 	closesocket(s);
@@ -101,16 +105,7 @@ void Client::Update()
 
 		if (type == PacketType::JoinAccepted)
 		{
-			if (recv_len < 5)
-				continue;
-
-			uint32_t networkID;
-			memcpy(&networkID, buf + 1, sizeof(networkID));
-
-			clientID = static_cast<int>(ntohl(networkID));
-			joined = true;
-
-			std::cout << "Joined server - Client ID: " << clientID << std::endl;
+			AcceptedJoin(recv_len, buf);
 		}
 		else if (type == PacketType::AddNewClient)
 		{
@@ -169,4 +164,23 @@ void Client::SendObject(NetworkObject* t_object)
 		printf("sendto() failed with error code : %d", WSAGetLastError());
 		exit(EXIT_FAILURE);
 	}
+}
+
+void Client::AcceptedJoin(int recv_len, char buf[])
+{
+	if (recv_len < 5)
+		return;
+
+	uint32_t networkID;
+	memcpy(&networkID, buf + 1, sizeof(networkID));
+
+	uint32_t networkSeed;
+	memcpy(&networkSeed, buffer + 5, sizeof(networkSeed));
+	int seed = static_cast<int>(ntohl(networkSeed));
+	world.SetSeed(seed);
+
+	clientID = static_cast<int>(ntohl(networkID));
+	joined = true;
+
+	std::cout << "Joined server - Client ID: " << clientID << std::endl;
 }
