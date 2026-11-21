@@ -48,6 +48,7 @@ public:
 
 	void SetSurfaceLevel(float t_surfaceLevel) { surfaceLevel = t_surfaceLevel; }
 	float GetSurfaceLevel() const { return surfaceLevel; }
+
 private:
 	void UpdateAllChunks();
 

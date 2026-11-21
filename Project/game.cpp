@@ -3,7 +3,6 @@
 void Game::Init()
 {
     Lighting::Init();
-    world.Init((int)(rand() % 9999));
 
     world.InitColliders();
     Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
@@ -43,6 +42,7 @@ void Game::DrawPreGame()
     if (GuiButton(rect, "Host"))
     {
         networkType = NetworkingTypes::Host;
+        world.Init((int)(rand() % 9999)); // Set world
 
         server = std::make_shared<Server>(world);
         server->Init();

@@ -335,7 +335,7 @@ void World::UpdateAllChunks()
         return;
 
     // Randomize the surfaceLevel
-    RandomizeSurfaceLevel();
+    // RandomizeSurfaceLevel();
 
     std::lock_guard<std::mutex> lock(jobMutex);
 
