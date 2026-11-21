@@ -24,7 +24,7 @@ void StructureBuilding::Init()
     DisableCursor();
 
     Lighting::Init();
-    world.Init();
+    world.Init(0);
     worldSize = world.GetSizeDimensions();
     worldCenter = Vector3Multiply(worldSize, { 0.5f, 0.5f, 0.5f });
     world.EmptyWorldGen();

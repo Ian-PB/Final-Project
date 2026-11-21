@@ -10,8 +10,9 @@ Client::~Client()
 	WSACleanup();
 }
 
-void Client::Init()
+void Client::JoinServer(std::string t_serverIP)
 {
+	serverIP = t_serverIP;
 	slen = sizeof(si_other);
 
 	// Initialise winsock

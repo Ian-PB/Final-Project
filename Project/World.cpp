@@ -40,9 +40,10 @@ World::~World()
     }
 }
 
-void World::Init()
+void World::Init(int t_seed)
 {
-    SetupNoise();
+    // Make world
+    SetSeed(t_seed);
 
     for (int x = 0; x < WIDTH; x++)
     {
@@ -57,10 +58,6 @@ void World::Init()
         }
     }
 
-    // Make world
-    noiseSeed = (int)(rand() % 9999);
-    noise->SetSeed(noiseSeed);
-    completeRebuild = true;
 
     // Reset densities
     for (int x = 0; x < WIDTH; x++)
@@ -358,8 +355,8 @@ void World::UpdateAllChunks()
 
 void World::NoiseWorldGen()
 {
-    noiseSeed = (int)(rand() % 9999);
-    noise->SetSeed(noiseSeed);
+    seed = (int)(rand() % 9999);
+    noise->SetSeed(seed);
     completeRebuild = true;
 
     UpdateAllDensities();
@@ -438,6 +435,13 @@ void World::QueueChunkChangeAtPos(Vector3 t_pos)
     jobCondition.notify_one();
 }
 
+void World::SetSeed(int t_seed)
+{
+    seed = t_seed;
+    noise->SetSeed(seed);
+    completeRebuild = true;
+}
+
 void World::KeyboardInputs()
 {
     if (IsKeyReleased(KEY_G))
@@ -448,18 +452,6 @@ void World::KeyboardInputs()
     {
         TestWorldGen();
     }
-}
-
-// FastNoiseLite is a library I added
-void World::SetupNoise()
-{
-    noiseSeed = (int)(rand() % 9999);
-    UpdatedSeed();
-}
-
-void World::UpdatedSeed()
-{
-    noise->SetSeed(noiseSeed);
 }
 
 void World::UpdateAllDensities()

@@ -47,7 +47,7 @@ void PauseMenu::ToggleActive()
 
 	if (active)
 	{
-		worldSeed = world.noiseSeed;
+		worldSeed = world.seed;
 		noiseSeedEditMode = false;
 		EnableCursor();
 	}
@@ -263,10 +263,9 @@ void PauseMenu::DrawWorldSettings()
 	{
 		noiseSeedEditMode = !noiseSeedEditMode;
 
-		if (!noiseSeedEditMode && worldSeed != world.noiseSeed) // Changed
+		if (!noiseSeedEditMode && worldSeed != world.seed) // Changed
 		{
-			world.noiseSeed = worldSeed;
-			world.UpdatedSeed();
+			world.SetSeed(worldSeed);
 			world.UpdateAllDensities();
 			world.completeRebuild = true;
 		}

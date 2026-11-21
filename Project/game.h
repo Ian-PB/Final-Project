@@ -24,6 +24,7 @@ class Game
 {
 public:
     void Init();
+
     void Draw();
     void DrawPreGame();
     void DrawJoinGame();
@@ -42,8 +43,11 @@ private:
 
     GameStates gameState = GameStates::ChooseNetworkType;
 
-    std::vector<std::shared_ptr<Player>> players;
+    // Joining variables
+    char serverIpInput[64] = "";
+    int activeButton = -1;
 
+    std::vector<std::shared_ptr<Player>> players;
     World world;
 
     std::shared_ptr<PauseMenu> pauseMenu;

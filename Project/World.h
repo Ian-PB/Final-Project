@@ -22,7 +22,7 @@ public:
 	World();
 	~World();
 
-	void Init();
+	void Init(int t_seed);
 	void InitColliders();
 	void Draw();
 	void Update();
@@ -43,6 +43,7 @@ public:
 
 	void QueueChunkChangeAtPos(Vector3 t_pos);
 
+	void SetSeed(int t_seed);
 private:
 	void UpdateAllChunks();
 
@@ -63,11 +64,9 @@ private:
 	bool completeRebuild = false;
 
 	// Noise (FastNoiseLite is a library I added)
-	void SetupNoise();
-	void UpdatedSeed();
 	void UpdateAllDensities();
 	std::shared_ptr<BaseNoise> noise;
-	int noiseSeed;
+	int seed;
 
 	// Multi-threading
 	void WorkerLoop();

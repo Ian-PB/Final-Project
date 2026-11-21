@@ -3,8 +3,7 @@
 void Game::Init()
 {
     Lighting::Init();
-    world.Init();
-
+    world.Init((int)(rand() % 9999));
 
     world.InitColliders();
     Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
@@ -36,7 +35,6 @@ void Game::Draw()
 
 void Game::DrawPreGame()
 {
-    bool optionPicked = false;
     Rectangle rect;
     rect.width = GetScreenWidth();
     rect.height = GetScreenHeight() / 2.0f;
@@ -46,27 +44,42 @@ void Game::DrawPreGame()
     {
         networkType = NetworkingTypes::Host;
         server.Init();
-        optionPicked = true;
-        players[0]->SetOwner(true); // TEMP
+
+        gameState = GameStates::Game;
+        DisableCursor();
+
+        players[0]->SetOwner(true);
+        return;
     }
 
     rect.y += GetScreenHeight() / 2.0f;
     if (GuiButton(rect, "Join"))
     {
         networkType = NetworkingTypes::Client;
-        client.Init();
-        optionPicked = true;
-    }
-
-    if (optionPicked)
-    {
-        gameState = GameStates::Game;
-        DisableCursor();
+        gameState = GameStates::JoinGame;
     }
 }
 
 void Game::DrawJoinGame()
 {
+    Rectangle rect;
+    rect.width = GetScreenWidth() * 0.8f;
+    rect.height = GetScreenHeight() * 0.8f;
+    rect.x = GetScreenWidth() * 0.1f;
+    rect.y = GetScreenHeight() * 0.1f;
+
+    GuiTextInputBox(rect, "Server IP: ", "Enter the Servers IP: ", serverIpInput, rect.height * 0.9f, "Join;Cancel", &activeButton, nullptr);
+
+    if (activeButton == 1) // Join Pressed
+    {
+        client.JoinServer(serverIpInput);
+        gameState = GameStates::Game;
+        DisableCursor();
+    }
+    else if (activeButton == 2 || activeButton == 0) // Cancel
+    {
+        gameState = GameStates::ChooseNetworkType;
+    }
 }
 
 void Game::DrawGame()

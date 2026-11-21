@@ -31,7 +31,7 @@ class Client
 {
 public:
 	~Client();
-	void Init();
+	void JoinServer(std::string t_serverIP);
 	void SendJoinMsg();
 
 	void Update();
