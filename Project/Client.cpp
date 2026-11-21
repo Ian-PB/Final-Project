@@ -168,18 +168,27 @@ void Client::SendObject(NetworkObject* t_object)
 
 void Client::AcceptedJoin(int recv_len, char buf[])
 {
-	if (recv_len < 5)
-		return;
+	size_t offset = 1;
 
-	uint32_t networkID;
-	memcpy(&networkID, buf + 1, sizeof(networkID));
+	auto read = [&](void* out, size_t s) {
+		memcpy(out, buf + offset, s);
+		offset += s;
+		};
 
-	uint32_t networkSeed;
-	memcpy(&networkSeed, buffer + 5, sizeof(networkSeed));
-	int seed = static_cast<int>(ntohl(networkSeed));
-	world.SetSeed(seed);
+	read(&clientID, sizeof(clientID));
 
-	clientID = static_cast<int>(ntohl(networkID));
+	// World Seed
+	int seed;
+	read(&seed, sizeof(seed));
+
+	// World SurfaceLevel
+	float surfaceLevel;
+	read(&surfaceLevel, sizeof(surfaceLevel));
+
+	// Set them to world
+	world.SetSurfaceLevel(surfaceLevel);
+	world.Init(seed);
+
 	joined = true;
 
 	std::cout << "Joined server - Client ID: " << clientID << std::endl;

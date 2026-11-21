@@ -24,6 +24,8 @@
 #define BUFLEN 512	// Max length of buffer
 #define PORT 8888	// The port on which to listen for incoming data
 
+class World;
+
 struct ConnectedClient
 {
 	sockaddr_in address;
@@ -33,6 +35,7 @@ struct ConnectedClient
 class Server
 {
 public:
+	Server(World& t_world);
 	~Server();
 	void Init();
 
@@ -44,6 +47,8 @@ public:
 	void ClearNewPlayers() { newPlayers.clear(); }
 
 private:
+	World& world;
+
 	void SendAddPlayer(const sockaddr_in& t_address, int t_clientID);
 	std::vector<int> newPlayers;
 
@@ -67,3 +72,5 @@ private:
 	void SetServerIP();
 	std::string serverIpAddress = "NOT HERE YET";
 };
+
+#include "World.h"

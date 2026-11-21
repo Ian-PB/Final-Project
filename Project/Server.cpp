@@ -7,6 +7,10 @@
 #include "NetworkManager.h"
 #include "World.h"
 
+Server::Server(World& t_world) : world(t_world)
+{
+}
+
 Server::~Server()
 {
 	closesocket(s);
@@ -168,17 +172,27 @@ void Server::ServerSending()
 
 void Server::SendJoinAccepted(const sockaddr_in& t_address, int t_clientID)
 {
-	char packet[5];
+	std::vector<char> buffer;
 
-	packet[0] = static_cast<char>(PacketType::JoinAccepted);
+	auto write = [&](const void* data, size_t size) {
+		const char* bytes = reinterpret_cast<const char*>(data);
+		buffer.insert(buffer.end(), bytes, bytes + size);
+		};
 
-	uint32_t networkID = htonl(static_cast<uint32_t>(t_clientID));
-	memcpy(packet + 1, &networkID, sizeof(networkID));
+	// Packet type
+	uint8_t type = static_cast<uint8_t>(PacketType::JoinAccepted);
+	write(&type, sizeof(type));
 
-	uint32_t networkSeed = htonl(static_cast<uint32_t>(World::GetSeed()));
-	memcpy(packet + 5, &networkSeed, sizeof(networkSeed));
+	// Client ID
+	write(&t_clientID, sizeof(t_clientID));
 
-	if (sendto(s, packet, sizeof(packet), 0, (struct sockaddr*)&t_address, sizeof(t_address)) == SOCKET_ERROR)
+	// World info
+	int seed = World::GetSeed();
+	write(&seed, sizeof(seed));
+	float surfaceLevel = world.GetSurfaceLevel();
+	write(&surfaceLevel, sizeof(surfaceLevel));
+
+	if (sendto(s, buffer.data(), static_cast<int>(buffer.size()), 0, (struct sockaddr*)&t_address, sizeof(t_address)) == SOCKET_ERROR)
 	{
 		printf("sendto() failed with error code : %d", WSAGetLastError());
 		exit(EXIT_FAILURE);

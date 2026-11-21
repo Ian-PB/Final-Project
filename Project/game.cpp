@@ -12,7 +12,6 @@ void Game::Init()
 
     pauseMenu = std::make_shared<PauseMenu>(*players[0], world); // player[0] is wrong currently
 
-    client = std::make_shared<Client>(world);
     EnableCursor();
 }
 
@@ -44,7 +43,9 @@ void Game::DrawPreGame()
     if (GuiButton(rect, "Host"))
     {
         networkType = NetworkingTypes::Host;
-        server.Init();
+
+        server = std::make_shared<Server>(world);
+        server->Init();
 
         gameState = GameStates::Game;
         DisableCursor();
@@ -58,6 +59,8 @@ void Game::DrawPreGame()
     if (GuiButton(rect, "Join"))
     {
         networkType = NetworkingTypes::Client;
+        client = std::make_shared<Client>(world);
+
         gameState = GameStates::JoinGame;
 
         return;
@@ -120,7 +123,7 @@ void Game::DrawGame()
     pauseMenu->Draw();
 
     if (networkType == NetworkingTypes::Host)
-        DrawText(server.GetServerIp().c_str(), 0, GetScreenHeight() - 20, 20, RED);
+        DrawText(server->GetServerIp().c_str(), 0, GetScreenHeight() - 20, 20, RED);
 }
 
 void Game::Update()
@@ -131,16 +134,16 @@ void Game::Update()
     switch (networkType)
     {
     case NetworkingTypes::Host:
-        server.Update();
+        server->Update();
 
-        if (server.GetNewPlayersSize() > 0)
+        if (server->GetNewPlayersSize() > 0)
         {
-            for (int owner : server.GetNewPlayers())
+            for (int owner : server->GetNewPlayers())
             {
                 AddPlayer(owner);
             }
 
-            server.ClearNewPlayers();
+            server->ClearNewPlayers();
         }
 
         break;
