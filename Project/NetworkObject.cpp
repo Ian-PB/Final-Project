@@ -3,6 +3,7 @@
 
 #include "NetworkManager.h"
 
+const size_t NetworkObject::HEADER_SIZE = sizeof(ObjectHeader);
 
 NetworkObject::NetworkObject(int t_owner) : owner(t_owner)
 {
@@ -11,13 +12,17 @@ NetworkObject::NetworkObject(int t_owner) : owner(t_owner)
 
 NetworkObject* NetworkObject::Deserialise(const char* t_data, size_t t_size)
 {
-	size_t offset = 0;
+	// Error checking
+	if (t_data == nullptr || t_size < HEADER_SIZE)
+		return nullptr;
 
+	size_t offset = 0;
 	auto read = [&](void* out, size_t s) {
 		memcpy(out, t_data + offset, s);
 		offset += s;
 		};
 
+	// Header
 	uint32_t len;
 	read(&len, sizeof(len));
 

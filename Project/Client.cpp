@@ -142,7 +142,13 @@ void Client::Update()
 
 void Client::SendObject(NetworkObject* t_object)
 {
+	if (t_object == nullptr)
+		return;
+
 	auto data = t_object->Serialise();
+
+	if (data.empty())
+		return;
 
 	// Check that adding the packet type wont go over the limit
 	if (data.size() + 1 > BUFLEN)

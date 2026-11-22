@@ -3,6 +3,13 @@
 #include <vector>
 #include <memory>
 
+struct ObjectHeader
+{
+	uint32_t len;
+	int objOwner;
+	int objIndex;
+
+};
 
 class NetworkObject
 {
@@ -21,5 +28,7 @@ protected:
 
 	int index = -1;
 	int owner = -1; // 0 = Host, Anything above is a client
+
+	static const size_t HEADER_SIZE;
 };
 

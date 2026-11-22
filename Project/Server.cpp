@@ -256,6 +256,10 @@ void Server::SendObjectToClients(NetworkObject* t_object)
 
 	auto data = t_object->Serialise();
 
+	// Check for no data
+	if (data.empty())
+		return;
+
 	if (data.size() + 1 > BUFLEN)
 		return;
 
