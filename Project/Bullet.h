@@ -35,7 +35,7 @@ private:
 
 	Vector3 position = {0.0f, 0.0f, 0.0f};
 	Vector3 velocity = { 0.0f, 0.0f, 0.0f };
-	float speed = 150.0f;
+	float speed = 125.0f;
 	float radius = 0.5f;
 
 	// Collision
