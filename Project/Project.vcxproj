@@ -163,6 +163,7 @@
     <ClCompile Include="CylinderCollider.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="GroundedState.cpp" />
+    <ClCompile Include="Health.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainCamera.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GroundedState.h" />
+    <ClInclude Include="Health.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MarchingTables.h" />

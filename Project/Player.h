@@ -39,16 +39,16 @@ public:
 	void Draw2D();
 
 	Vector3& GetPosRef() { return position; }
-	Camera& GetCameraRef() { return camera->GetCameraRef(); }
+	void SetCamera(std::shared_ptr<MainCamera> t_cam) { camera = t_cam; }
+	float GetHeight() const { return height; }
 
 	void SetPos(Vector3 t_pos) { position = t_pos; }
 
 	virtual std::vector<char> Serialise() override;
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
-	void SetOwner(bool t_b);
+	virtual void SetOwner(bool t_b) override;
 private:
-	bool isOwner = false;
 
 	void UpdatePositions();
 

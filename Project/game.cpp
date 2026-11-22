@@ -150,13 +150,7 @@ void Game::DrawJoinGame()
 
 void Game::DrawGame()
 {
-    if (networkType == NetworkingTypes::Client && client->GetClientID() != -1)
-    {
-        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client->GetClientsObjs());
-        BeginMode3D(localPlayer->GetCameraRef());
-    }
-    else if (networkType == NetworkingTypes::Host)
-        BeginMode3D(players[0]->GetCameraRef());
+    BeginMode3D(camera->GetCameraRef());
 
         world.Draw();
 
@@ -247,7 +241,7 @@ std::shared_ptr<Player> Game::GetPlayerByOwner(int t_owner)
 void Game::AddPlayer(int t_owner)
 {
     // Create the player
-    auto player = std::make_shared<Player>(t_owner, world);
+    std::shared_ptr<Player> player = std::make_shared<Player>(t_owner, world);
     player->Init();
 
     // Set spawn position
@@ -259,7 +253,18 @@ void Game::AddPlayer(int t_owner)
 
     // Set as owner if needed
     if (networkType == NetworkingTypes::Client && client->GetClientID() != -1 && t_owner == client->GetClientsObjs())
+    {
         player->SetOwner(true);
+        camera = std::make_shared<MainCamera>(player->GetPosRef(), 0.8f);
+        camera->SetHeight(player->GetHeight());
+        player->SetCamera(camera);
+    }
+    else if (t_owner == 0)
+    {
+        camera = std::make_shared<MainCamera>(player->GetPosRef(), 0.8f);
+        camera->SetHeight(player->GetHeight());
+        player->SetCamera(camera);
+    }
 
     players.push_back(player);
 }
@@ -272,7 +277,6 @@ void Game::ClientUpdate()
         int fontSize = 30;
         int textWidth = MeasureText(joiningText.c_str(), fontSize);
         DrawText(joiningText.c_str(), (GetScreenWidth() - textWidth) / 2.0f, (GetScreenHeight() - fontSize) / 2.0f, fontSize, WHITE);
-        return;
     }
     else if (connection == ConnectionType::TookTooLong) // Go back to lobby
     {

@@ -65,7 +65,7 @@ private:
 
 	// Join waiting
 	float joinTimer = 0.0f;
-	static const int JOINING_WAIT_DUR = 5;
+	static const int JOINING_WAIT_DUR = 30;
 
 	World& world;
 	std::vector<int> newPlayers;

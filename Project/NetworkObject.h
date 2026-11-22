@@ -23,7 +23,9 @@ public:
 
 	int GetIndex() const { return index; }
 	int GetOwner() const { return owner; }
+	virtual void SetOwner(bool t_b) { isOwner = t_b; }
 protected:
+	bool isOwner = false;
 	void SerialiseBase(std::vector<char>& t_buffer);
 
 	int index = -1;

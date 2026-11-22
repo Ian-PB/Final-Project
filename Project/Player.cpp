@@ -46,9 +46,6 @@ void Player::Init()
 
     rayHeightDist = height / 2.0f + RAY_EXTENTION;
 
-    camera = std::make_shared<MainCamera>(position, 0.8f);
-    camera->SetHeight(height);
-
     randLight.strength = 5.0f;
     light.strength = 25.0f;
     collider.Setup(height, radius);
@@ -77,7 +74,9 @@ void Player::Update()
         freeFly = !freeFly;
 
 
-    camera->Update();
+    if (camera != nullptr)
+        camera->Update();
+
     Movement();
 
     if (IsMouseButtonPressed(0))
@@ -378,6 +377,9 @@ void Player::SwapState(std::shared_ptr<PlayerState> t_newState)
 
 void Player::FreeFly()
 {
+    if (camera == nullptr)
+        return;
+
     // Flattened so you dont go in the direction you're facing
     float yaw = camera->GetYaw();
     Vector3 flatForward = { sinf(yaw), 0.0f, cosf(yaw) };
@@ -547,7 +549,9 @@ void Player::CollisionDetection()
     }
 
     // Update camera after resolving collisions
-    camera->UpdatePos();
+    if (camera != nullptr)
+        camera->UpdatePos();
+
     UpdatePositions();
 }
 
