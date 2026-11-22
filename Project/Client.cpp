@@ -1,6 +1,7 @@
 #include "Client.h"
 #include "NetworkManager.h"
 #include <iostream>
+#include <raylib.h>
 
 std::string Client::serverIP = "192.168.0.100";
 
@@ -198,4 +199,22 @@ void Client::AcceptedJoin(int recv_len, char buf[])
 	joined = true;
 
 	std::cout << "Joined server - Client ID: " << clientID << std::endl;
+}
+
+ConnectionType Client::JoiningTimer()
+{
+	if (!joined)
+	{
+		if (joinTimer < JOINING_WAIT_DUR)
+		{
+			joinTimer += GetFrameTime();
+			return ConnectionType::Waiting;
+		}
+		else
+		{
+			return ConnectionType::TookTooLong;
+		}
+	}
+	else // When joining success
+		return ConnectionType::Connected;
 }

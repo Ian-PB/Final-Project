@@ -34,12 +34,14 @@ void Game::Draw()
 void Game::DrawPreGame()
 {
     Rectangle rect;
-    rect.width = GetScreenWidth();
-    rect.height = GetScreenHeight() / 2.0f;
-    rect.x = 0.0f;
-    rect.y = 0.0f;
+    rect.width = GetScreenWidth() / 2.0f;
+    rect.height = GetScreenHeight() / 4.0f;
+    rect.x = (GetScreenWidth() / 2.0f) - (rect.width / 2.0f);
+    rect.y = (GetScreenHeight() / 2.0f) - rect.height;
     if (GuiButton(rect, "Host"))
     {
+        hadIssueConnecting = false;
+
         networkType = NetworkingTypes::Host;
         world.Init((int)(rand() % 9999)); // Set world
 
@@ -54,15 +56,30 @@ void Game::DrawPreGame()
         return;
     }
 
-    rect.y += GetScreenHeight() / 2.0f;
+    rect.y += rect.height;
     if (GuiButton(rect, "Join"))
     {
+        hadIssueConnecting = false;
+
         networkType = NetworkingTypes::Client;
         client = std::make_shared<Client>(world);
 
         gameState = GameStates::JoinGame;
 
         return;
+    }
+
+    // Error box
+    rect.y += rect.height * 1.2f;
+    if (hadIssueConnecting)
+    {
+        const Rectangle errorBoxRect = { rect.x, rect.y, rect.width, rect.height * 0.5f };
+        DrawRectangleRoundedLinesEx(errorBoxRect, 0.1f, 5, 5, MAROON);
+        DrawRectangleRounded(errorBoxRect, 0.1f, 5, RED);
+
+        const float fontSize = rect.height * 0.12f;
+        rect.y += (errorBoxRect.height * 0.5f) - fontSize / 2.0f;
+        DrawText(errorConnectingMsg.c_str(), rect.x + (rect.width * 0.01f), rect.y, fontSize, BLACK);
     }
 }
 
@@ -148,17 +165,7 @@ void Game::Update()
         break;
 
     case NetworkingTypes::Client:
-        client->Update();
-
-        if (client->GetNewPlayersSize() > 0)
-        {
-            for (int owner : client->GetNewPlayers())
-            {
-                AddPlayer(owner);
-            }
-
-            client->ClearNewPlayers();
-        }
+        ClientUpdate();
         break;
 
     default:
@@ -212,4 +219,29 @@ void Game::AddPlayer(int t_owner)
         player->SetOwner(true);
 
     players.push_back(player);
+}
+
+void Game::ClientUpdate()
+{
+    ConnectionType connection = client->JoiningTimer();
+    if (connection == ConnectionType::Waiting) // Awaiting join success
+        return;
+    else if (connection == ConnectionType::TookTooLong) // Go back to lobby
+    {
+        EnableCursor();
+        hadIssueConnecting = true;
+        gameState = GameStates::ChooseNetworkType;
+    }
+
+    client->Update();
+
+    if (client->GetNewPlayersSize() > 0)
+    {
+        for (int owner : client->GetNewPlayers())
+        {
+            AddPlayer(owner);
+        }
+
+        client->ClearNewPlayers();
+    }
 }

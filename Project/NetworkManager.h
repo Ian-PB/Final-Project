@@ -4,11 +4,6 @@
 #include <cstdint>
 #include <map>
 
-enum class ObjectType : uint8_t
-{
-	Player = 1
-};
-
 enum class PacketType : uint8_t
 {
 	JoinRequest = 1,

@@ -39,9 +39,13 @@ private:
     // Networking
     NetworkingTypes networkType;
     std::shared_ptr<Server> server;
+
+    void ClientUpdate();
     std::shared_ptr<Client> client;
 
     GameStates gameState = GameStates::ChooseNetworkType;
+    bool hadIssueConnecting = false;
+    std::string errorConnectingMsg = "There was an issue connecting to the server";
 
     // Joining variables
     char serverIpInput[64] = "";

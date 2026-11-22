@@ -28,6 +28,13 @@ class World;
 #define BUFLEN 512	// Max length of buffer
 #define PORT 8888	// The port on which to listen for incoming data
 
+enum class ConnectionType
+{
+	Waiting,
+	Connected,
+	TookTooLong
+};
+
 class Client
 {
 public:
@@ -50,10 +57,17 @@ public:
 	std::vector<int> GetNewPlayers() { return newPlayers; }
 	void ClearNewPlayers() { newPlayers.clear(); }
 
+	bool HasJoined() const { return joined; }
+	ConnectionType JoiningTimer();
+
 private:
 	void AcceptedJoin(int recv_len, char buf[]);
-	World& world;
 
+	// Join waiting
+	float joinTimer = 0.0f;
+	static const int JOINING_WAIT_DUR = 5;
+
+	World& world;
 	std::vector<int> newPlayers;
 
 	int clientID = -1;
