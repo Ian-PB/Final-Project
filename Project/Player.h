@@ -131,7 +131,8 @@ private:
 	float radiusChange = 0.5f;
 
 	void Shoot();
-	std::shared_ptr<Bullet> bullet;
+ 	std::vector<std::shared_ptr<Bullet>> bullets;
+	const int BULLET_AMOUNT = 20;
 
 	World& WORLD;
 

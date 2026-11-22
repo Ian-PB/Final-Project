@@ -4,6 +4,7 @@
 #include <iostream>
 #include "MeshCollider.h"
 #include <memory>
+#include "Bullet.h"
 
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
@@ -25,8 +26,11 @@ Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), WORLD(t_wo
 
     aboveCheckRay.direction = UP;
 
-    bullet = std::make_shared<Bullet>(t_owner, WORLD);
-    MeshCollider::AddTrackedPos(bullet->GetPosRef());
+    for (int i = 0; i < BULLET_AMOUNT; i++)
+    {
+        bullets.push_back(std::make_shared<Bullet>(t_owner, WORLD));
+        MeshCollider::AddTrackedPos(bullets[i]->GetPosRef());
+    }
 }
 
 void Player::Init()
@@ -81,7 +85,9 @@ void Player::Update()
     if (IsMouseButtonPressed(1))
     {
         breaking = !breaking;
-        bullet->SetBreaking(breaking);
+
+        for (std::shared_ptr<Bullet> bullet : bullets)
+            bullet->SetBreaking(breaking);
     }
 
 
@@ -100,7 +106,8 @@ void Player::Update()
             rayRadius = 0.0f;
     }
 
-    bullet->Update();
+    for (const std::shared_ptr<Bullet> bullet : bullets)
+        bullet->Update();
 
     testParticles->Update();
 }
@@ -122,7 +129,8 @@ void Player::Draw()
         DrawSphere(shootRayCollision.point, 0.2, randLight.color);
     }
 
-    bullet->Draw();
+    for (const std::shared_ptr<Bullet> bullet : bullets)
+        bullet->Draw();
 
     if (!isOwner)
     {
@@ -239,7 +247,8 @@ void Player::SetOwner(bool t_b)
 {
     isOwner = t_b;
 
-    bullet->SetOwner(isOwner);
+    for (std::shared_ptr<Bullet> bullet : bullets)
+        bullet->SetOwner(isOwner);
 }
 
 void Player::UpdatePositions()
@@ -495,8 +504,19 @@ void Player::EditAtPos(Vector3 t_pos)
 void Player::Shoot()
 {
     Vector3 startPos = camera->GetPos();
+    Vector3 dir = camera->GetForward();
 
-    bullet->Shoot(startPos, camera->GetForward());
+    // Get the first inactive bullet
+    for (int i = 0; i < bullets.size(); i++)
+    {
+        if (!bullets[i]->IsActive())
+        {
+            bullets[i]->Shoot(startPos, dir);
+            return;
+        }
+    }
+
+    bullets[0]->Shoot(startPos, dir);
 }
 
 void Player::CollisionDetection()

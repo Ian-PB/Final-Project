@@ -21,6 +21,8 @@ public:
 	void SetBreaking(bool b) { breaking = b; }
 	Vector3& GetPosRef() { return position; }
 
+	bool IsActive() const { return active; }
+
 	// Networking
 	virtual std::vector<char> Serialise() override;
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
@@ -33,7 +35,7 @@ private:
 
 	Vector3 position = {0.0f, 0.0f, 0.0f};
 	Vector3 velocity = { 0.0f, 0.0f, 0.0f };
-	float speed = 100.0f;
+	float speed = 150.0f;
 	float radius = 0.5f;
 
 	// Collision
