@@ -44,8 +44,15 @@ private:
     std::shared_ptr<Client> client;
 
     GameStates gameState = GameStates::ChooseNetworkType;
+
+    // Connection Error
     bool hadIssueConnecting = false;
-    std::string errorConnectingMsg = "There was an issue connecting to the server";
+    const std::string ERROR_CONNECTING_MSG = "There was an issue connecting to the server";
+    const std::string ERROR_INVALID_IP = "Invalid IP";
+
+    // IP check
+    bool IsValidIp(const std::string& t_ip);
+    bool invalidIpInput = false;
 
     // Joining variables
     char serverIpInput[64] = "";

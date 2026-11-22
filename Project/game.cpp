@@ -1,4 +1,8 @@
 #include "game.h"
+#include <WS2tcpip.h>
+#include <Windows.h>
+#include <ws2def.h>
+#include <string>
 
 void Game::Init()
 {
@@ -73,13 +77,18 @@ void Game::DrawPreGame()
     rect.y += rect.height * 1.2f;
     if (hadIssueConnecting)
     {
-        const Rectangle errorBoxRect = { rect.x, rect.y, rect.width, rect.height * 0.5f };
-        DrawRectangleRoundedLinesEx(errorBoxRect, 0.1f, 5, 5, MAROON);
-        DrawRectangleRounded(errorBoxRect, 0.1f, 5, RED);
+        const Rectangle errorPanel = { rect.x, rect.y, rect.width, rect.height * 0.5f };
+        int oldBackground = GuiGetStyle(DEFAULT, BACKGROUND_COLOR);
+        int oldLine = GuiGetStyle(DEFAULT, LINE_COLOR);
 
-        const float fontSize = rect.height * 0.12f;
-        rect.y += (errorBoxRect.height * 0.5f) - fontSize / 2.0f;
-        DrawText(errorConnectingMsg.c_str(), rect.x + (rect.width * 0.01f), rect.y, fontSize, BLACK);
+        GuiSetStyle(DEFAULT, BACKGROUND_COLOR, ColorToInt(RED));
+        GuiSetStyle(DEFAULT, LINE_COLOR, ColorToInt(MAROON));
+
+        GuiPanel(errorPanel, ERROR_CONNECTING_MSG.c_str());
+
+        // Restore original styles
+        GuiSetStyle(DEFAULT, BACKGROUND_COLOR, oldBackground);
+        GuiSetStyle(DEFAULT, LINE_COLOR, oldLine);
     }
 }
 
@@ -93,11 +102,45 @@ void Game::DrawJoinGame()
 
     GuiTextInputBox(rect, "Server IP: ", "Enter the Servers IP: ", serverIpInput, rect.height * 0.9f, "Join;Cancel", &activeButton, nullptr);
 
+    if (invalidIpInput)
+    {
+        Rectangle errorPanel;
+        errorPanel.width = GetScreenWidth() * 0.1f;
+        errorPanel.height = GetScreenHeight() * 0.1f;
+        errorPanel.x = GetScreenWidth() / 2.0f - errorPanel.width / 2.0f;
+        errorPanel.y = GetScreenHeight() / 2.0f - errorPanel.height / 2.0f;
+
+        // Save panel style
+        int oldBackground = GuiGetStyle(DEFAULT, BACKGROUND_COLOR);
+        int oldLine = GuiGetStyle(DEFAULT, LINE_COLOR);
+        // Set to error style
+        GuiSetStyle(DEFAULT, BACKGROUND_COLOR, ColorToInt(RED));
+        GuiSetStyle(DEFAULT, LINE_COLOR, ColorToInt(MAROON));
+
+        // Draw panel with error style
+        GuiPanel(errorPanel, ERROR_INVALID_IP.c_str());
+
+        // Restore original styles
+        GuiSetStyle(DEFAULT, BACKGROUND_COLOR, oldBackground);
+        GuiSetStyle(DEFAULT, LINE_COLOR, oldLine);
+    }
+
     if (activeButton == 1) // Join Pressed
     {
-        client->JoinServer(serverIpInput);
-        gameState = GameStates::Game;
-        DisableCursor();
+        if (IsValidIp(serverIpInput))
+        {
+            invalidIpInput = false;
+            client->JoinServer(serverIpInput);
+            gameState = GameStates::Game;
+            DisableCursor();
+        }
+        else
+        {
+            // Not a valid IP
+            invalidIpInput = true;
+            activeButton = -1;
+            return;
+        }
     }
     else if (activeButton == 2 || activeButton == 0) // Cancel
     {
@@ -244,4 +287,10 @@ void Game::ClientUpdate()
 
         client->ClearNewPlayers();
     }
+}
+
+bool Game::IsValidIp(const std::string& t_ip)
+{
+    IN_ADDR addr;
+    return InetPtonA(AF_INET, t_ip.c_str(), &addr) == 1;
 }
