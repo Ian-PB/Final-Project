@@ -36,12 +36,3 @@ int NetworkManager::GetSize(int t_owner)
 
 	return static_cast<int>(it->second.size());
 }
-
-//int NetworkManager::AddNewVector()
-//{
-//	int next = NetworkManager::networkObjects.rbegin()->first + 1;
-//	NetworkManager::networkObjects[next] = std::vector<NetworkObject*>();
-//
-//	// Return the new vectors key
-//	return next;
-//}

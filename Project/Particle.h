@@ -17,8 +17,6 @@ public:
 	void Spawn(Vector3 t_pos, Vector3 t_dir, float t_speed, float t_scale, Color t_col = RED);
 	bool IsActive() const { return active; }
 
-	void SetSpeeds(float t_min, float t_max);
-
 	// Optionals
 	void SetGravity(float t_gravityForce);
 	void SetDrag(float t_dragAmount);

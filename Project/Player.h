@@ -1,14 +1,20 @@
 #pragma once
 #include <raylib.h>
-#include "Lighting.h"
-#include "CapsuleCollider.h"
-#include "MainCamera.h"
 #include <memory>
 #include <vector>
-#include "Chunk.h"
-#include "ParticleSpawner.h"
-#include "Bomb.h"
+
 #include "NetworkObject.h"
+
+#include "MainCamera.h"
+#include "Lighting.h"
+
+#include "CapsuleCollider.h"
+#include "Chunk.h"
+
+#include "ParticleSpawner.h"
+
+#include "Bomb.h"
+#include "Bullet.h"
 
 
 // Reading on Character Controllers
@@ -40,7 +46,7 @@ public:
 	virtual std::vector<char> Serialise() override;
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
-	void SetOwner(bool t_b) { isOwner = t_b; }
+	void SetOwner(bool t_b);
 private:
 	bool isOwner = false;
 
@@ -124,8 +130,8 @@ private:
 	float rayRadius = 2.0f;
 	float radiusChange = 0.5f;
 
-	void ThrowBomb();
-	std::shared_ptr<Bomb> bomb;
+	void Shoot();
+	std::shared_ptr<Bullet> bullet;
 
 	World& WORLD;
 

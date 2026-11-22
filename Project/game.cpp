@@ -5,7 +5,6 @@ void Game::Init()
     Lighting::Init();
 
     world.InitColliders();
-    Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
 
     AddPlayer(0);
 
@@ -181,7 +180,7 @@ void Game::Update()
         localPlayer->Update();
     }
     else if (networkType == NetworkingTypes::Host)
-        players[0]->Update();
+        players[0]->Update(); 
 }
 
 std::shared_ptr<Player> Game::GetPlayerByOwner(int t_owner)

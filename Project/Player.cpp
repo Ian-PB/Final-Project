@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "MeshCollider.h"
+#include <memory>
 
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
@@ -24,8 +25,8 @@ Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), WORLD(t_wo
 
     aboveCheckRay.direction = UP;
 
-    bomb = std::make_shared<Bomb>(WORLD);
-    MeshCollider::AddTrackedPos(bomb->GetPosRef());
+    bullet = std::make_shared<Bullet>(t_owner, WORLD);
+    MeshCollider::AddTrackedPos(bullet->GetPosRef());
 }
 
 void Player::Init()
@@ -35,9 +36,9 @@ void Player::Init()
 
     testParticles = std::make_shared<ParticleSpawner>(&particleModel, 15, 300);
     testParticles->AddColor(RED);
-    testParticles->SetSpeeds(0.1f, 0.4f);
+    testParticles->SetSpeeds(8.0f, 32.0f);
     testParticles->SetScales(0.2f, 1.2f);
-    testParticles->SetGravity(0.01f);
+    testParticles->SetGravity(2.0f);
 
     rayHeightDist = height / 2.0f + RAY_EXTENTION;
 
@@ -76,11 +77,11 @@ void Player::Update()
     Movement();
 
     if (IsMouseButtonPressed(0))
-        ShootRay();
+        Shoot();
     if (IsMouseButtonPressed(1))
     {
         breaking = !breaking;
-        bomb->SetBreaking(breaking);
+        bullet->SetBreaking(breaking);
     }
 
 
@@ -99,7 +100,7 @@ void Player::Update()
             rayRadius = 0.0f;
     }
 
-    bomb->Update();
+    bullet->Update();
 
     testParticles->Update();
 }
@@ -121,7 +122,7 @@ void Player::Draw()
         DrawSphere(shootRayCollision.point, 0.2, randLight.color);
     }
 
-    bomb->Draw();
+    bullet->Draw();
 
     if (!isOwner)
     {
@@ -232,6 +233,13 @@ NetworkObject* Player::UpdateFromDeserialisation(const char* t_data)
     }
 
     return this;
+}
+
+void Player::SetOwner(bool t_b)
+{
+    isOwner = t_b;
+
+    bullet->SetOwner(isOwner);
 }
 
 void Player::UpdatePositions()
@@ -484,15 +492,11 @@ void Player::EditAtPos(Vector3 t_pos)
     WORLD.EditSphere(t_pos, rayRadius, breaking);
 }
 
-void Player::ThrowBomb()
+void Player::Shoot()
 {
     Vector3 startPos = camera->GetPos();
-    Vector3 distAhead = Vector3Scale(camera->GetForward(), 1.25f);
-    startPos = Vector3Add(startPos, distAhead);
 
-    Vector3 force = Vector3Scale(camera->GetForward(), 1.0f);
-
-    bomb->Throw(startPos, force);
+    bullet->Shoot(startPos, camera->GetForward());
 }
 
 void Player::CollisionDetection()

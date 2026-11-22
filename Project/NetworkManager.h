@@ -25,7 +25,6 @@ public:
 	static NetworkObject* GetObjectAt(int t_owner, int t_i);
 
 	static int GetSize(int t_owner);
-	// static int AddNewVector();
 private:
 	// 0 is objects owned by the host
 	static std::map<int, std::vector<NetworkObject*>> networkObjects;

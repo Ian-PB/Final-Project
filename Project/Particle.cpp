@@ -46,7 +46,7 @@ void Particle::Update()
 	}
 	rotation += rotationSpeed;
 
-	position = Vector3Add(position, velocity);
+	position = Vector3Add(position, velocity * GetFrameTime());
 
 	if (dragOn)
 		velocity = Vector3Scale(velocity, dragAmount);

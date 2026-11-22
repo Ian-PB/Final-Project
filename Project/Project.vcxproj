@@ -152,6 +152,7 @@
     <ClCompile Include="BaseBuildingBlock.cpp" />
     <ClCompile Include="BaseNoise.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CapsuleCollider.cpp" />
     <ClCompile Include="CavernNoise.cpp" />
     <ClCompile Include="Chunk.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="BaseBuildingBlock.h" />
     <ClInclude Include="BaseNoise.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="CavernNoise.h" />
     <ClInclude Include="Chunk.h" />
