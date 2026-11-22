@@ -268,7 +268,12 @@ void Game::ClientUpdate()
 {
     ConnectionType connection = client->JoiningTimer();
     if (connection == ConnectionType::Waiting) // Awaiting join success
+    {
+        int fontSize = 30;
+        int textWidth = MeasureText(joiningText.c_str(), fontSize);
+        DrawText(joiningText.c_str(), (GetScreenWidth() - textWidth) / 2.0f, (GetScreenHeight() - fontSize) / 2.0f, fontSize, WHITE);
         return;
+    }
     else if (connection == ConnectionType::TookTooLong) // Go back to lobby
     {
         EnableCursor();

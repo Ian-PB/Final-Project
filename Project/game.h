@@ -55,6 +55,7 @@ private:
     bool invalidIpInput = false;
 
     // Joining variables
+    std::string joiningText = "Joining...";
     char serverIpInput[64] = "";
     int activeButton = -1;
 
