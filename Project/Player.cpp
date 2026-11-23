@@ -5,11 +5,12 @@
 #include "MeshCollider.h"
 #include <memory>
 #include "Bullet.h"
+#include "Health.h"
 
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
-Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
+Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), health(t_owner), WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
     shootRayCollision.distance = 9999.0f;
@@ -131,6 +132,9 @@ void Player::Draw()
     for (const std::shared_ptr<Bullet> bullet : bullets)
         bullet->Draw();
 
+    // TEMP FOR TESTING
+    health.DrawOthers(camera->GetCameraRef());
+
     if (!isOwner)
     {
         Vector3 end = position;
@@ -139,6 +143,8 @@ void Player::Draw()
         start.y += radius;
         DrawCapsule(start, end, radius, 10, 10, WHITE);
         DrawCapsuleWires(start, end, radius, 10, 10, BLACK);
+
+        health.DrawOthers(camera->GetCameraRef());
     }
 
     collider.Draw();
@@ -179,6 +185,8 @@ void Player::Draw2D()
 
     // Crossair
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);
+
+    health.DrawUI();
 }
 
 std::vector<char> Player::Serialise()
@@ -254,6 +262,14 @@ void Player::UpdatePositions()
 {
     // Collider
     collider.SetPos(position);
+
+    // Health bar
+    //if (!isOwner)
+    //{
+        Vector3 healthPos = position;
+        healthPos.y += height + 8.0f;
+        health.SetPosition(healthPos);
+     // }
 
     // Rays
     Vector3 bodyCenter = { position.x, position.y + height / 2.0f, position.z };

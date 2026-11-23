@@ -15,6 +15,7 @@
 
 #include "Bomb.h"
 #include "Bullet.h"
+#include "Health.h"
 
 
 // Reading on Character Controllers
@@ -49,6 +50,7 @@ public:
 
 	virtual void SetOwner(bool t_b) override;
 private:
+	Health health;
 
 	void UpdatePositions();
 
