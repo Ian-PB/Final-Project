@@ -43,6 +43,8 @@ public:
 	Vector3& GetPosRef() { return position; }
 	void SetCamera(std::shared_ptr<MainCamera> t_cam) { camera = t_cam; }
 	float GetHeight() const { return height; }
+	CapsuleCollider GetCollider() { return collider; }
+	Health GetHealth() const { return health; }
 
 	void SetPos(Vector3 t_pos) { position = t_pos; }
 
@@ -50,6 +52,9 @@ public:
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
 	virtual void SetOwner(bool t_b) override;
+
+	void TakeDamage(int t_amount);
+
 private:
 	Health health;
 

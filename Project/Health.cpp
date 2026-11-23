@@ -46,7 +46,11 @@ void Health::DrawTexture()
 
 void Health::DrawUI()
 {
-	DrawTextureEx(healthBarTexture.texture, { 0.0f, 0.0f }, 0, 1, WHITE);
+	Vector2 pos;
+	pos.x = (GetScreenWidth() * 0.5f) - (healthBarTexture.texture.width * 0.5f);
+	pos.y = (GetScreenHeight() * 0.9f) + (healthBarTexture.texture.height * 0.5f);
+
+	DrawTextureEx(healthBarTexture.texture, pos, 0, 1, WHITE);
 }
 
 void Health::DrawOthers(const Camera& t_cam, Vector3 t_pos)

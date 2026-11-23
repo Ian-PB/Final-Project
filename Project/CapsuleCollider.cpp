@@ -93,6 +93,26 @@ float CapsuleCollider::ShortestSegmentToSegmentDistSq(Vector3 t_p1, Vector3 t_q1
     return Vector3DistanceSqr(t_closest1, t_closest2);
 }
 
+// Sources of research
+// https://stackoverflow.com/questions/27733634/closest-point-on-a-3-dimensional-line-to-another-point
+// https://www.youtube.com/watch?v=YEQZonfT5B4
+Vector3 CapsuleCollider::ClosestPointOnLine(Vector3 t_lineStart, Vector3 t_lineEnd, Vector3 t_point)
+{
+    Vector3 line = Vector3Subtract(t_lineEnd, t_lineStart);
+    Vector3 toPoint = Vector3Subtract(t_point, t_lineStart);
+
+    float lengthSquared = Vector3LengthSqr(line);
+
+    if (lengthSquared == 0.0f)
+        return t_lineStart;
+
+    float howFarAlong = Vector3DotProduct(toPoint, line) / lengthSquared;
+
+    howFarAlong = Clamp(howFarAlong, 0.0f, 1.0f);
+
+    return Vector3Add(t_lineStart, Vector3Scale(line, howFarAlong));
+}
+
 // Sources of research and editted code
 // https://blog.bearcats.nl/capsule-triangle-sweep/
 // https://cseweb.ucsd.edu/classes/sp19/cse291-d/Files/CSE291_13_CollisionDetection.pdf
@@ -228,4 +248,34 @@ CollisionInfo CapsuleCollider::CheckAgainstTriangles(const std::vector<Triangle>
     }
 
     return deepestCollision;
+}
+
+CollisionInfo CapsuleCollider::CheckAgainstSphere(const Vector3& t_pos, const float& t_radius)
+{
+    CollisionInfo collisionInfo;
+
+    Vector3 lineStart = position;
+    lineStart.y += radius;
+
+    Vector3 lineEnd = position;
+    lineEnd.y += std::max(radius, height - radius);
+
+    Vector3 closestPointOnLine = ClosestPointOnLine(lineStart, lineEnd, t_pos);
+    float distToPoint = Vector3Distance(t_pos, closestPointOnLine);
+
+    float addedRadii = t_radius + radius;
+    // No collision
+    if (distToPoint > addedRadii)
+        return collisionInfo;
+    
+    collisionInfo.hit = true;
+    collisionInfo.penetration = addedRadii - distToPoint;
+
+    // Error checking
+    if (distToPoint > 0.000001f)
+        collisionInfo.normal = Vector3Normalize(Vector3Subtract(t_pos, closestPointOnLine));
+    else
+        collisionInfo.normal = { 0.0f, 1.0f, 0.0f }; // Default to upwards
+
+    return collisionInfo;
 }

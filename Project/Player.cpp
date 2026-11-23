@@ -263,6 +263,11 @@ void Player::SetOwner(bool t_b)
         bullet->SetOwner(isOwner);
 }
 
+void Player::TakeDamage(int t_amount)
+{
+    health.TakeDamage(t_amount);
+}
+
 void Player::UpdatePositions()
 {
     // Collider

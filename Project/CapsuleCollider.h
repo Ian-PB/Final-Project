@@ -11,8 +11,10 @@ public:
 	void Draw() override;
 
 	CollisionInfo CheckAgainstTriangles(const std::vector<Triangle>& t_triangles);
+	CollisionInfo CheckAgainstSphere(const Vector3& t_pos, const float& t_radius);
 
 private:
+	Vector3 ClosestPointOnLine(Vector3 t_lineStart, Vector3 t_lineEnd, Vector3 t_point);
 	void TestPoints(Vector3 t_capsulePoint, Vector3 t_trianglePoint, float& t_minDistSq, Vector3& t_closestCapsule, Vector3& t_closestTriangle);
 	CollisionInfo CapsuleTriangle(Vector3 t_start, Vector3 t_end, const Triangle& tri);
 	float ShortestSegmentToSegmentDistSq(Vector3 t_p1, Vector3 t_q1, Vector3 t_p2, Vector3 t_q2, Vector3& t_closest1, Vector3& t_closest2);

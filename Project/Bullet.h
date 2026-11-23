@@ -28,13 +28,14 @@ public:
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
 private:
-
 	bool active = false;
 
 	Vector3 position = {0.0f, 0.0f, 0.0f};
 	Vector3 velocity = { 0.0f, 0.0f, 0.0f };
 	float speed = 125.0f;
 	float radius = 0.5f;
+
+	int damage = 10;
 
 	// Collision
 	void CollisionDetection();

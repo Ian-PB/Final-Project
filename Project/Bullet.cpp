@@ -3,6 +3,9 @@
 #include <raymath.h>
 #include <vector>
 
+#include "PlayersManager.h"
+#include "CapsuleCollider.h"
+
 Bullet::Bullet(int t_owner, World& t_world) : NetworkObject(t_owner), WORLD(t_world)
 {
     position = { 0.0f, 0.0f, 0.0f };
@@ -120,6 +123,26 @@ NetworkObject* Bullet::UpdateFromDeserialisation(const char* t_data)
 
 void Bullet::CollisionDetection()
 {
+    // Player collision
+    for (const std::shared_ptr<Player> player : PlayersManager::GetPlayers())
+    {
+        // Check if not itself
+        if (player->GetOwner() == owner)
+            continue;
+
+        CapsuleCollider playerCollider = player->GetCollider();
+        CollisionInfo collisionInfo = playerCollider.CheckAgainstSphere(position, radius);
+
+        // Hit found
+        if (collisionInfo.hit)
+        {
+            player->TakeDamage(damage);
+
+            OnHit();
+            return;
+        }
+    }
+
     // World collision
     for (const Chunk* chunk : occupiedChunks)
     {
