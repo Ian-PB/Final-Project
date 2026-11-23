@@ -8,8 +8,9 @@ public:
 	Health(int t_owner);
 	~Health();
 
+	void DrawTexture();
 	void DrawUI();
-	void DrawOthers(Camera& t_cam);
+	void DrawOthers(const Camera& t_cam, Vector3 t_pos);
 	void Update();
 
 	void TakeDamage(int t_amount);
@@ -20,8 +21,6 @@ public:
 	void ResetHealth();
 	void SetHealth(int t_health) { currentHealth = t_health; }
 
-	void SetPosition(Vector3 t_pos) { position = t_pos; }
-
 private:
 
 	bool alive = true;
@@ -29,6 +28,7 @@ private:
 	int maxHealth = 100;
 
 	Vector3 position;
+	float yOffset = 0.5f;
 
 	// Visuals
 	Rectangle borderRect;
@@ -38,4 +38,3 @@ private:
 	RenderTexture2D healthBarTexture;
 	Rectangle healthBarSource;
 };
-

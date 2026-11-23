@@ -112,7 +112,7 @@ void Player::Update()
     testParticles->Update();
 }
 
-void Player::Draw()
+void Player::Draw(const Camera& t_camera)
 {
     if (shootRayCollision.hit)
     {
@@ -132,9 +132,6 @@ void Player::Draw()
     for (const std::shared_ptr<Bullet> bullet : bullets)
         bullet->Draw();
 
-    // TEMP FOR TESTING
-    health.DrawOthers(camera->GetCameraRef());
-
     if (!isOwner)
     {
         Vector3 end = position;
@@ -144,7 +141,10 @@ void Player::Draw()
         DrawCapsule(start, end, radius, 10, 10, WHITE);
         DrawCapsuleWires(start, end, radius, 10, 10, BLACK);
 
-        health.DrawOthers(camera->GetCameraRef());
+        // Health bar
+        Vector3 healthPos = position;
+        healthPos.y += height;
+        health.DrawOthers(t_camera, healthPos);
     }
 
     collider.Draw();
@@ -187,6 +187,11 @@ void Player::Draw2D()
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);
 
     health.DrawUI();
+}
+
+void Player::UpdateHealthBarTexture()
+{
+    health.DrawTexture();
 }
 
 std::vector<char> Player::Serialise()
@@ -262,14 +267,6 @@ void Player::UpdatePositions()
 {
     // Collider
     collider.SetPos(position);
-
-    // Health bar
-    //if (!isOwner)
-    //{
-        Vector3 healthPos = position;
-        healthPos.y += height + 8.0f;
-        health.SetPosition(healthPos);
-     // }
 
     // Rays
     Vector3 bodyCenter = { position.x, position.y + height / 2.0f, position.z };

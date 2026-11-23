@@ -36,8 +36,9 @@ public:
 	void Init();
 
 	void Update();
-	void Draw();
+	void Draw(const Camera& t_camera);
 	void Draw2D();
+	void UpdateHealthBarTexture();
 
 	Vector3& GetPosRef() { return position; }
 	void SetCamera(std::shared_ptr<MainCamera> t_cam) { camera = t_cam; }

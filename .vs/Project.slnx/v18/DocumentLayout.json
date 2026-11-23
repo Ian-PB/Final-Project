@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -34,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "Project\\game.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.cpp",
               "RelativeToolTip": "Project\\game.cpp",
-              "ViewState": "AgIAAOQAAAAAAAAAAAAmwOUAAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAAAKMAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-18T16:05:34.515Z",
               "IsPinned": true,
@@ -58,7 +58,7 @@
               "RelativeDocumentMoniker": "Project\\game.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.h",
               "RelativeToolTip": "Project\\game.h",
-              "ViewState": "AgIAABkAAAAAAAAAAAAmwCQAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAABwAAAAAAAAAAAAUwCoAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-18T16:05:31.134Z",
               "IsPinned": true,
@@ -66,13 +66,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "Health.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp",
               "RelativeDocumentMoniker": "Project\\Health.cpp",
-              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp*",
-              "RelativeToolTip": "Project\\Health.cpp*",
-              "ViewState": "AgIAADMAAAAAAAAAAAAUwEMAAABZAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp",
+              "RelativeToolTip": "Project\\Health.cpp",
+              "ViewState": "AgIAACQAAAAAAAAAAAAmwDQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-23T00:00:07.928Z",
               "IsPinned": true,
@@ -80,13 +80,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Health.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h",
               "RelativeDocumentMoniker": "Project\\Health.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h",
               "RelativeToolTip": "Project\\Health.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAUwB4AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-22T23:27:52.575Z",
               "IsPinned": true,
@@ -100,7 +100,7 @@
               "RelativeDocumentMoniker": "Project\\Player.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeToolTip": "Project\\Player.cpp",
-              "ViewState": "AgIAAIAAAAAAAAAAAAAmwA4BAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAmwJEAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-22T23:39:59.419Z",
               "IsPinned": true,
@@ -108,13 +108,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeDocumentMoniker": "Project\\Player.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeToolTip": "Project\\Player.h",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAmwJUAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACUAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-22T23:40:11.364Z",
               "IsPinned": true,

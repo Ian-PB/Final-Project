@@ -150,13 +150,18 @@ void Game::DrawJoinGame()
 
 void Game::DrawGame()
 {
+    for (const std::shared_ptr<Player> p : players)
+    {
+        p->UpdateHealthBarTexture();
+    }
+
     BeginMode3D(camera->GetCameraRef());
 
         world.Draw();
 
         for (const std::shared_ptr<Player> player : players)
         {
-            player->Draw();
+            player->Draw(camera->GetCameraRef());
         }
 
     EndMode3D();
