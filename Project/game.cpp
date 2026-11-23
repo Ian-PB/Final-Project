@@ -3,16 +3,19 @@
 #include <Windows.h>
 #include <ws2def.h>
 #include <string>
+#include "PlayersManager.h"
 
 void Game::Init()
 {
     Lighting::Init();
 
     world.InitColliders();
+    PlayersManager::SetWorldPointer(&world);
 
-    AddPlayer(0);
+    PlayerAdded(PlayersManager::AddPlayer(0), 0);
+    hostPlayer = PlayersManager::GetPlayerByOwner(0);
 
-    pauseMenu = std::make_shared<PauseMenu>(*players[0], world); // player[0] is wrong currently
+    pauseMenu = std::make_shared<PauseMenu>(*PlayersManager::GetPlayerByOwner(0), world); // player[0] is wrong currently
 
     EnableCursor();
 }
@@ -55,7 +58,7 @@ void Game::DrawPreGame()
         gameState = GameStates::Game;
         DisableCursor();
 
-        players[0]->SetOwner(true);
+        hostPlayer->SetOwner(true);
 
         return;
     }
@@ -150,7 +153,7 @@ void Game::DrawJoinGame()
 
 void Game::DrawGame()
 {
-    for (const std::shared_ptr<Player> p : players)
+    for (const std::shared_ptr<Player> p : PlayersManager::GetPlayers())
     {
         p->UpdateHealthBarTexture();
     }
@@ -159,7 +162,7 @@ void Game::DrawGame()
 
         world.Draw();
 
-        for (const std::shared_ptr<Player> player : players)
+        for (const std::shared_ptr<Player> player : PlayersManager::GetPlayers())
         {
             player->Draw(camera->GetCameraRef());
         }
@@ -169,12 +172,12 @@ void Game::DrawGame()
     if (networkType == NetworkingTypes::Client && client->GetClientID() != -1)
     {
         {
-            std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client->GetClientsObjs());
+            std::shared_ptr<Player> localPlayer = PlayersManager::GetPlayerByOwner(client->GetClientsObjs());
             localPlayer->Draw2D();
         }
     }
     else if (networkType == NetworkingTypes::Host)
-        players[0]->Draw2D();
+        hostPlayer->Draw2D();
     
     DrawFPS(0, 0);
 
@@ -198,7 +201,7 @@ void Game::Update()
         {
             for (int owner : server->GetNewPlayers())
             {
-                AddPlayer(owner);
+                PlayerAdded(PlayersManager::AddPlayer(owner), owner);
             }
 
             server->ClearNewPlayers();
@@ -225,53 +228,29 @@ void Game::Update()
 
     if (networkType == NetworkingTypes::Client && client->GetClientID() != -1)
     {
-        std::shared_ptr<Player> localPlayer = GetPlayerByOwner(client->GetClientsObjs());
+        std::shared_ptr<Player> localPlayer = PlayersManager::GetPlayerByOwner(client->GetClientsObjs());
         localPlayer->Update();
     }
     else if (networkType == NetworkingTypes::Host)
-        players[0]->Update(); 
+        hostPlayer->Update();
 }
 
-std::shared_ptr<Player> Game::GetPlayerByOwner(int t_owner)
+void Game::PlayerAdded(std::shared_ptr<Player> t_player, int t_owner)
 {
-    for (const std::shared_ptr<Player>& player : players)
-    {
-        if (player->GetOwner() == t_owner)
-            return player;
-    }
-
-    return nullptr;
-}
-
-void Game::AddPlayer(int t_owner)
-{
-    // Create the player
-    std::shared_ptr<Player> player = std::make_shared<Player>(t_owner, world);
-    player->Init();
-
-    // Set spawn position
-    Vector3 worldCenter = Vector3Scale(world.GetSizeDimensions(), 0.5f);
-    player->SetPos(worldCenter);
-
-    // Allow mesh tracking
-    MeshCollider::AddTrackedPos(player->GetPosRef());
-
     // Set as owner if needed
     if (networkType == NetworkingTypes::Client && client->GetClientID() != -1 && t_owner == client->GetClientsObjs())
     {
-        player->SetOwner(true);
-        camera = std::make_shared<MainCamera>(player->GetPosRef(), 0.8f);
-        camera->SetHeight(player->GetHeight());
-        player->SetCamera(camera);
+        t_player->SetOwner(true);
+        camera = std::make_shared<MainCamera>(t_player->GetPosRef(), 0.8f);
+        camera->SetHeight(t_player->GetHeight());
+        t_player->SetCamera(camera);
     }
     else if (t_owner == 0)
     {
-        camera = std::make_shared<MainCamera>(player->GetPosRef(), 0.8f);
-        camera->SetHeight(player->GetHeight());
-        player->SetCamera(camera);
+        camera = std::make_shared<MainCamera>(t_player->GetPosRef(), 0.8f);
+        camera->SetHeight(t_player->GetHeight());
+        t_player->SetCamera(camera);
     }
-
-    players.push_back(player);
 }
 
 void Game::ClientUpdate()
@@ -296,7 +275,7 @@ void Game::ClientUpdate()
     {
         for (int owner : client->GetNewPlayers())
         {
-            AddPlayer(owner);
+            PlayerAdded(PlayersManager::AddPlayer(owner), owner);
         }
 
         client->ClearNewPlayers();

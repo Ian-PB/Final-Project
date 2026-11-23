@@ -4,8 +4,9 @@
 
 #include <raylib.h>
 #include "World.h"
-#include "Player.h"
 #include "PauseMenu.h"
+#include "Player.h"
+#include <memory>
 
 enum class NetworkingTypes
 {
@@ -34,11 +35,9 @@ public:
 
 private:
 
+    void PlayerAdded(std::shared_ptr<Player> t_player, int t_owner);
+
     std::shared_ptr<MainCamera> camera;
-
-
-    std::shared_ptr<Player> GetPlayerByOwner(int t_owner);
-    void AddPlayer(int t_owner);
 
     // Networking
     NetworkingTypes networkType;
@@ -63,8 +62,9 @@ private:
     char serverIpInput[64] = "";
     int activeButton = -1;
 
-    std::vector<std::shared_ptr<Player>> players;
     World world;
+
+    std::shared_ptr<Player> hostPlayer;
 
     std::shared_ptr<PauseMenu> pauseMenu;
 };

@@ -176,6 +176,7 @@
     <ClCompile Include="ParticleSpawner.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayersManager.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="SlidingState.cpp" />
     <ClCompile Include="SphereBuildingBlock.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="ParticleSpawner.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayersManager.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="SlidingState.h" />
