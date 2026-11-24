@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include "PlayersManager.h"
 
-std::string Client::serverIP = "192.168.0.100";
+std::string Client::serverIP = "";
 
 Client::Client(World& t_world) : world(t_world)
 {

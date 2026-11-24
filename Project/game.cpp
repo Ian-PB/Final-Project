@@ -135,6 +135,7 @@ void Game::DrawJoinGame()
             invalidIpInput = false;
             client->JoinServer(serverIpInput);
             gameState = GameStates::Game;
+            serverIpInput[0] = '\0'; // Clear ip input
             DisableCursor();
         }
         else
