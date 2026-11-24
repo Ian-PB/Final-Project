@@ -30,7 +30,6 @@ Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), health(t_o
     for (int i = 0; i < BULLET_AMOUNT; i++)
     {
         bullets.push_back(std::make_shared<Bullet>(t_owner, WORLD));
-        MeshCollider::AddTrackedPos(bullets[i]->GetPosRef());
     }
 }
 
@@ -258,6 +257,13 @@ NetworkObject* Player::UpdateFromDeserialisation(const char* t_data)
 void Player::SetOwner(bool t_b)
 {
     isOwner = t_b;
+
+    // Allow mesh tracking
+    MeshCollider::AddTrackedPos(GetPosRef());
+    for (int i = 0; i < BULLET_AMOUNT; i++)
+    {
+        MeshCollider::AddTrackedPos(bullets[i]->GetPosRef());
+    }
 
     for (std::shared_ptr<Bullet> bullet : bullets)
         bullet->SetOwner(isOwner);

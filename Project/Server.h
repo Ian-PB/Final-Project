@@ -30,6 +30,13 @@ struct ConnectedClient
 {
 	sockaddr_in address;
 	int id;
+
+	// Alive checking
+	bool AliveCheck();
+	void ResetAliveTimer();
+	float aliveTimer = 0.0f;
+	static const int TIMER_DUR = 10;
+	bool alive = true;
 };
 
 class Server
@@ -48,6 +55,9 @@ public:
 
 private:
 	World& world;
+
+	void RemoveClient(int t_i);
+	void SendPlayerRemoval(int t_owner);
 
 	void SendAddPlayer(const sockaddr_in& t_address, int t_clientID);
 	std::vector<int> newPlayers;

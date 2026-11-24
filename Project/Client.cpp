@@ -2,6 +2,7 @@
 #include "NetworkManager.h"
 #include <iostream>
 #include <raylib.h>
+#include "PlayersManager.h"
 
 std::string Client::serverIP = "192.168.0.100";
 
@@ -76,6 +77,11 @@ void Client::Update()
 		{
 			SendObject(NetworkManager::GetObjectAt(clientObjs, i));
 		}
+
+		if (AliveTimer())
+		{
+			SendAliveMessage();
+		}
 	}
 
 	char buf[BUFLEN];
@@ -131,12 +137,19 @@ void Client::Update()
 				continue;
 			}
 		}
-		// When an object needs to be spawned this is recieved
-		else if (type == PacketType::SpawnNetworkObject)
+		else if (type == PacketType::RemoveClient)
 		{
-			// Add object to networkObjects
+			if (recv_len < 5)
+				continue;
 
-			// Send to Server
+			uint32_t networkID;
+			memcpy(&networkID, buf + 1, sizeof(networkID));
+
+			int owner = static_cast<int>(ntohl(networkID));
+			NetworkManager::RemoveOwner(owner);
+			PlayersManager::RemovePlayer(owner);
+
+			std::cout << "Player removed: " << owner << std::endl;
 		}
 	}
 }
@@ -199,6 +212,42 @@ void Client::AcceptedJoin(int recv_len, char buf[])
 	joined = true;
 
 	std::cout << "Joined server - Client ID: " << clientID << std::endl;
+}
+
+void Client::SendAliveMessage()
+{
+	std::vector<char> buffer;
+
+	auto write = [&](const void* data, size_t size) {
+		const char* bytes = reinterpret_cast<const char*>(data);
+		buffer.insert(buffer.end(), bytes, bytes + size);
+		};
+
+	// Packet type
+	uint8_t type = static_cast<uint8_t>(PacketType::ClientAlive);
+	write(&type, sizeof(type));
+
+	// Send the packet
+	if (sendto(s, buffer.data(), static_cast<int>(buffer.size()), 0, (struct sockaddr*)&si_other, slen) == SOCKET_ERROR)
+	{
+		printf("sendto() failed with error code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+
+	std::cout << "Client Alive sent to server" << std::endl;
+}
+
+bool Client::AliveTimer()
+{
+	if (aliveTimer >= TIME_BETWEEN_ALIVE_MSGS)
+	{
+		aliveTimer = 0.0f;
+		return true;
+	}
+
+	aliveTimer += GetFrameTime();
+
+	return false;
 }
 
 ConnectionType Client::JoiningTimer()

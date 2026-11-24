@@ -27,10 +27,19 @@ std::shared_ptr<Player> PlayersManager::AddPlayer(int t_owner)
     Vector3 worldCenter = Vector3Scale(world->GetSizeDimensions(), 0.5f);
     newPlayer->SetPos(worldCenter);
 
-    // Allow mesh tracking
-    MeshCollider::AddTrackedPos(newPlayer->GetPosRef());
-
     players.push_back(newPlayer);
 
     return newPlayer;
+}
+
+void PlayersManager::RemovePlayer(int t_owner)
+{
+    for (auto it = players.begin(); it != players.end(); it++)
+    {
+        if ((*it)->GetOwner() == t_owner)
+        {
+            players.erase(it);
+            return;
+        }
+    }
 }

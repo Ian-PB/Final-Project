@@ -8,6 +8,8 @@
 #include "World.h"
 
 #include "Health.h"
+#include <raylib.h>
+#include "PlayersManager.h"
 
 Server::Server(World& t_world) : world(t_world)
 {
@@ -66,7 +68,53 @@ void Server::Update()
 {
 	RecievingUpdate();
 
+	// Allows the removal of multiple clients without worries
+	for (int i = clients.size() - 1; i >= 0; i--)
+	{
+		if (clients[i].AliveCheck())
+		{
+			// Client is gone
+			RemoveClient(i);
+		}
+	}
+
 	ServerSending();
+}
+
+void Server::RemoveClient(int t_i)
+{
+	std::cout << "Client disconnected: " << clients[t_i].id << std::endl;
+
+	int owner = clients[t_i].id + 1;
+	NetworkManager::RemoveOwner(owner);
+	PlayersManager::RemovePlayer(owner);
+
+	// Remove from clients array
+	clients.erase(clients.begin() + t_i);
+
+	SendPlayerRemoval(owner);
+}
+
+void Server::SendPlayerRemoval(int t_owner)
+{
+	// Send client removal request
+	char packet[5];
+	packet[0] = static_cast<char>(PacketType::RemoveClient);
+
+	uint32_t networkID = htonl(static_cast<uint32_t>(t_owner));
+
+	memcpy(packet + 1, &networkID, sizeof(networkID));
+
+	for (const ConnectedClient& client : clients)
+	{
+		if (sendto(s, packet, sizeof(packet), 0, (struct sockaddr*)&client.address, sizeof(client.address)) == SOCKET_ERROR)
+		{
+			printf("sendto() failed with error code : %d", WSAGetLastError());
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	std::cout << "Sent client removal request to: " << t_owner << std::endl;
 }
 
 void Server::SendAddPlayer(const sockaddr_in& t_address, int t_clientID)
@@ -152,12 +200,15 @@ void Server::RecievingUpdate()
 			// Send object directly after deserializing
 			SendObjectToClients(obj);
 		}
-		// When an object needs to be spawned this is recieved
-		else if (type == PacketType::SpawnNetworkObject)
+		else if (type == PacketType::ClientAlive)
 		{
-			// Add object to networkObjects
+			int clientIndex = FindClient(sender);
 
-			// Send to all clients besides owner
+			if (clientIndex == -1)
+				continue;
+
+			// Reset alive timer
+			clients[clientIndex].ResetAliveTimer();
 		}
 	}
 }
@@ -300,4 +351,28 @@ void Server::SetServerIP()
 	struct in_addr addr;
 	memcpy(&addr, hostInfo->h_addr_list[0], sizeof(struct in_addr));
 	serverIpAddress = inet_ntoa(addr);
+}
+
+bool ConnectedClient::AliveCheck()
+{
+	aliveTimer += GetFrameTime();
+
+	if (aliveTimer >= TIMER_DUR)
+	{
+		aliveTimer = 0.0f;
+		return true;
+	}
+
+	if (aliveTimer >= TIMER_DUR / 2.0f)
+	{
+		alive = false;
+	}
+
+	return false;
+}
+
+void ConnectedClient::ResetAliveTimer()
+{
+	aliveTimer = 0.0f;
+	alive = true;
 }

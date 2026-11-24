@@ -67,6 +67,12 @@ private:
 	float joinTimer = 0.0f;
 	static const int JOINING_WAIT_DUR = 30;
 
+	// Alive check timer
+	void SendAliveMessage();
+	bool AliveTimer();
+	float aliveTimer = 0.0f;
+	static const int TIME_BETWEEN_ALIVE_MSGS = 5;
+
 	World& world;
 	std::vector<int> newPlayers;
 

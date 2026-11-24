@@ -12,6 +12,7 @@ public:
 
 	static std::shared_ptr<Player> GetPlayerByOwner(int t_owner);
 	static std::shared_ptr<Player> AddPlayer(int t_owner);
+	static void RemovePlayer(int t_owner);
 
 	static std::vector<std::shared_ptr<Player>> GetPlayers() { return players; }
 private:

@@ -26,6 +26,11 @@ NetworkObject* NetworkManager::GetObjectAt(int t_owner, int t_i)
 	return it->second[t_i];
 }
 
+void NetworkManager::RemoveOwner(int t_owner)
+{
+	networkObjects.erase(t_owner);
+}
+
 int NetworkManager::GetSize(int t_owner)
 {
 	auto it = networkObjects.find(t_owner);
