@@ -18,9 +18,11 @@ public:
 	virtual std::vector<char> Serialise() override;
 	virtual NetworkObject* UpdateFromDeserialisation(const char* t_data) override;
 
-	void ResetHealth();
+	void Reset();
 	void SetHealth(int t_health) { currentHealth = t_health; }
 	int GetHealth() const { return currentHealth; }
+
+	bool isAlive() const { return alive; }
 
 private:
 

@@ -56,7 +56,14 @@ public:
 	void TakeDamage(int t_amount);
 
 private:
+	void Respawn();
+	void DrawDeathScreen();
+	bool RespawnTimer();
 	Health health;
+	float respawnTimer = 0.0f;
+	static const int RESPAWN_DUR = 5;
+	std::string deathText = "You died!";
+	float deathTextSize = 30.0f;
 
 	void UpdatePositions();
 
@@ -119,7 +126,7 @@ private:
 
 
 	void FreeFly();
-	bool freeFly = true;
+	bool freeFly = false;
 
 	Vector3 velocity = { 0.0f, 0.0f, 0.0f };
 	Vector3 position;
@@ -156,9 +163,6 @@ private:
 	bool displayDebugElements = false;
 
 	Light& light;
-
-	void SetRandLight(Vector3 pos);
-	Light& randLight;
 
 	Model particleModel;
 	std::shared_ptr<ParticleSpawner> testParticles;

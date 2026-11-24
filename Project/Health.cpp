@@ -6,7 +6,7 @@
 
 Health::Health(int t_owner) : NetworkObject(t_owner)
 {
-	ResetHealth();
+	Reset();
 
 	// Border
 	borderRect.width = 200.0f;
@@ -108,7 +108,7 @@ NetworkObject* Health::UpdateFromDeserialisation(const char* t_data)
 	return this;
 }
 
-void Health::ResetHealth()
+void Health::Reset()
 {
 	currentHealth = maxHealth;
 	alive = true;

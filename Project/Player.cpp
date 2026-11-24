@@ -10,7 +10,7 @@
 const Vector3 Player::UP = { 0.0f, 1.0f, 0.0f };
 const Vector3 Player::DOWN = { 0.0f, -1.0f, 0.0f };
 
-Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), health(t_owner), WORLD(t_world), light(Lighting::CreateLight(WHITE)), randLight(Lighting::CreateLight(WHITE))
+Player::Player(int t_owner, World& t_world) : NetworkObject(t_owner), health(t_owner), WORLD(t_world), light(Lighting::CreateLight(WHITE))
 {
     position = collider.GetPos();
     shootRayCollision.distance = 9999.0f;
@@ -46,7 +46,6 @@ void Player::Init()
 
     rayHeightDist = height / 2.0f + RAY_EXTENTION;
 
-    randLight.strength = 5.0f;
     light.strength = 25.0f;
     collider.Setup(height, radius);
 
@@ -66,6 +65,16 @@ void Player::Update()
     // No need to update if not the owner
     if (!isOwner)
         return;
+
+    if (!health.isAlive())
+    {
+        if (RespawnTimer())
+        {
+            Respawn();
+        }
+
+        return;
+    }
 
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
@@ -124,14 +133,12 @@ void Player::Draw(const Camera& t_camera)
             // Temp destruction sphere
             DrawSphereWires(shootRayCollision.point, rayRadius, 10, 10, RED);
         }
-
-        DrawSphere(shootRayCollision.point, 0.2, randLight.color);
     }
 
     for (const std::shared_ptr<Bullet> bullet : bullets)
         bullet->Draw();
 
-    if (!isOwner)
+    if (!isOwner && health.isAlive())
     {
         Vector3 end = position;
         end.y += std::max(radius, height - radius);
@@ -186,6 +193,11 @@ void Player::Draw2D()
     DrawCircle(GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, 2, BLUE);
 
     health.DrawUI();
+
+    if (!health.isAlive())
+    {
+        DrawDeathScreen();
+    }
 }
 
 void Player::UpdateHealthBarTexture()
@@ -272,6 +284,42 @@ void Player::SetOwner(bool t_b)
 void Player::TakeDamage(int t_amount)
 {
     health.TakeDamage(t_amount);
+}
+
+void Player::Respawn()
+{
+    health.Reset();
+    Vector3 worldDimensions = WORLD.GetSizeDimensions();
+    position = Vector3Scale(worldDimensions, 0.5f);
+    UpdatePositions();
+}
+
+void Player::DrawDeathScreen()
+{
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), { 0, 0, 0, 100 });
+
+    deathTextSize = GetScreenHeight() * 0.1f;
+    int textLength = MeasureText(deathText.c_str(), deathTextSize);
+
+    DrawText(deathText.c_str(), GetScreenWidth() / 2.0f - textLength / 2.0f, GetScreenHeight() / 2.0f - deathTextSize, deathTextSize, RED);
+
+    // Timer
+    std::string respawnCountdown = std::to_string((int)std::ceil(RESPAWN_DUR - respawnTimer));
+    int timerLength = MeasureText(respawnCountdown.c_str(), deathTextSize);
+    DrawText(respawnCountdown.c_str(), GetScreenWidth() / 2.0f - timerLength / 2.0f, GetScreenHeight() / 2.0f + deathTextSize, deathTextSize, RED);
+}
+
+bool Player::RespawnTimer()
+{
+    respawnTimer += GetFrameTime();
+
+    if (respawnTimer >= RESPAWN_DUR)
+    {
+        respawnTimer = 0.0f;
+        return true;
+    }
+
+    return false;
 }
 
 void Player::UpdatePositions()
@@ -509,7 +557,6 @@ void Player::ShootRay()
     }
 
     shootRayCollision.point = closestHit;
-    SetRandLight(shootRayCollision.point);
 
     Point* p = nullptr;
     Color particleColor = WHITE;
@@ -577,11 +624,6 @@ void Player::CollisionDetection()
         camera->UpdatePos();
 
     UpdatePositions();
-}
-
-void Player::SetRandLight(Vector3 pos)
-{
-    randLight.position = pos;
 }
 
 bool Player::JumpInfo::CheckJump(Vector3& t_velocity)
