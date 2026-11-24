@@ -56,6 +56,7 @@ public:
 	void TakeDamage(int t_amount);
 
 private:
+	bool InBounds();
 	void Respawn();
 	void DrawDeathScreen();
 	bool RespawnTimer();

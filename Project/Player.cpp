@@ -76,6 +76,12 @@ void Player::Update()
         return;
     }
 
+    // Check if the player is in bounds
+    if (!InBounds())
+    {
+        health.TakeDamage(health.GetMaxHealth());
+    }
+
     // Enable / disable debug
     if (IsKeyReleased(KEY_F1))
         displayDebugElements = !displayDebugElements;
@@ -284,6 +290,24 @@ void Player::SetOwner(bool t_b)
 void Player::TakeDamage(int t_amount)
 {
     health.TakeDamage(t_amount);
+}
+
+bool Player::InBounds()
+{
+
+    // Minus coords
+    if (position.x < -10.0f || position.y < -10.0f || position.z < -10.0f)
+    {
+        return false;
+    }
+
+    Vector3 worldDimensions = WORLD.GetSizeDimensions();
+    if (position.x > worldDimensions.x + 10.0f || position.y > worldDimensions.y + 10.0f || position.z > worldDimensions.z + 10.0f)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void Player::Respawn()

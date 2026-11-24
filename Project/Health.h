@@ -21,6 +21,7 @@ public:
 	void Reset();
 	void SetHealth(int t_health) { currentHealth = t_health; }
 	int GetHealth() const { return currentHealth; }
+	int GetMaxHealth() const { return maxHealth; }
 
 	bool isAlive() const { return alive; }
 
