@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Bullet.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -11,28 +27,20 @@
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Health.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Bullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{907E20D6-BED3-4F2B-9EDC-FFB0B0354ED6}|Project\\Project.vcxproj|solutionrelative:Project\\Bullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
@@ -52,7 +60,7 @@
               "RelativeDocumentMoniker": "Project\\game.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\game.cpp",
               "RelativeToolTip": "Project\\game.cpp",
-              "ViewState": "AgIAAPgAAAAAAAAAAAAUwAQBAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAPgAAAAAAAAAAAAUwAoBAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-18T16:05:34.515Z",
               "IsPinned": true,
@@ -74,13 +82,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Bullet.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.cpp",
               "RelativeDocumentMoniker": "Project\\Bullet.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.cpp",
               "RelativeToolTip": "Project\\Bullet.cpp",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAEwIwAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAUwIoAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-23T22:17:25.798Z",
               "IsPinned": true,
@@ -88,13 +96,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "Bullet.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.h",
               "RelativeDocumentMoniker": "Project\\Bullet.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Bullet.h",
               "RelativeToolTip": "Project\\Bullet.h",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAUwCEAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAUwCMAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-23T22:41:07.679Z",
               "IsPinned": true,
@@ -102,52 +110,78 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "Server.cpp",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp",
+              "RelativeDocumentMoniker": "Project\\Server.cpp",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.cpp",
+              "RelativeToolTip": "Project\\Server.cpp",
+              "ViewState": "AgIAAPoAAAAAAAAAAAAAAAkBAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-24T00:32:55.359Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Server.h",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.h",
+              "RelativeDocumentMoniker": "Project\\Server.h",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Server.h",
+              "RelativeToolTip": "Project\\Server.h",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAADYAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-24T00:32:52.504Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Player.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeDocumentMoniker": "Project\\Player.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.cpp",
               "RelativeToolTip": "Project\\Player.cpp",
-              "ViewState": "AgIAAPQAAAAAAAAAAAAmwAsBAAALAAAAAAAAAA==",
+              "ViewState": "AgIAACgCAAAAAAAAAAAUwDgCAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-23T23:16:15.524Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeDocumentMoniker": "Project\\Player.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Player.h",
               "RelativeToolTip": "Project\\Player.h",
-              "ViewState": "AgIAABgAAAAAAAAAAAAUwDYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAUwJcAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-23T23:15:17.175Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Health.cpp",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp",
               "RelativeDocumentMoniker": "Project\\Health.cpp",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.cpp",
               "RelativeToolTip": "Project\\Health.cpp",
-              "ViewState": "AgIAAEwAAAAAAAAAAAAUwFsAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-11-23T23:10:26.551Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "Health.h",
               "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h",
               "RelativeDocumentMoniker": "Project\\Health.h",
               "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h",
               "RelativeToolTip": "Project\\Health.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-11-23T23:10:24.529Z",
               "EditorCaption": ""

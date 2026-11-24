@@ -20,6 +20,7 @@ public:
 
 	void ResetHealth();
 	void SetHealth(int t_health) { currentHealth = t_health; }
+	int GetHealth() const { return currentHealth; }
 
 private:
 

@@ -11,8 +11,6 @@ Health::Health(int t_owner) : NetworkObject(t_owner)
 	// Border
 	borderRect.width = 200.0f;
 	borderRect.height = 25.0f;
-	//borderRect.x = borderRect.width / 2.0f;
-	//borderRect.y = GetScreenHeight() * 0.9f;
 	borderRect.x = 0.0f;
 	borderRect.y = 0.0f;
 

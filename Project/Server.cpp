@@ -7,6 +7,8 @@
 #include "NetworkManager.h"
 #include "World.h"
 
+#include "Health.h"
+
 Server::Server(World& t_world) : world(t_world)
 {
 }

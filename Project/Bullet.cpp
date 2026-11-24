@@ -138,6 +138,7 @@ void Bullet::CollisionDetection()
         {
             player->TakeDamage(damage);
 
+            hasCollided = true;
             OnHit();
             return;
         }
