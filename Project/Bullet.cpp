@@ -136,8 +136,6 @@ void Bullet::CollisionDetection()
         // Hit found
         if (collisionInfo.hit)
         {
-            player->TakeDamage(damage);
-
             hasCollided = true;
             OnHit();
             return;
@@ -166,6 +164,24 @@ void Bullet::CollisionDetection()
 void Bullet::OnHit()
 {
     active = false;
+
+    // Player damaging
+    for (const std::shared_ptr<Player> player : PlayersManager::GetPlayers())
+    {
+        // Check if not the owner
+        if (!player->IsOwner())
+            continue;
+
+        CapsuleCollider playerCollider = player->GetCollider();
+        CollisionInfo collisionInfo = playerCollider.CheckAgainstSphere(position, radius);
+
+        // Hit found
+        if (collisionInfo.hit)
+        {
+            player->TakeDamage(damage);
+            return;
+        }
+    }
 
     WORLD.EditSphere(position, explosionRadius, breaking);
 }
