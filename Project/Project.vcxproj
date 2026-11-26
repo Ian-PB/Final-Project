@@ -114,7 +114,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ProjectRequirements\raylib-6.0_win64_msvc16\include;$(SolutionDir)ProjectRequirements\raygui-5.0\src;C:\nlohmann\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ProjectRequirements\raylib-6.0_win64_msvc16\include;$(SolutionDir)ProjectRequirements\raygui-5.0\src;$(SolutionDir)ProjectRequirements\nlohmann\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +135,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ProjectRequirements\raylib-6.0_win64_msvc16\include;$(SolutionDir)ProjectRequirements\raygui-5.0\src;C:\nlohmann\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ProjectRequirements\raylib-6.0_win64_msvc16\include;$(SolutionDir)ProjectRequirements\raygui-5.0\src;$(SolutionDir)ProjectRequirements\nlohmann\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
