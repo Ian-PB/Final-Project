@@ -446,14 +446,14 @@ void World::SetSeed(int t_seed)
 
 void World::KeyboardInputs()
 {
-    if (IsKeyReleased(KEY_G))
-    {
-        NoiseWorldGen();
-    }
-    else if (IsKeyReleased(KEY_C))
-    {
-        TestWorldGen();
-    }
+    //if (IsKeyReleased(KEY_G))
+    //{
+    //    NoiseWorldGen();
+    //}
+    //else if (IsKeyReleased(KEY_C))
+    //{
+    //    TestWorldGen();
+    //}
 }
 
 void World::UpdateAllDensities()
