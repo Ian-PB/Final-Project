@@ -18,7 +18,6 @@ Release/
 *.dll
 *.pdb
 *.ilk
-*.lib
 *.exp
 
 # Logs
