@@ -48,9 +48,14 @@
               "RelativeToolTip": "Project\\game.h",
               "ViewState": "AgIAACgAAAAAAAAAAAAmwD0AAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+<<<<<<< HEAD
               "WhenOpened": "2026-11-18T16:05:31.134Z",
               "IsPinned": true,
               "EditorCaption": ""
+=======
+              "WhenOpened": "2026-11-23T23:15:17.175Z",
+              "IsPinned": true
+>>>>>>> master
             },
             {
               "$type": "Document",
@@ -62,8 +67,26 @@
               "RelativeToolTip": "Project\\Client.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+<<<<<<< HEAD
               "WhenOpened": "2026-11-24T22:46:08.843Z",
               "EditorCaption": ""
+=======
+              "WhenOpened": "2026-11-24T21:46:43.513Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Health.h",
+              "DocumentMoniker": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h",
+              "RelativeDocumentMoniker": "Project\\Health.h",
+              "ToolTip": "C:\\Users\\Ian\\Desktop\\CollegeWork\\Final-Project\\Project\\Health.h",
+              "RelativeToolTip": "Project\\Health.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-24T21:46:34.812Z",
+              "IsPinned": true
+>>>>>>> master
             }
           ]
         }
