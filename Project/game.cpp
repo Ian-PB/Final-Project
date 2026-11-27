@@ -130,6 +130,8 @@ void Game::DrawJoinGame()
 
     if (activeButton == 1) // Join Pressed
     {
+        invalidIpInput = false;
+
         if (IsValidIp(serverIpInput))
         {
             invalidIpInput = false;
