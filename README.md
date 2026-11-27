@@ -1,18 +1,5 @@
 # Project
 
-## About Project
-This project is my current final year project, because of this it is very plain currently.
-What the project currently has:
-- Player Movement
-- Collision Detection / Resolution
-- A Dynamic World
-- A Debug Menu (pressing escape)
-
-For this project I would like to turn this into a multiplayer shooter style game where the following is synced between players:
-- Players (position, size, health)
-- The World (Any edits made by players will be synced up to match every player playing)
-- Projectiles (Currently there is only a bomb projectile but this will also include bullets)
-
 ## Run Instructions
 Just pressing run in visual studio should work.
 If it doesn't work please go into the Project properties add this:
